@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>😈 SYSTEM HACKED 😈</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: lime;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    #logo {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: red;
+      margin-top: 20px;
+      animation: blinkLogo 0.5s infinite alternate;
+    }
+    @keyframes blinkLogo {
+      from { opacity: 1; }
+      to { opacity: 0.3; }
+    }
+    #screen {
+      white-space: pre-wrap;
+      font-size: 14px;
+      padding: 20px;
+    }
+    .popup {
+      position: fixed;
+      background: red;
+      color: white;
+      font-size: 20px;
+      padding: 20px;
+      border: 3px solid white;
+      z-index: 9999;
+      animation: blink 0.3s infinite alternate;
+    }
+    @keyframes blink {
+      from { opacity: 1; }
+      to { opacity: 0.2; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ruddi Bhai Danger Logo -->
+  <div id="logo">☠️ RUDDI BHAI DANGER ☠️</div>
+
+  <div id="screen"></div>
+
+  <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+  <audio id="glitch" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+  <script>
+    const screen = document.getElementById("screen");
+    const beep = document.getElementById("beep");
+    const glitch = document.getElementById("glitch");
+
+    const messages = [
+      "[ERROR] Unauthorized access detected...",
+      "[WARNING] Malware found in system32\\",
+      "[ALERT] Sending private files to remote server...",
+      "[CRITICAL] Overwriting boot sector...",
+      "[CRITICAL] Disconnecting antivirus...",
+      "[CRITICAL] Deleting C:\\Users\\...",
+      "Encrypting files...",
+      "System will shut down in 10 seconds...",
+    ];
+
+    let i = 0;
+    function typeLine() {
+      if (i < messages.length) {
+        screen.innerHTML += messages[i] + "\n";
+        beep.play();
+        i++;
+        setTimeout(typeLine, 1200);
+      } else {
+        chaos();
+      }
+    }
+    typeLine();
+
+    // Random scary popups
+    function chaos() {
+      setInterval(() => {
+        let popup = document.createElement("div");
+        popup.className = "popup";
+        popup.textContent = "⚠ SYSTEM BREACH ⚠";
+        popup.style.top = Math.random()*window.innerHeight+"px";
+        popup.style.left = Math.random()*window.innerWidth+"px";
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 800);
+      }, 500);
+
+      // Random background color flicker
+      setInterval(() => {
+        document.body.style.background = ["black","red","purple","darkblue"][Math.floor(Math.random()*4)];
+        glitch.play();
+      }, 300);
+
+      // Disturb mouse
+      document.addEventListener("mousemove", e=>{
+        window.scrollTo(Math.random()*500, Math.random()*500);
+      });
+
+      // Auto BSOD after 20 sec
+      setTimeout(fakeBlueScreen, 20000);
+    }
+
+    // Fake BSOD
+    function fakeBlueScreen() {
+      document.body.style.background = "#0000AA";
+      document.body.style.color = "white";
+      document.body.style.fontSize = "18px";
+      document.body.innerHTML = 
+        "<br><br>A problem has been detected and Windows has been shut down to prevent damage.<br><br>" +
+        "If this is the first time you've seen this Stop error screen,<br>" +
+        "restart your computer. If this screen appears again, follow<br>" +
+        "these steps:<br><br>" +
+        "Check to make sure any new hardware or software is properly installed.<br>" +
+        "If this is a new installation, ask your hardware or software manufacturer<br>" +
+        "for any Windows updates you might need.<br><br>" +
+        "*** STOP: 0x0000007B (0xF880009C, 0xC0000034)";
+    }
+  </script>
+</body>
+</html>
