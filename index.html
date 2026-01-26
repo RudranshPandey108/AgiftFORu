@@ -2,23 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>ORACLE FUTURE ENGINE — FULL BUILD</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oracle Future Engine</title>
 
-<!-- =========================
-        GLOBAL STYLES
-========================= -->
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+/* =====================================================
+   GLOBAL RESET
+===================================================== */
+*{margin:0;padding:0;box-sizing:border-box}
 
+/* =====================================================
+   BODY
+===================================================== */
 body{
   min-height:100vh;
-  font-family: 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top, #1a2a3a, #050608);
+  background:radial-gradient(circle at top,#122636,#030406);
+  font-family:Segoe UI,system-ui;
   color:#eaf6ff;
   display:flex;
   justify-content:center;
@@ -26,125 +25,116 @@ body{
   overflow-x:hidden;
 }
 
-/* =========================
-        CONTAINER
-========================= */
+/* =====================================================
+   APP CONTAINER
+===================================================== */
 .app{
   width:95%;
-  max-width:900px;
-  background:rgba(0,0,0,0.55);
-  backdrop-filter:blur(14px);
-  border-radius:25px;
-  padding:35px;
+  max-width:1100px;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(16px);
+  border-radius:30px;
+  padding:45px;
   box-shadow:
-    0 0 40px rgba(0,255,255,0.12),
-    inset 0 0 20px rgba(255,255,255,0.05);
+    0 0 60px rgba(0,255,255,.18),
+    inset 0 0 30px rgba(255,255,255,.05);
 }
 
-/* =========================
-        HEADINGS
-========================= */
+/* =====================================================
+   HEADINGS
+===================================================== */
 h1{
   text-align:center;
-  font-weight:600;
   letter-spacing:2px;
-  margin-bottom:10px;
+  font-weight:600;
 }
-
 .subtitle{
   text-align:center;
-  opacity:0.8;
-  font-size:14px;
-  margin-bottom:30px;
+  opacity:.75;
+  margin:12px 0 35px;
 }
 
-/* =========================
-        FORM ELEMENTS
-========================= */
+/* =====================================================
+   FORM ELEMENTS
+===================================================== */
 label{
   display:block;
   margin-top:18px;
   font-size:14px;
-  opacity:0.85;
+  opacity:.85;
 }
-
-input, select{
+input,select{
   width:100%;
   padding:14px;
-  border-radius:14px;
-  border:none;
-  outline:none;
-  background:rgba(255,255,255,0.08);
-  color:#fff;
-  font-size:15px;
   margin-top:6px;
-}
-
-input::placeholder{
-  color:#bbb;
-}
-
-button{
-  margin-top:30px;
-  width:100%;
-  padding:15px;
   border:none;
-  border-radius:18px;
+  border-radius:14px;
+  background:rgba(255,255,255,.1);
+  color:#fff;
+}
+button{
+  width:100%;
+  margin-top:32px;
+  padding:16px;
+  border:none;
+  border-radius:20px;
   background:linear-gradient(135deg,#00ffe0,#0077ff);
-  color:#000;
   font-size:16px;
-  font-weight:600;
+  font-weight:700;
   cursor:pointer;
 }
+button:hover{opacity:.9}
 
-button:hover{
-  opacity:0.9;
-}
+/* =====================================================
+   SCREENS
+===================================================== */
+.screen{display:none}
+.screen.active{display:block}
 
-/* =========================
-        SCREENS
-========================= */
-.screen{
-  display:none;
-}
-
-.screen.active{
-  display:block;
-}
-
-/* =========================
-        LOADING
-========================= */
+/* =====================================================
+   LOADING
+===================================================== */
 .loading{
   text-align:center;
   font-size:18px;
-  padding:40px 0;
-  line-height:1.8;
+  padding:60px 0;
+  line-height:2;
 }
 
-/* =========================
-        RESULT
-========================= */
+/* =====================================================
+   RESULT
+===================================================== */
 .result{
-  line-height:1.9;
   font-size:15px;
+  line-height:1.9;
+}
+.hl{color:#00ffe0;font-weight:600}
+.section{
+  margin-top:30px;
+  padding-top:22px;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+.bar{
+  margin-top:10px;
+  height:8px;
+  border-radius:8px;
+  background:rgba(255,255,255,.15);
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,#00ffe0,#0077ff);
 }
 
-.highlight{
-  color:#00ffe0;
-  font-weight:600;
-}
-
-/* =========================
-        TYPE EFFECT
-========================= */
+/* =====================================================
+   CURSOR
+===================================================== */
 .cursor{
   display:inline-block;
   width:8px;
   background:#00ffe0;
   animation:blink 1s infinite;
 }
-
 @keyframes blink{
   0%{opacity:1}
   50%{opacity:0}
@@ -157,29 +147,26 @@ button:hover{
 
 <div class="app">
 
-<!-- =========================
-        SCREEN 1 : INPUT
-========================= -->
+<!-- ================= INPUT SCREEN ================= -->
 <div id="screen-input" class="screen active">
-  <h1>🔮 ORACLE ENGINE</h1>
-  <div class="subtitle">Advanced Probability-Based Future Simulation</div>
+  <h1>🔮 ORACLE FUTURE ENGINE</h1>
+  <div class="subtitle">Multi-Layer Probability & Timeline Simulation</div>
 
-  <label>Your Full Name</label>
-  <input id="name" placeholder="Enter your name">
+  <label>Full Name</label>
+  <input id="name">
 
   <label>Date of Birth</label>
   <input type="date" id="dob">
 
   <label>Gender</label>
   <select id="gender">
-    <option value="">Select</option>
     <option>Male</option>
     <option>Female</option>
     <option>Other</option>
   </select>
 
-  <label>Place (City / Country)</label>
-  <input id="place" placeholder="Where do you live?">
+  <label>Location</label>
+  <input id="place">
 
   <label>Current Mood</label>
   <select id="mood">
@@ -193,21 +180,17 @@ button:hover{
   <button onclick="begin()">Initiate Prediction</button>
 </div>
 
-<!-- =========================
-        SCREEN 2 : LOADING
-========================= -->
+<!-- ================= LOADING SCREEN ================= -->
 <div id="screen-loading" class="screen">
   <div class="loading">
-    🔍 Scanning personal timeline...<br>
-    🧠 Mapping behavioral patterns...<br>
-    🌌 Aligning probability vectors...<br><br>
-    Please wait...
+    🧠 Reading personality layers...<br>
+    📊 Building life probability matrix...<br>
+    🕰️ Simulating future timelines...<br>
+    🔐 Locking outcomes...
   </div>
 </div>
 
-<!-- =========================
-        SCREEN 3 : RESULT
-========================= -->
+<!-- ================= RESULT SCREEN ================= -->
 <div id="screen-result" class="screen">
   <h1>📜 Prediction Report</h1>
   <div id="result" class="result"></div>
@@ -215,114 +198,185 @@ button:hover{
 
 </div>
 
-<!-- =========================
-        SCRIPT SECTION
-========================= -->
 <script>
-/* =========================
-        UTILITIES
-========================= */
-function $(id){ return document.getElementById(id); }
+/* =====================================================
+   UTILITIES
+===================================================== */
+const $=id=>document.getElementById(id)
+const rand=(min,max)=>Math.floor(Math.random()*(max-min+1))+min
+const pick=arr=>arr[Math.floor(Math.random()*arr.length)]
 
-function rand(min,max){
-  return Math.floor(Math.random()*(max-min+1))+min;
+/* =====================================================
+   MEMORY ENGINE (ANTI-REPEAT)
+===================================================== */
+let memory=new Set()
+function unique(arr){
+  let t
+  do{t=pick(arr)}while(memory.has(t))
+  memory.add(t)
+  return t
 }
 
-/* =========================
-        CORE DATA
-========================= */
-const personalityTraits = [
-  "intuitive","observant","emotionally deep","analytical",
-  "creative","resilient","quietly ambitious","strategic"
-];
+/* =====================================================
+   PERSONALITY DATABASE (BIG)
+===================================================== */
+const personalityDB={
+Calm:[
+"mentally grounded","emotionally stable","patient by instinct","observant by nature",
+"slow but accurate decision-maker","internally confident","resistant to chaos"
+],
+Confused:[
+"questioning old beliefs","searching for clarity","adaptive under uncertainty",
+"quietly evolving","learning through mistakes","emotionally sensitive"
+],
+Ambitious:[
+"future-oriented","goal-driven","strategic thinker","discipline-dependent",
+"hungry for progress","mentally competitive"
+],
+Stressed:[
+"pressure-tested","resilient under load","emotionally stretched",
+"learning boundaries","stronger than perceived","burnout-aware"
+],
+Hopeful:[
+"optimistic","open-hearted","emotionally expressive",
+"forward-looking","trust-oriented","faith-driven"
+]
+}
 
-const lifePhases = [
-  "a transformation phase",
-  "a rebuilding phase",
-  "a clarity-seeking phase",
-  "a disciplined growth phase",
-  "an emotionally evolving phase"
-];
+/* =====================================================
+   CAREER ENGINE
+===================================================== */
+const careerLines=[
+"your career improves through consistency, not sudden jumps",
+"discipline matters more than talent for you",
+"one delayed decision protects your future",
+"slow progress hides long-term stability",
+"your growth curve is late but steep",
+"you outperform peers after initial delays",
+"routine is your hidden advantage",
+"you succeed when pressure increases",
+"authority notices you quietly",
+"respect comes before money"
+]
 
-const futureEvents = [
-  "a strong career decision will reshape your future",
-  "a friendship will turn into a lifelong bond",
-  "financial stability will slowly increase",
-  "you will detach from unnecessary distractions",
-  "your mindset will mature faster than peers"
-];
+/* =====================================================
+   FINANCE ENGINE
+===================================================== */
+const financeLines=[
+"money grows when spending is controlled",
+"financial clarity arrives later than peers",
+"savings beat risky investments for you",
+"money stress reduces after patience",
+"wealth builds slowly but permanently",
+"discipline protects your finances",
+"financial luck follows planning"
+]
 
-/* =========================
-        FLOW CONTROL
-========================= */
+/* =====================================================
+   RELATIONSHIP ENGINE
+===================================================== */
+const relationshipLines=[
+"you value loyalty over attention",
+"few connections matter deeply",
+"emotional boundaries protect you",
+"one bond defines emotional life",
+"trust builds slowly for you",
+"you detach when disrespected",
+"relationships stabilize with age"
+]
+
+/* =====================================================
+   HEALTH ENGINE
+===================================================== */
+const healthLines=[
+"mental health defines physical energy",
+"sleep discipline matters more than workouts",
+"stress management is key",
+"routine improves stamina",
+"overthinking affects rest",
+"balance restores strength"
+]
+
+/* =====================================================
+   TIMELINE ENGINE
+===================================================== */
+const pastLines=[
+"past years were about learning limits",
+"you outgrew certain patterns",
+"mistakes shaped awareness",
+"pressure revealed strength"
+]
+const futureLines=[
+"future rewards patience",
+"clarity replaces confusion",
+"stability increases steadily",
+"self-trust improves decisions"
+]
+
+/* =====================================================
+   FLOW
+===================================================== */
 function begin(){
-  const name = $("name").value.trim();
-  const dob = $("dob").value;
-  const gender = $("gender").value;
-  const place = $("place").value.trim();
-
-  if(!name || !dob || !gender || !place){
-    alert("Please complete all fields.");
-    return;
+  if(!$("name").value||!$("dob").value||!$("place").value){
+    alert("Complete all fields")
+    return
   }
-
-  $("screen-input").classList.remove("active");
-  $("screen-loading").classList.add("active");
-
-  setTimeout(()=>generate(name,dob,gender,place),3500);
+  $("screen-input").classList.remove("active")
+  $("screen-loading").classList.add("active")
+  setTimeout(generate,3500)
 }
 
-/* =========================
-        GENERATION ENGINE
-========================= */
-function generate(name,dob,gender,place){
-  $("screen-loading").classList.remove("active");
-  $("screen-result").classList.add("active");
+function generate(){
+  $("screen-loading").classList.remove("active")
+  $("screen-result").classList.add("active")
 
-  const age = new Date().getFullYear() - new Date(dob).getFullYear();
-  const friends = rand(3,7);
-  const siblings = rand(0,3);
+  const age=new Date().getFullYear()-new Date($("dob").value).getFullYear()
+  const mood=$("mood").value
 
-  const trait = personalityTraits[rand(0,personalityTraits.length-1)];
-  const phase = lifePhases[rand(0,lifePhases.length-1)];
-  const event = futureEvents[rand(0,futureEvents.length-1)];
+  let html=`
+Hello <span class="hl">${$("name").value}</span>,<br><br>
+At age <span class="hl">${age}</span>, your dominant nature is
+<span class="hl">${unique(personalityDB[mood])}</span>.
+<br><br>
+${unique(pastLines)}. You are now entering a stabilizing phase.
+`
 
-  const text = `
-Hello <span class="highlight">${name}</span>,<br><br>
+  html+=block("Career Outlook",unique(careerLines),rand(60,85))
+  html+=block("Financial Pattern",unique(financeLines),rand(55,80))
+  html+=block("Relationships",unique(relationshipLines),rand(65,90))
+  html+=block("Health & Energy",unique(healthLines),rand(50,75))
 
-Based on deep probabilistic modeling of your life patterns, your personality shows strong signs of being 
-<span class="highlight">${trait}</span> in nature.<br><br>
+  html+=`
+  <div class="section">
+    <b>Future Window (2–5 Years)</b><br>
+    ${unique(futureLines)}.
+  </div>
 
-At the age of <span class="highlight">${age}</span>, you are currently entering 
-<span class="highlight">${phase}</span>. This period is subtle but extremely important for long-term success.<br><br>
+  <div class="section">
+    <b>Final Advice</b><br>
+    Delay is not weakness for you. It is strategy.
+  </div>
+  `
 
-You naturally maintain around <span class="highlight">${friends}</span> meaningful friendships.
-Family influence remains strong — you are likely connected to <span class="highlight">${siblings}</span> sibling(s)
-who impact your emotional decisions.<br><br>
-
-Your living environment (<span class="highlight">${place}</span>) is undergoing energetic changes.
-Over the next few years, this location will present new opportunities and social movement.<br><br>
-
-Prediction Window (Next 2–4 Years):<br>
-➡️ <span class="highlight">${event}</span>.<br><br>
-
-Final Advice:<br>
-Trust delayed decisions. Your biggest victories will come from patience, not speed.
-`;
-
-  typeWriter($("result"), text, 0);
+  type($("result"),html,0)
 }
 
-/* =========================
-        TYPEWRITER
-========================= */
-function typeWriter(el, txt, i){
-  if(i < txt.length){
-    el.innerHTML = txt.substring(0,i+1) + '<span class="cursor"></span>';
-    setTimeout(()=>typeWriter(el,txt,i+1),20);
-  }else{
-    el.innerHTML = txt;
-  }
+/* =====================================================
+   UI HELPERS
+===================================================== */
+function block(title,text,val){
+  return `
+  <div class="section">
+    <b>${title}</b><br>${text}
+    <div class="bar"><div class="fill" style="width:${val}%"></div></div>
+  </div>`
+}
+
+function type(el,txt,i){
+  if(i<txt.length){
+    el.innerHTML=txt.substring(0,i+1)+'<span class="cursor"></span>'
+    setTimeout(()=>type(el,txt,i+1),10)
+  }else el.innerHTML=txt
 }
 </script>
 
