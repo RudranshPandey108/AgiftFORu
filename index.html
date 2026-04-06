@@ -1,380 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-     <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#38bdf8">
-<meta charset="UTF-8">
-<title>JARVIS AI</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-/* =======================
-   GLOBAL RESET
-======================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  user-select: none;
-  font-family: "Segoe UI", system-ui;
-}
-
-body {
-  height: 200vh;
-  background: #020617;
-  color: #e5e7eb;
-}
-
-/* =======================
-   FLOATING JARVIS ORB
-======================= */
-#jarvis-orb {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #38bdf8, #0ea5e9, #0369a1);
-  box-shadow:
-    0 0 20px #38bdf8,
-    0 0 40px rgba(56,189,248,.6);
-  cursor: pointer;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform .2s ease;
-}
-
-#jarvis-orb:active {
-  transform: scale(0.92);
-}
-
-#jarvis-orb::after {
-  content: "";
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: white;
-  opacity: 0.9;
-}
-
-/* =======================
-   CHAT PANEL
-======================= */
-#jarvis-panel {
-  position: fixed;
-  bottom: 110px;
-  right: 30px;
-  width: 340px;
-  height: 480px;
-  background: #020617;
-  border-radius: 16px;
-  box-shadow:
-    0 0 0 1px rgba(56,189,248,.3),
-    0 20px 60px rgba(0,0,0,.8);
-  display: none;
-  flex-direction: column;
-  overflow: hidden;
-  z-index: 9998;
-}
-
-/* HEADER */
-#jarvis-header {
-  height: 56px;
-  background: linear-gradient(90deg, #020617, #020617);
-  display: flex;
-  align-items: center;
-  padding: 0 14px;
-  border-bottom: 1px solid rgba(56,189,248,.3);
-}
-
-#jarvis-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #38bdf8, #0284c7);
-  margin-right: 10px;
-}
-
-#jarvis-title {
-  flex: 1;
-}
-
-#jarvis-title h4 {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-#jarvis-title span {
-  font-size: 11px;
-  color: #38bdf8;
-}
-
-#jarvis-close {
-  font-size: 18px;
-  cursor: pointer;
-  opacity: .7;
-}
-
-#jarvis-close:hover {
-  opacity: 1;
-}
-
-/* BODY */
-#jarvis-body {
-  flex: 1;
-  padding: 12px;
-  font-size: 13px;
-  overflow-y: auto;
-}
-
-/* FOOTER */
-#jarvis-footer {
-  padding: 10px;
-  border-top: 1px solid rgba(56,189,248,.2);
-  display: flex;
-  gap: 8px;
-}
-
-#jarvis-input {
-  flex: 1;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-  background: #020617;
-  color: white;
-  box-shadow: inset 0 0 0 1px rgba(56,189,248,.3);
-}
-
-#jarvis-send {
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: #38bdf8;
-  color: #020617;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-/* =======================
-   MESSAGE STYLE
-======================= */
-.msg {
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-
-.user {
-  color: #e5e7eb;
-}
-
-.ai {
-  color: #38bdf8;
-}
-
-/* =======================
-   SCROLLBAR
-======================= */
-#jarvis-body::-webkit-scrollbar {
-  width: 4px;
-}
-#jarvis-body::-webkit-scrollbar-thumb {
-  background: #38bdf8;
-  border-radius: 10px;
-}
-</style>
+  <title>CBT Test</title>
+  <style>
+    body { font-family: Arial; background:#0f172a; color:white; }
+    .container { width: 80%; margin:auto; }
+    .question { margin:20px 0; }
+    .options button {
+      display:block;
+      margin:5px 0;
+      padding:10px;
+      width:100%;
+      background:#1e293b;
+      color:white;
+      border:none;
+      cursor:pointer;
+    }
+    .selected { background:green !important; }
+    #timer { font-size:20px; }
+  </style>
 </head>
 
 <body>
+<div class="container">
 
-<!-- FLOATING ORB -->
-<div id="jarvis-orb"></div>
+<h2>JEE CBT Mock Test</h2>
+<div id="timer">Time: 180:00</div>
 
-<!-- CHAT PANEL -->
-<div id="jarvis-panel">
-  <div id="jarvis-header">
-    <div id="jarvis-avatar"></div>
-    <div id="jarvis-title">
-      <h4>JARVIS</h4>
-      <span>Online</span>
-    </div>
-    <div id="jarvis-close">✕</div>
-  </div>
+<div id="quiz"></div>
 
-  <div id="jarvis-body">
-    <div class="msg ai">Hello. I am JARVIS. System online.</div>
-  </div>
+<button onclick="submitTest()">Submit</button>
 
-  <div id="jarvis-footer">
-    <input id="jarvis-input" placeholder="Type a command…" />
-    <button id="jarvis-send">Send</button>
-       <button id="jarvis-mic">🎤</button>
-  </div>
 </div>
 
 <script>
-     let deferredPrompt;
 
-window.addEventListener("beforeinstallprompt", e => {
-  e.preventDefault();
-  deferredPrompt = e;
-
-  addMsg("JARVIS can be installed as an app.", "ai");
-
-  setTimeout(() => {
-    if (confirm("Install JARVIS App?")) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(() => {
-        deferredPrompt = null;
-      });
-    }
-  }, 2000);
-});
-/* =======================
-   OPEN / CLOSE PANEL
-======================= */
-const orb = document.getElementById("jarvis-orb");
-const panel = document.getElementById("jarvis-panel");
-const closeBtn = document.getElementById("jarvis-close");
-
-orb.onclick = () => panel.style.display = "flex";
-closeBtn.onclick = () => panel.style.display = "none";
-
-/* =======================
-   DRAG SYSTEM
-======================= */
-let dragging = false, offsetX = 0, offsetY = 0;
-
-orb.addEventListener("pointerdown", e => {
-  dragging = true;
-  const r = orb.getBoundingClientRect();
-  offsetX = e.clientX - r.left;
-  offsetY = e.clientY - r.top;
-});
-
-window.addEventListener("pointermove", e => {
-  if (!dragging) return;
-  let x = e.clientX - offsetX;
-  let y = e.clientY - offsetY;
-  x = Math.max(10, Math.min(window.innerWidth - 74, x));
-  y = Math.max(10, Math.min(window.innerHeight - 74, y));
-  orb.style.left = x + "px";
-  orb.style.top = y + "px";
-  orb.style.right = "auto";
-  orb.style.bottom = "auto";
-});
-
-window.addEventListener("pointerup", () => dragging = false);
-
-/* =======================
-   CORE ELEMENTS
-======================= */
-const input = document.getElementById("jarvis-input");
-const body = document.getElementById("jarvis-body");
-const sendBtn = document.getElementById("jarvis-send");
-const micBtn = document.getElementById("jarvis-mic");
-
-/* =======================
-   MESSAGE HELPERS
-======================= */
-function addMsg(text, type="ai"){
-  const div = document.createElement("div");
-  div.className = "msg " + type;
-  div.textContent = (type === "user" ? "You: " : "JARVIS: ") + text;
-  body.appendChild(div);
-  body.scrollTop = body.scrollHeight;
-}
-
-/* =======================
-   TEXT TO SPEECH (TTS)
-======================= */
-function speak(text){
-  if(!window.speechSynthesis) return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.rate = 1;
-  u.pitch = 0.9;
-  u.lang = "en-US";
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
-}
-
-/* =======================
-   OFFLINE BRAIN
-======================= */
-function offlineBrain(q){
-  q = q.toLowerCase();
-
-  if(q.includes("time"))
-    return new Date().toLocaleTimeString();
-
-  if(q.includes("date"))
-    return new Date().toDateString();
-
-  if(q.includes("who are you"))
-    return "I am JARVIS, your personal AI system.";
-
-  if(q.includes("hello") || q.includes("hi"))
-    return "Hello. I am online and ready.";
-
-  if(q.includes("help"))
-    return "You can ask time, date, or talk to me.";
-
-  return "I have received your command.";
-}
-
-/* =======================
-   SEND TEXT INPUT
-======================= */
-sendBtn.onclick = () => {
-  if(!input.value.trim()) return;
-  const text = input.value;
-  input.value = "";
-  addMsg(text, "user");
-
-  const reply = offlineBrain(text);
-  addMsg(reply, "ai");
-  speak(reply);
-};
-
-/* =======================
-   VOICE INPUT (STT)
-======================= */
-let recognition;
-if("webkitSpeechRecognition" in window){
-  recognition = new webkitSpeechRecognition();
-  recognition.lang = "en-US";
-  recognition.continuous = false;
-  recognition.interimResults = false;
-
-  recognition.onresult = e => {
-    const text = e.results[0][0].transcript;
-    addMsg(text, "user");
-    const reply = offlineBrain(text);
-    addMsg(reply, "ai");
-    speak(reply);
-  };
-
-  recognition.onerror = () => {
-    addMsg("Voice error. Try again.", "ai");
-  };
-}
-
-micBtn.onclick = () => {
-  if(recognition){
-    recognition.start();
-    addMsg("Listening…", "ai");
-  } else {
-    addMsg("Voice not supported in this browser.", "ai");
+// SAMPLE QUESTIONS (yaha PDF se paste karna)
+let questions = [
+  {
+    q: "What is 2 + 2?",
+    options: ["2","3","4","5"],
+    correct: 2
+  },
+  {
+    q: "Capital of India?",
+    options: ["Mumbai","Delhi","Kolkata","Chennai"],
+    correct: 1
   }
-};
-</script>
-     <script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
+];
+
+let answers = new Array(questions.length).fill(null);
+
+// LOAD QUESTIONS
+let quizDiv = document.getElementById("quiz");
+
+questions.forEach((item, index) => {
+  let qDiv = document.createElement("div");
+  qDiv.classList.add("question");
+
+  qDiv.innerHTML = `<h3>Q${index+1}. ${item.q}</h3>`;
+
+  let optDiv = document.createElement("div");
+
+  item.options.forEach((opt, i) => {
+    let btn = document.createElement("button");
+    btn.innerText = opt;
+
+    btn.onclick = () => {
+      answers[index] = i;
+      let buttons = optDiv.querySelectorAll("button");
+      buttons.forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+    };
+
+    optDiv.appendChild(btn);
+  });
+
+  qDiv.appendChild(optDiv);
+  quizDiv.appendChild(qDiv);
+});
+
+
+// TIMER (180 min)
+let time = 180 * 60;
+
+let timer = setInterval(() => {
+  let min = Math.floor(time / 60);
+  let sec = time % 60;
+
+  document.getElementById("timer").innerText =
+    `Time: ${min}:${sec < 10 ? "0"+sec : sec}`;
+
+  time--;
+
+  if(time < 0){
+    clearInterval(timer);
+    submitTest();
+  }
+}, 1000);
+
+
+// SUBMIT FUNCTION
+function submitTest(){
+  let score = 0;
+
+  questions.forEach((q, i) => {
+    if(answers[i] === q.correct) score += 4;
+    else if(answers[i] !== null) score -= 1;
+  });
+
+  alert("Your Score: " + score);
 }
-     </script>
+
+</script>
+
 </body>
 </html>
