@@ -1,119 +1,81 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>JEE CBT PRO MAX UI</title>
+<title>JEE CBT Simulator</title>
 
 <style>
-body {
- margin:0;
- font-family: 'Segoe UI', sans-serif;
- background: linear-gradient(135deg,#0f172a,#1e293b);
- color:white;
- display:flex;
- height:100vh;
-}
+body { font-family: Arial; margin:0; background:#0f172a; color:white; display:flex; }
 
-/* LEFT */
-#left {
- width:70%;
- padding:25px;
-}
+#left { width:70%; padding:20px; }
+#right { width:30%; background:#1e293b; padding:20px; }
 
-/* RIGHT */
-#right {
- width:30%;
- background:#111827;
- padding:20px;
- overflow-y:auto;
- box-shadow:-5px 0 15px rgba(0,0,0,0.5);
-}
+h2 { margin-top:0; }
 
-/* QUESTION */
-#question {
- font-size:20px;
- margin-bottom:20px;
-}
-
-/* OPTIONS */
 .option {
- padding:12px;
- margin:10px 0;
- background:#1f2937;
- border-radius:10px;
- cursor:pointer;
- transition:0.3s;
+  background:#334155;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  cursor:pointer;
 }
+.option:hover { background:#475569; }
 
-.option:hover {
- background:#374151;
-}
+.selected { background:#22c55e; }
 
-.selected {
- background:linear-gradient(45deg,#22c55e,#16a34a);
-}
-
-/* BUTTONS */
 button {
- padding:10px 15px;
- margin:5px;
- border:none;
- border-radius:8px;
- cursor:pointer;
- font-weight:bold;
+  padding:10px 15px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
 }
 
-.nav { background:#2563eb; color:white; }
-.reviewBtn { background:#9333ea; color:white; }
-.submitBtn { background:#dc2626; color:white; width:100%; }
-
-/* PALETTE */
-.palette button {
- width:40px;
- height:40px;
- border-radius:6px;
- margin:4px;
- border:none;
- color:white;
- font-weight:bold;
+#palette button {
+  width:40px;
+  height:40px;
+  margin:4px;
 }
 
-input {
- padding:8px;
- border-radius:6px;
- border:none;
- width:60px;
+.attempted { background:#22c55e; }
+.notvisited { background:#64748b; }
+.review { background:#a855f7; }
+.current { border:2px solid yellow; }
+
+#timer { font-size:20px; margin-bottom:10px; }
+
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
 }
 </style>
 
 </head>
-
 <body>
 
 <div id="left">
-<h2>Physics</h2>
+  <div class="topbar">
+    <div id="timer"></div>
+    <button onclick="toggleFull()">Fullscreen</button>
+  </div>
 
-<div id="question"></div>
-<div id="options"></div>
+  <h2 id="question"></h2>
+  <div id="options"></div>
 
-<button class="nav" onclick="prevQ()">Prev</button>
-<button class="nav" onclick="nextQ()">Next</button>
-<button class="reviewBtn" onclick="markReview()">Mark Review</button>
-
-<br><br>
-
-<input type="number" id="jump">
-<button onclick="jumpQ()">Go</button>
+  <button onclick="prevQ()">Prev</button>
+  <button onclick="nextQ()">Next</button>
+  <button onclick="markReview()">Mark Review</button>
+  <button onclick="submitTest()">Submit</button>
 </div>
 
 <div id="right">
-<h3 id="timer"></h3>
-<div class="palette" id="palette"></div>
-<button class="submitBtn" onclick="submitTest()">Submit Test</button>
+  <h3>Question Palette</h3>
+  <div id="palette"></div>
 </div>
 
 <script>
 
-// QUESTIONS
+// SAMPLE QUESTIONS
 let questions = [
   {
     q: "Light of wavelength λA and λB falls on two identical metal plates A and B respectively. The maximum kinetic energy of photoelectrons is KA and KB respectively, then which one of the following relations is true (λA = 2λB)",
@@ -743,107 +705,107 @@ let questions = [
 ];
 
 
-// LOAD DATA
-let answers = JSON.parse(localStorage.getItem("answers")) || new Array(questions.length).fill(null);
-let review = JSON.parse(localStorage.getItem("review")) || new Array(questions.length).fill(false);
-let visited = JSON.parse(localStorage.getItem("visited")) || new Array(questions.length).fill(false);
-let time = localStorage.getItem("time") || 180*60;
-
+// VARIABLES
 let currentQ = 0;
+let answers = new Array(questions.length).fill(null);
+let review = new Array(questions.length).fill(false);
+let visited = new Array(questions.length).fill(false);
+let time = 180 * 60;
+
+let timerInterval;
+
+// LOAD FROM STORAGE
+function loadData(){
+ if(localStorage.getItem("answers")){
+   answers = JSON.parse(localStorage.getItem("answers"));
+   review = JSON.parse(localStorage.getItem("review"));
+   visited = JSON.parse(localStorage.getItem("visited"));
+   time = parseInt(localStorage.getItem("time"));
+ }
+}
 
 // SAVE
 function save(){
- localStorage.setItem("answers", JSON.stringify(answers));
- localStorage.setItem("review", JSON.stringify(review));
- localStorage.setItem("visited", JSON.stringify(visited));
- localStorage.setItem("time", time);
+ localStorage.setItem("answers",JSON.stringify(answers));
+ localStorage.setItem("review",JSON.stringify(review));
+ localStorage.setItem("visited",JSON.stringify(visited));
+ localStorage.setItem("time",time);
 }
-
-// TIMER
-function updateTimer(){
- let m = Math.floor(time/60);
- let s = time%60;
- document.getElementById("timer").innerText = `Time: ${m}:${s<10?"0"+s:s}`;
-}
-updateTimer();
-
-setInterval(()=>{
- time--;
- updateTimer();
- save();
-
- if(time === 300) alert("⚠️ 5 min left!");
- if(time <= 0) submitTest();
-
-},1000);
 
 // LOAD QUESTION
 function loadQuestion(){
-
- visited[currentQ] = true;
-
  let q = questions[currentQ];
-
  document.getElementById("question").innerText = (currentQ+1)+". "+q.q;
 
  let html="";
  q.options.forEach((opt,i)=>{
-   html += `<div class="option ${answers[currentQ]==i?"selected":""}" onclick="selectOption(${i})">${opt}</div>`;
+   html+=`<div class="option ${answers[currentQ]==i?'selected':''}" onclick="select(${i})">${opt}</div>`;
  });
+ document.getElementById("options").innerHTML=html;
 
- document.getElementById("options").innerHTML = html;
-
+ visited[currentQ]=true;
  updatePalette();
  save();
 }
 
-// SELECT
-function selectOption(i){
- answers[currentQ] = i;
+// SELECT OPTION
+function select(i){
+ answers[currentQ]=i;
  loadQuestion();
 }
 
-// NAV
-function nextQ(){ if(currentQ<questions.length-1){ currentQ++; loadQuestion(); }}
-function prevQ(){ if(currentQ>0){ currentQ--; loadQuestion(); }}
+// NAVIGATION
+function nextQ(){ if(currentQ<questions.length-1){ currentQ++; loadQuestion(); } }
+function prevQ(){ if(currentQ>0){ currentQ--; loadQuestion(); } }
 
-// REVIEW
+// MARK REVIEW
 function markReview(){
- review[currentQ] = !review[currentQ];
+ review[currentQ]=!review[currentQ];
  updatePalette();
  save();
-}
-
-// JUMP
-function jumpQ(){
- let val = document.getElementById("jump").value;
- if(val>=1 && val<=questions.length){
-   currentQ = val-1;
-   loadQuestion();
- }
 }
 
 // PALETTE
 function updatePalette(){
  let html="";
  for(let i=0;i<questions.length;i++){
+   let cls="notvisited";
 
-   let color="gray";
+   if(visited[i]) cls="notvisited";
+   if(answers[i]!=null) cls="attempted";
+   if(review[i]) cls="review";
+   if(i===currentQ) cls+=" current";
 
-   if(!visited[i]) color="gray";
-   else if(review[i]) color="purple";
-   else if(answers[i]!==null) color="green";
-   else color="red";
-
-   html += `<button style="background:${color}" onclick="goTo(${i})">${i+1}</button>`;
+   html+=`<button class="${cls}" onclick="gotoQ(${i})">${i+1}</button>`;
  }
-
- document.getElementById("palette").innerHTML = html;
+ document.getElementById("palette").innerHTML=html;
 }
 
-function goTo(i){
- currentQ=i;
- loadQuestion();
+// GOTO
+function gotoQ(i){ currentQ=i; loadQuestion(); }
+
+// TIMER
+function updateTimer(){
+ let min = Math.floor(time/60);
+ let sec = time%60;
+ document.getElementById("timer").innerText = min+":"+sec;
+}
+
+// TIMER START
+function startTimer(){
+ timerInterval = setInterval(()=>{
+   time--;
+   updateTimer();
+   save();
+
+   if(time === 300) alert("⚠️ 5 minutes left!");
+
+   if(time<=0){
+     clearInterval(timerInterval);
+     submitTest();
+   }
+
+ },1000);
 }
 
 // SUBMIT
@@ -851,12 +813,14 @@ function submitTest(){
 
  if(!confirm("Submit test?")) return;
 
+ clearInterval(timerInterval);
+
  let score=0,correct=0,wrong=0,attempted=0;
 
  questions.forEach((q,i)=>{
-   if(answers[i]!==null){
+   if(answers[i]!=null){
      attempted++;
-     if(answers[i]===q.correct){
+     if(answers[i]==q.correct){
        score+=4;
        correct++;
      } else {
@@ -869,26 +833,57 @@ function submitTest(){
  let unattempted = questions.length - attempted;
  let accuracy = attempted ? ((correct/attempted)*100).toFixed(2) : 0;
 
- alert(`
- Score: ${score}
- Correct: ${correct}
- Wrong: ${wrong}
- Attempted: ${attempted}
- Unattempted: ${unattempted}
- Accuracy: ${accuracy}%
- `);
+ alert(`Score: ${score}
+Correct: ${correct}
+Wrong: ${wrong}
+Attempted: ${attempted}
+Unattempted: ${unattempted}
+Accuracy: ${accuracy}%`);
 
- localStorage.clear();
- location.reload();
+ // CLEAR STORAGE
+ localStorage.removeItem("answers");
+ localStorage.removeItem("review");
+ localStorage.removeItem("visited");
+ localStorage.removeItem("time");
+
+ // RESET
+ answers = new Array(questions.length).fill(null);
+ review = new Array(questions.length).fill(false);
+ visited = new Array(questions.length).fill(false);
+ time = 180*60;
+ currentQ = 0;
+
+ loadQuestion();
+ updateTimer();
+ updatePalette();
+
+ alert("✅ New Test Started");
 }
 
 // FULLSCREEN
-document.body.onclick = ()=>{
- document.documentElement.requestFullscreen().catch(()=>{});
-};
+function toggleFull(){
+ if(!document.fullscreenElement){
+   document.documentElement.requestFullscreen();
+ } else {
+   document.exitFullscreen();
+ }
+}
 
-// INIT
-loadQuestion();
+// START LOGIC
+window.onload = ()=>{
+ if(localStorage.getItem("answers")){
+   let choice = confirm("Resume previous test?");
+   if(choice){
+     loadData();
+   } else {
+     localStorage.clear();
+   }
+ }
+
+ loadQuestion();
+ updateTimer();
+ startTimer();
+}
 
 </script>
 
