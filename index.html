@@ -1,41 +1,183 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html>
 <head>
-<title>JEE CBT Simulator PRO</title><style>
-body { font-family: Arial; background:#0f172a; color:white; display:flex; margin:0; }
-#left { width:70%; padding:20px; }
-#right { width:30%; background:#1e293b; padding:20px; overflow:auto; }
+<title>JEE CBT PRO UI</title>
 
-h2 { font-size:28px; }
-#question { font-size:20px; margin-top:20px; }
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI;}
 
-button { padding:10px; margin:5px; cursor:pointer; border:none; border-radius:6px; }
+body{
+ background:linear-gradient(135deg,#0f172a,#020617);
+ color:white;
+ display:flex;
+ height:100vh;
+}
 
-.option { display:block; width:100%; background:#334155; color:white; margin:8px 0; }
-.option:hover { background:#475569; }
-.selected { background:green !important; }
+/* LEFT PANEL */
+#left{
+ width:70%;
+ padding:30px;
+ display:flex;
+ flex-direction:column;
+ justify-content:space-between;
+}
 
-.palette button { width:40px; height:40px; margin:3px; }
-.answered { background:green; }
-.notanswered { background:red; }
-.review { background:purple; }
-.reviewAnswered { background:orange; }
+#question{
+ font-size:22px;
+ margin-bottom:20px;
+}
 
-</style></head><body><div id="left">
-<h2>JEE CBT Simulator PRO</h2>
-<div id="timer">Time: 180:00</div><h3 id="question"></h3>
-<div id="options"></div><button onclick="prevQ()">Prev</button> <button onclick="nextQ()">Next</button> <button onclick="markReview()">Mark for Review</button> <button onclick="clearResponse()">Clear</button> <br><br> <button onclick="submitTest()">Submit</button>
+/* OPTIONS */
+.option{
+ padding:14px;
+ margin:10px 0;
+ background:rgba(255,255,255,0.05);
+ border-radius:10px;
+ cursor:pointer;
+ transition:0.3s;
+ border:1px solid transparent;
+}
 
-</div><div id="right">
-<h3>Question Palette</h3>
-<div id="palette" class="palette"></div>
-</div><script>
+.option:hover{
+ background:rgba(255,255,255,0.1);
+ border:1px solid #38bdf8;
+ transform:translateX(5px);
+}
 
-// Disable right click
- document.addEventListener("contextmenu", e => e.preventDefault());
+.selected{
+ background:linear-gradient(45deg,#22c55e,#16a34a);
+ color:white;
+ box-shadow:0 0 10px rgba(34,197,94,0.7);
+}
 
-// Fullscreen
- document.documentElement.requestFullscreen();
+/* BUTTONS */
+.controls button{
+ padding:10px 18px;
+ margin:5px;
+ border:none;
+ border-radius:8px;
+ cursor:pointer;
+ background:#1e293b;
+ color:white;
+ transition:0.3s;
+}
 
+.controls button:hover{
+ background:#38bdf8;
+ color:black;
+ transform:scale(1.05);
+}
+
+/* RIGHT PANEL */
+#right{
+ width:30%;
+ background:rgba(255,255,255,0.05);
+ backdrop-filter:blur(15px);
+ padding:20px;
+ display:flex;
+ flex-direction:column;
+ justify-content:space-between;
+}
+
+/* TIMER */
+#timer{
+ font-size:28px;
+ font-weight:bold;
+ text-align:center;
+ margin-bottom:20px;
+ color:#38bdf8;
+}
+
+/* PALETTE */
+.palette{
+ display:flex;
+ flex-wrap:wrap;
+ justify-content:center;
+}
+
+.palette button{
+ width:45px;
+ height:45px;
+ margin:5px;
+ border-radius:8px;
+ border:none;
+ cursor:pointer;
+ font-weight:bold;
+ color:white;
+ transition:0.2s;
+}
+
+.palette button:hover{
+ transform:scale(1.1);
+}
+
+/* JUMP BOX */
+#jump{
+ padding:10px;
+ width:80px;
+ border-radius:6px;
+ border:none;
+ margin-right:5px;
+}
+
+/* SUBMIT BUTTON */
+#submitBtn{
+ padding:12px;
+ background:#ef4444;
+ border:none;
+ border-radius:8px;
+ color:white;
+ font-size:16px;
+ cursor:pointer;
+ transition:0.3s;
+}
+
+#submitBtn:hover{
+ background:#dc2626;
+ transform:scale(1.05);
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="left">
+
+<div>
+<h2 id="sectionTitle">JEE CBT Simulator</h2>
+<br>
+<div id="question"></div>
+<div id="options"></div>
+</div>
+
+<div class="controls">
+<button onclick="prevQ()">⬅ Prev</button>
+<button onclick="nextQ()">Next ➡</button>
+<button onclick="markReview()">⭐ Review</button>
+
+<br><br>
+
+<input type="number" id="jump" placeholder="Q">
+<button onclick="jumpQ()">Go</button>
+</div>
+
+</div>
+
+<div id="right">
+
+<div>
+<div id="timer"></div>
+<div class="palette" id="palette"></div>
+</div>
+
+<button id="submitBtn" onclick="submitTest()">Submit Test</button>
+
+</div>
+
+<script>
+
+// SAMPLE QUESTIONS
 let questions = [
   {
     q: "Light of wavelength λA and λB falls on two identical metal plates A and B respectively. The maximum kinetic energy of photoelectrons is KA and KB respectively, then which one of the following relations is true (λA = 2λB)",
@@ -665,96 +807,106 @@ let questions = [
 ];
 
 
-let answers = JSON.parse(localStorage.getItem("answers")) || new Array(questions.length).fill(null);
-let review = new Array(questions.length).fill(false);
+let answers=new Array(questions.length).fill(null);
+let review=new Array(questions.length).fill(false);
+let visited=new Array(questions.length).fill(false);
 
-let currentQ = 0;
+let currentQ=0;
+let time=180*60;
 
-function save(){
- localStorage.setItem("answers", JSON.stringify(answers));
-}
+// TIMER
+setInterval(()=>{
+ time--;
+ let m=Math.floor(time/60);
+ let s=time%60;
+ document.getElementById("timer").innerText=m+":"+(s<10?"0":"")+s;
 
+ if(time===300) alert("⚠️ 5 min left!");
+ if(time<=0) submitTest();
+
+},1000);
+
+// LOAD QUESTION
 function loadQuestion(){
- let q = questions[currentQ];
- document.getElementById("question").innerText = `Q${currentQ+1}. ${q.q}`;
- let optDiv = document.getElementById("options");
- optDiv.innerHTML = "";
 
+ visited[currentQ]=true;
+
+ let q=questions[currentQ];
+ document.getElementById("question").innerText=(currentQ+1)+". "+q.q;
+
+ let html="";
  q.options.forEach((opt,i)=>{
-   let btn = document.createElement("button");
-   btn.innerText = opt;
-   btn.classList.add("option");
-
-   if(answers[currentQ] === i) btn.classList.add("selected");
-
-   btn.onclick = ()=>{
-     answers[currentQ] = i;
-     review[currentQ] = false;
-     save();
-     loadQuestion();
-     updatePalette();
-   };
-
-   optDiv.appendChild(btn);
+   html+=`<div class="option ${answers[currentQ]==i?"selected":""}" onclick="selectOption(${i})">${opt}</div>`;
  });
 
+ document.getElementById("options").innerHTML=html;
  updatePalette();
 }
 
-function nextQ(){ if(currentQ < questions.length-1){ currentQ++; loadQuestion(); }}
-function prevQ(){ if(currentQ > 0){ currentQ--; loadQuestion(); }}
+// SELECT
+function selectOption(i){
+ answers[currentQ]=i;
+ loadQuestion();
+}
 
-function markReview(){ review[currentQ] = true; nextQ(); }
+// NAV
+function nextQ(){ if(currentQ<questions.length-1){currentQ++;loadQuestion();}}
+function prevQ(){ if(currentQ>0){currentQ--;loadQuestion();}}
 
-function clearResponse(){ answers[currentQ] = null; review[currentQ] = false; save(); loadQuestion(); }
+// REVIEW
+function markReview(){
+ review[currentQ]=!review[currentQ];
+ updatePalette();
+}
 
+// JUMP
+function jumpQ(){
+ let val=document.getElementById("jump").value;
+ if(val>=1 && val<=questions.length){
+   currentQ=val-1;
+   loadQuestion();
+ }
+}
+
+// PALETTE
 function updatePalette(){
- let pal = document.getElementById("palette");
- pal.innerHTML = "";
+ let html="";
+ for(let i=0;i<questions.length;i++){
 
- questions.forEach((q,i)=>{
-   let btn = document.createElement("button");
-   btn.innerText = i+1;
+   let color="grey";
+   if(!visited[i]) color="grey";
+   else if(review[i]) color="purple";
+   else if(answers[i]!=null) color="green";
+   else color="red";
 
-   if(review[i] && answers[i] !== null) btn.classList.add("reviewAnswered");
-   else if(review[i]) btn.classList.add("review");
-   else if(answers[i] !== null) btn.classList.add("answered");
-   else btn.classList.add("notanswered");
-
-   btn.onclick = ()=>{ currentQ = i; loadQuestion(); };
-
-   pal.appendChild(btn);
- });
+   html+=`<button style="background:${color}" onclick="goTo(${i})">${i+1}</button>`;
+ }
+ document.getElementById("palette").innerHTML=html;
 }
 
-let time = 180*60;
-let timer = setInterval(()=>{
- let min = Math.floor(time/60);
- let sec = time%60;
- document.getElementById("timer").innerText = `Time: ${min}:${sec<10?"0"+sec:sec}`;
- time--;
- if(time < 0){ clearInterval(timer); submitTest(); }
-},1000);
+function goTo(i){
+ currentQ=i;
+ loadQuestion();
+}
 
+// SUBMIT
 function submitTest(){
- if(!confirm("Are you sure you want to submit?")) return;
-
- let score = 0, attempted=0, correct=0;
+ let score=0;
 
  questions.forEach((q,i)=>{
-   if(answers[i] !== null) attempted++;
-   if(answers[i] === q.correct){ score+=4; correct++; }
-   else if(answers[i] !== null && q.type==="mcq") score-=1;
+   if(answers[i]!==null){
+     if(answers[i]===q.correct) score+=4;
+     else score-=1;
+   }
  });
 
- let accuracy = attempted ? ((correct/attempted)*100).toFixed(2) : 0;
-
- alert(`Score: ${score}\nAttempted: ${attempted}\nAccuracy: ${accuracy}%`);
-
- localStorage.clear();
+ alert("Score: "+score);
 }
 
+// INIT
 loadQuestion();
 
-</script></body>
+</script>
+
+</body>
 </html>
