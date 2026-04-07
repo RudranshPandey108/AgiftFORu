@@ -1,39 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>JEE CBT Simulator</title>
+<title>CBT Simulator Ultimate</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
 <style>
-body { font-family: Arial; margin:0; background:#0f172a; color:white; display:flex; }
+body { margin:0; font-family:Arial; display:flex; background:#0f172a; color:white; }
 
 #left { width:70%; padding:20px; }
 #right { width:30%; background:#1e293b; padding:20px; }
 
-h2 { margin-top:0; }
-
 .option {
-  background:#334155;
-  padding:10px;
-  margin:8px 0;
-  border-radius:8px;
-  cursor:pointer;
+ background:#334155;
+ padding:10px;
+ margin:8px 0;
+ border-radius:8px;
+ cursor:pointer;
 }
 .option:hover { background:#475569; }
-
 .selected { background:#22c55e; }
 
 button {
-  padding:10px 15px;
-  margin:5px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-#palette button {
-  width:40px;
-  height:40px;
-  margin:4px;
+ padding:10px;
+ margin:5px;
+ border:none;
+ border-radius:8px;
+ cursor:pointer;
 }
 
 .attempted { background:#22c55e; }
@@ -41,42 +34,65 @@ button {
 .review { background:#a855f7; }
 .current { border:2px solid yellow; }
 
-#timer { font-size:20px; margin-bottom:10px; }
-
-.topbar {
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:10px;
+#palette button {
+ width:40px;
+ height:40px;
+ margin:4px;
 }
-</style>
 
+.topbar { display:flex; justify-content:space-between; }
+</style>
 </head>
+
 <body>
 
 <div id="left">
-  <div class="topbar">
-    <div id="timer"></div>
+
+<div class="topbar">
+  <div id="timer"></div>
+  <div>
+    <select onchange="changeTest(this.value)">
+      <option value="JEE">JEE</option>
+      <option value="BITSAT">BITSAT</option>
+      <option value="ADV">ADVANCED</option>
+    </select>
     <button onclick="toggleFull()">Fullscreen</button>
   </div>
+</div>
 
-  <h2 id="question"></h2>
-  <div id="options"></div>
+<h2 id="question"></h2>
+<div id="options"></div>
 
-  <button onclick="prevQ()">Prev</button>
-  <button onclick="nextQ()">Next</button>
-  <button onclick="markReview()">Mark Review</button>
-  <button onclick="submitTest()">Submit</button>
+<button onclick="prevQ()">Prev</button>
+<button onclick="nextQ()">Next</button>
+<button onclick="markReview()">Mark Review</button>
+<button onclick="submitTest()">Submit</button>
+
+<br><br>
+
+<input type="file" id="pdfInput">
+<button onclick="loadPDF()">Load PDF</button>
+
 </div>
 
 <div id="right">
-  <h3>Question Palette</h3>
-  <div id="palette"></div>
+<h3>Palette</h3>
+<div id="palette"></div>
 </div>
 
 <script>
 
-// SAMPLE QUESTIONS
-let questions = [
+// CONFIG
+let config = {
+ JEE:{time:180*60,pos:4,neg:-1},
+ BITSAT:{time:180*60,pos:3,neg:-1},
+ ADV:{time:180*60,pos:4,neg:-2}
+};
+
+// DEFAULT QUESTIONS
+let questionBank = {
+ JEE:[
+  
   {
     q: "Light of wavelength λA and λB falls on two identical metal plates A and B respectively. The maximum kinetic energy of photoelectrons is KA and KB respectively, then which one of the following relations is true (λA = 2λB)",
     options: ["KA < KB/2", "2KA = KB", "KA = 2KB", "KA > 2KB"],
@@ -704,27 +720,32 @@ let questions = [
   }
 ];
 
+ BITSAT:[
+  {q:"Speed of light?",options:["3e8","1e6","2e5","None"],correct:0}
+ ],
+ ADV:[
+  {q:"x dx integration?",options:["x^2/2","x","1","0"],correct:0}
+ ]
+};
 
-// VARIABLES
-let currentQ = 0;
-let answers = new Array(questions.length).fill(null);
-let review = new Array(questions.length).fill(false);
-let visited = new Array(questions.length).fill(false);
-let time = 180 * 60;
+let testType="JEE";
+let questions=questionBank[testType];
 
+let currentQ=0;
+let answers=[],review=[],visited=[];
+let time=config[testType].time;
 let timerInterval;
 
-// LOAD FROM STORAGE
-function loadData(){
- if(localStorage.getItem("answers")){
-   answers = JSON.parse(localStorage.getItem("answers"));
-   review = JSON.parse(localStorage.getItem("review"));
-   visited = JSON.parse(localStorage.getItem("visited"));
-   time = parseInt(localStorage.getItem("time"));
- }
+// INIT
+function resetState(){
+ answers=new Array(questions.length).fill(null);
+ review=new Array(questions.length).fill(false);
+ visited=new Array(questions.length).fill(false);
+ currentQ=0;
+ time=config[testType].time;
 }
 
-// SAVE
+// LOAD/SAVE
 function save(){
  localStorage.setItem("answers",JSON.stringify(answers));
  localStorage.setItem("review",JSON.stringify(review));
@@ -732,15 +753,23 @@ function save(){
  localStorage.setItem("time",time);
 }
 
-// LOAD QUESTION
+function loadData(){
+ answers=JSON.parse(localStorage.getItem("answers"));
+ review=JSON.parse(localStorage.getItem("review"));
+ visited=JSON.parse(localStorage.getItem("visited"));
+ time=parseInt(localStorage.getItem("time"));
+}
+
+// QUESTION LOAD
 function loadQuestion(){
- let q = questions[currentQ];
- document.getElementById("question").innerText = (currentQ+1)+". "+q.q;
+ let q=questions[currentQ];
+ document.getElementById("question").innerText=(currentQ+1)+". "+q.q;
 
  let html="";
  q.options.forEach((opt,i)=>{
-   html+=`<div class="option ${answers[currentQ]==i?'selected':''}" onclick="select(${i})">${opt}</div>`;
+  html+=`<div class="option ${answers[currentQ]==i?'selected':''}" onclick="select(${i})">${opt}</div>`;
  });
+
  document.getElementById("options").innerHTML=html;
 
  visited[currentQ]=true;
@@ -748,63 +777,57 @@ function loadQuestion(){
  save();
 }
 
-// SELECT OPTION
+// SELECT
 function select(i){
  answers[currentQ]=i;
  loadQuestion();
 }
 
-// NAVIGATION
-function nextQ(){ if(currentQ<questions.length-1){ currentQ++; loadQuestion(); } }
-function prevQ(){ if(currentQ>0){ currentQ--; loadQuestion(); } }
+// NAV
+function nextQ(){ if(currentQ<questions.length-1){currentQ++;loadQuestion();}}
+function prevQ(){ if(currentQ>0){currentQ--;loadQuestion();}}
+function gotoQ(i){currentQ=i;loadQuestion();}
 
-// MARK REVIEW
+// REVIEW
 function markReview(){
  review[currentQ]=!review[currentQ];
  updatePalette();
- save();
 }
 
 // PALETTE
 function updatePalette(){
  let html="";
  for(let i=0;i<questions.length;i++){
-   let cls="notvisited";
+  let cls="notvisited";
 
-   if(visited[i]) cls="notvisited";
-   if(answers[i]!=null) cls="attempted";
-   if(review[i]) cls="review";
-   if(i===currentQ) cls+=" current";
+  if(answers[i]!=null) cls="attempted";
+  if(review[i]) cls="review";
+  if(i==currentQ) cls+=" current";
 
-   html+=`<button class="${cls}" onclick="gotoQ(${i})">${i+1}</button>`;
+  html+=`<button class="${cls}" onclick="gotoQ(${i})">${i+1}</button>`;
  }
  document.getElementById("palette").innerHTML=html;
 }
 
-// GOTO
-function gotoQ(i){ currentQ=i; loadQuestion(); }
-
 // TIMER
 function updateTimer(){
- let min = Math.floor(time/60);
- let sec = time%60;
- document.getElementById("timer").innerText = min+":"+sec;
+ let m=Math.floor(time/60);
+ let s=time%60;
+ document.getElementById("timer").innerText=m+":"+s;
 }
 
-// TIMER START
 function startTimer(){
- timerInterval = setInterval(()=>{
-   time--;
-   updateTimer();
-   save();
+ timerInterval=setInterval(()=>{
+  time--;
+  updateTimer();
+  save();
 
-   if(time === 300) alert("⚠️ 5 minutes left!");
+  if(time==300) alert("5 min left");
 
-   if(time<=0){
-     clearInterval(timerInterval);
-     submitTest();
-   }
-
+  if(time<=0){
+   clearInterval(timerInterval);
+   submitTest();
+  }
  },1000);
 }
 
@@ -818,66 +841,129 @@ function submitTest(){
  let score=0,correct=0,wrong=0,attempted=0;
 
  questions.forEach((q,i)=>{
-   if(answers[i]!=null){
-     attempted++;
-     if(answers[i]==q.correct){
-       score+=4;
-       correct++;
-     } else {
-       score-=1;
-       wrong++;
-     }
+  if(answers[i]!=null){
+   attempted++;
+   if(answers[i]==q.correct){
+    score+=config[testType].pos;
+    correct++;
+   } else {
+    score+=config[testType].neg;
+    wrong++;
    }
+  }
  });
 
- let unattempted = questions.length - attempted;
- let accuracy = attempted ? ((correct/attempted)*100).toFixed(2) : 0;
+ let unattempted=questions.length-attempted;
+ let acc=attempted?((correct/attempted)*100).toFixed(2):0;
 
- alert(`Score: ${score}
-Correct: ${correct}
-Wrong: ${wrong}
-Attempted: ${attempted}
-Unattempted: ${unattempted}
-Accuracy: ${accuracy}%`);
+ alert(`Score:${score}
+Correct:${correct}
+Wrong:${wrong}
+Attempted:${attempted}
+Unattempted:${unattempted}
+Accuracy:${acc}%`);
 
- // CLEAR STORAGE
- localStorage.removeItem("answers");
- localStorage.removeItem("review");
- localStorage.removeItem("visited");
- localStorage.removeItem("time");
-
- // RESET
- answers = new Array(questions.length).fill(null);
- review = new Array(questions.length).fill(false);
- visited = new Array(questions.length).fill(false);
- time = 180*60;
- currentQ = 0;
+ localStorage.clear();
+ resetState();
 
  loadQuestion();
  updateTimer();
  updatePalette();
 
- alert("✅ New Test Started");
+ alert("New Test Started");
 }
 
 // FULLSCREEN
 function toggleFull(){
  if(!document.fullscreenElement){
-   document.documentElement.requestFullscreen();
+  document.documentElement.requestFullscreen();
  } else {
-   document.exitFullscreen();
+  document.exitFullscreen();
  }
 }
 
-// START LOGIC
-window.onload = ()=>{
+// CHANGE TEST
+function changeTest(type){
+ if(!confirm("Switch test?")) return;
+
+ testType=type;
+ questions=questionBank[testType];
+
+ localStorage.clear();
+ resetState();
+
+ loadQuestion();
+ updateTimer();
+}
+
+// PDF LOAD
+async function loadPDF(){
+
+ let file=document.getElementById("pdfInput").files[0];
+ if(!file) return alert("Upload PDF");
+
+ let reader=new FileReader();
+
+ reader.onload=async function(){
+  let pdf=await pdfjsLib.getDocument(new Uint8Array(this.result)).promise;
+
+  let text="";
+
+  for(let i=1;i<=pdf.numPages;i++){
+   let page=await pdf.getPage(i);
+   let content=await page.getTextContent();
+   text+=content.items.map(x=>x.str).join(" ")+"\n";
+  }
+
+  convertToQuestions(text);
+ };
+
+ reader.readAsArrayBuffer(file);
+}
+
+// TEXT → QUESTIONS
+function convertToQuestions(text){
+
+ let lines=text.split("\n");
+ let newQ=[];
+
+ lines.forEach(line=>{
+  let m=line.match(/(.*)\?(.*)\(A\)(.*)\(B\)(.*)\(C\)(.*)\(D\)(.*)/);
+
+  if(m){
+   newQ.push({
+    q:m[1]+"?",
+    options:[m[3],m[4],m[5],m[6]],
+    correct:0
+   });
+  }
+ });
+
+ if(newQ.length==0){
+  alert("Format not supported");
+  return;
+ }
+
+ questions=newQ;
+ resetState();
+
+ loadQuestion();
+ updatePalette();
+
+ alert("PDF Loaded!");
+}
+
+// START
+window.onload=()=>{
  if(localStorage.getItem("answers")){
-   let choice = confirm("Resume previous test?");
-   if(choice){
-     loadData();
-   } else {
-     localStorage.clear();
-   }
+  if(confirm("Resume test?")){
+   loadData();
+  } else {
+   localStorage.clear();
+   resetState();
+  }
+ } else {
+  resetState();
  }
 
  loadQuestion();
