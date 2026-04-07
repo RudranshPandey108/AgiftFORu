@@ -1,974 +1,191 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>CBT Simulator Ultimate</title>
+<title>AI SUPER APP</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body { margin:0; font-family:Arial; display:flex; background:#0f172a; color:white; }
-
-#left { width:70%; padding:20px; }
-#right { width:30%; background:#1e293b; padding:20px; }
-
-.option {
- background:#334155;
- padding:10px;
- margin:8px 0;
- border-radius:8px;
- cursor:pointer;
+body {
+  background:black;
+  color:white;
+  font-family:Arial;
+  margin:0;
 }
-.option:hover { background:#475569; }
-.selected { background:#22c55e; }
+
+.container {
+  padding:10px;
+}
+
+#chat-box {
+  height:250px;
+  overflow-y:auto;
+  border:1px solid white;
+  padding:10px;
+}
+
+.input-box {
+  display:flex;
+  margin-top:5px;
+  border:1px solid white;
+  border-radius:20px;
+}
+
+input {
+  flex:1;
+  background:none;
+  border:none;
+  color:white;
+  padding:10px;
+}
 
 button {
- padding:10px;
- margin:5px;
- border:none;
- border-radius:8px;
- cursor:pointer;
+  background:none;
+  border:none;
+  color:white;
+  padding:10px;
 }
 
-.attempted { background:#22c55e; }
-.notvisited { background:#64748b; }
-.review { background:#a855f7; }
-.current { border:2px solid yellow; }
-
-#palette button {
- width:40px;
- height:40px;
- margin:4px;
+.section {
+  margin-top:15px;
+  border:1px solid white;
+  padding:10px;
 }
-
-.topbar { display:flex; justify-content:space-between; }
 </style>
+
 </head>
 
 <body>
 
-<div id="left">
+<div class="container">
 
-<div class="topbar">
-  <div id="timer"></div>
-  <div>
-    <select onchange="changeTest(this.value)">
-      <option value="JEE">JEE</option>
-      <option value="BITSAT">BITSAT</option>
-      <option value="ADV">ADVANCED</option>
-    </select>
-    <button onclick="toggleFull()">Fullscreen</button>
-  </div>
+<h2>WELCOME 🤝</h2>
+
+<!-- CHAT -->
+<div id="chat-box"></div>
+
+<div class="input-box">
+  <input id="input" placeholder="Type here">
+  <button onclick="reply()">➤</button>
+  <button onclick="voice()">🎤</button>
 </div>
 
-<h2 id="question"></h2>
-<div id="options"></div>
-
-<button onclick="prevQ()">Prev</button>
-<button onclick="nextQ()">Next</button>
-<button onclick="markReview()">Mark Review</button>
-<button onclick="submitTest()">Submit</button>
-
-<br><br>
-
-<input type="file" id="pdfInput">
-<button onclick="loadPDF()">Load PDF</button>
-
+<!-- NOTES -->
+<div class="section">
+<h3>Notes</h3>
+<textarea id="notes" style="width:100%;height:80px;background:black;color:white;"></textarea>
+<button onclick="saveNotes()">Save</button>
 </div>
 
-<div id="right">
-<h3>Palette</h3>
-<div id="palette"></div>
+<!-- PDF -->
+<div class="section">
+<h3>PDF Viewer</h3>
+<input type="file" onchange="openPDF(event)">
+<iframe id="pdf" width="100%" height="200"></iframe>
+</div>
+
+<!-- CBT -->
+<div class="section">
+<h3>CBT Test</h3>
+<p id="q">2+2 = ?</p>
+<button onclick="ans(4)">4</button>
+<button onclick="ans(5)">5</button>
+<button onclick="ans(6)">6</button>
+<p id="result"></p>
+</div>
+
 </div>
 
 <script>
 
-// CONFIG
-let config = {
- JEE:{time:180*60,pos:4,neg:-1},
- BITSAT:{time:180*60,pos:3,neg:-1},
- ADV:{time:180*60,pos:4,neg:-2}
-};
+// MEMORY
+let memory = JSON.parse(localStorage.getItem("memory")) || {};
 
-// DEFAULT QUESTIONS
-let questionBank = {
- JEE:[
-  
-  {
-    q: "Light of wavelength λA and λB falls on two identical metal plates A and B respectively. The maximum kinetic energy of photoelectrons is KA and KB respectively, then which one of the following relations is true (λA = 2λB)",
-    options: ["KA < KB/2", "2KA = KB", "KA = 2KB", "KA > 2KB"],
-    correct: 0
-  },
-  {
-    q: "Which one of the following curves represents the variation of impedance (Z) with frequency f in series LCR circuit?",
-    options: ["Curve A", "Curve B", "Curve C", "Curve D"],
-    correct: 2
-  },
-  {
-    q: "A Carnot engine takes 3 × 10^6 cal. of heat from a reservoir at 627°C, and gives it to a sink at 27°C. The work done by the engine is",
-    options: ["4.2 × 10^6 J", "8.4 × 10^6 J", "16.8 × 10^6 J", "zero"],
-    correct: 1
-  },
-  {
-    q: "An element of 0.05im is placed at the origin which carries a large current of 10A. The value of magnetic field at a distance of 1m in perpendicular direction is",
-    options: ["4.5 × 10^-8 T", "5.5 × 10^-8 T", "5.0 × 10^-8 T", "7.5 × 10^-8 T"],
-    correct: 2
-  },
-  {
-    q: "A sinusoidal voltage of amplitude 25 volt and frequency 50 Hz is applied to a half wave rectifier using P-n junction diode. No filter is used and the load resistor is 1000Ω. The forward resistance Rf of ideal diode is 10Ω. The percentage rectifier efficiency is",
-    options: ["40%", "20%", "30%", "15%"],
-    correct: 0
-  },
-  {
-    q: "A flask contains a monoatomic and a diatomic gas in the ratio of 4 : 1 by mass at a temperature of 300K. The ratio of average kinetic energy per molecule of the two gases is",
-    options: ["1 : 1", "2 : 1", "4 : 1", "1 : 4"],
-    correct: 0
-  },
-  {
-    q: "The potential energy of a particle (Ux) executing S.H.M. is given by",
-    options: ["Ux = k/2(x - a)^2", "Ux = kx + kx^2 + kx^3", "Ux = Ae^-bx", "Ux = a constant"],
-    correct: 0
-  },
-  {
-    q: "Consider an electric field E = E0x where E0 is a constant. The flux through the shaded area (as shown in the figure) due to this field is",
-    options: ["2E0a^2", "√2Ea^2", "Ea^2", "Ea^2/√2"],
-    correct: 2
-  },
-  {
-    q: "The equation of a wave on a string of linear mass density 0.04 kg m^-1 is given by y = 0.02(m)sin[2π(t/0.04 - x/0.50)]. The tension in the string is",
-    options: ["4.0N", "12.5N", "0.5N", "6.25N"],
-    correct: 3
-  },
-  {
-    q: "Equipotential surfaces are shown in figure. Then the electric field strength will be",
-    options: ["100Vm^-1 along X-axis", "100Vm^-1 along Y-axis", "200Vm^-1 at 120° with X-axis", "50Vm^-1 at 120° with X-axis"],
-    correct: 2
-  },
-  {
-    q: "Water falls from a 40m high dam at the rate of 9 × 10^4 kg per hour. 50% of potential energy is converted to electrical energy. How many 100W lamps can be lit? (g = 10ms^-2)",
-    options: ["25", "50", "100", "18"],
-    correct: 1
-  },
-  {
-    q: "An electron moving with velocity 10^6 m/s enters a magnetic field. If it describes a circle of radius 0.1m, strength of magnetic field is (m=9x10^-31kg, q=1.6x10^-19C)",
-    options: ["4.5 × 10^-5 T", "1.4 × 10^-5 T", "5.5 × 10^-5 T", "2.6 × 10^-5 T"],
-    correct: 2
-  },
-  {
-    q: "If V1 is velocity of body projected from A and V2 from B (below highest point C). If they collide, then:",
-    options: ["V1 = 1/2 V2", "V2 = 1/2 V1", "V1 = V2", "V1 = 3V2"],
-    correct: 1
-  },
-  {
-    q: "A square frame (10cm) moves right at 10ms^-1 near a wire carrying 1A. Induced e.m.f when left arm is at x=10cm is:",
-    options: ["2µV", "1µV", "0.75µV", "0.5µV"],
-    correct: 1
-  },
-  {
-    q: "In the circuit, current through inductor is 0.9A and condenser is 0.4A. Then:",
-    options: ["I = 1.13A", "ω = 1/(1.5LC)", "I = 0.5A", "I = 0.6A"],
-    correct: 2
-  },
-  {
-    q: "The ozone layer in the atmosphere absorbs",
-    options: ["Radiowaves", "Visible light", "γ-rays", "X-rays and ultraviolet rays"],
-    correct: 3
-  },
-  {
-    q: "Work done during adiabatic process CD for a diatomic ideal gas (γ=1.4) is:",
-    options: ["-500J", "200J", "-400J", "400J"],
-    correct: 0
-  },
-  {
-    q: "In YDSE, how many maximas can be obtained if λ = 3000Å, d = 5000Å?",
-    options: ["2", "5", "3", "1"],
-    correct: 2
-  },
-  {
-    q: "Metals A and B have threshold frequencies 1.8 and 2.2 × 10^14 Hz. Photons of 0.825 eV are incident. Photoelectrons emit in:",
-    options: ["B alone", "A alone", "Neither", "Both"],
-    correct: 1
-  },
-  {
-    q: "A sinusoidal voltage (25V, 50Hz) applied to half wave rectifier (load 1000Ω, Rf 10Ω). Efficiency is:",
-    options: ["40%", "20%", "30%", "15%"],
-    correct: 0
-  },
-  {
-    q: "Force between two magnets is 8N at distance r. If distance increases to 2r, force is:",
-    options: ["4N", "2N", "1N", "0.5N"],
-    correct: 3
-  },
-  {
-    q: "In Rutherford scattering, the energy of the projectile is:",
-    options: ["Prop. to Z1Z2", "Inv. prop. to Z1", "Prop. to M1", "Prop. to M1xM2"],
-    correct: 0
-  },
-  {
-    q: "Max speed of car on road turn (r=30m, µ=0.4, g=9.8) is:",
-    options: ["10.84m/s", "9.84m/s", "8.84m/s", "6.84m/s"],
-    correct: 0
-  },
-  {
-    q: "Swimmer (0.5 m/s) at 120° to stream flow to reach opposite point. Speed of water is:",
-    options: ["1 m/s", "0.5 m/s", "0.25 m/s", "0.433 m/s"],
-    correct: 2
-  },
-  {
-    q: "Car moves at 20ms^-1 on banked track (r=40√3m). Angle of banking is:",
-    options: ["25°", "60°", "45°", "30°"],
-    correct: 3
-  },
-  {
-    q: "Force F = αi + 3j + 6k at r = 2i - 6j - 12k. Value of α for conserved angular momentum is:",
-    options: ["2", "zero", "1", "-1"],
-    correct: 3
-  },
-  {
-    q: "Convex lens power P cut along principal axis, then one half cut perpendicular. Incorrect option:",
-    options: ["Power of L1 = P/2", "Power of L2 = P/2", "Power of L3 = P/2", "Power of L1 = P"],
-    correct: 0
-  },
-  {
-    q: "Ball (r, ρ) falls distance h into water and velocity doesn't change. h is:",
-    options: ["Option A", "Option B", "2r^4(ρ-1)^2g / 81η^2", "Option D"],
-    correct: 2
-  },
-  {
-    q: "Tyre (4 atm) bursts suddenly at 300K. New temperature is:",
-    options: ["300(4)^7/2", "300(4)^2/7", "300(2)^7/2", "300(4)^-2/7"],
-    correct: 3
-  },
-  {
-    q: "Dielectric slab K inserted into disconnected capacitor C. Which is incorrect?",
-    options: ["Energy decreases K times", "Change is 1/2CV^2(1 - 1/K)", "Charge is not conserved", "P.D. decreases K times"],
-    correct: 2
-  },
-  {
-    q: "Prism P has min. deviation. Prisms Q and R added. The ray will suffer:",
-    options: ["Greater deviation", "No deviation", "Same deviation", "TIR"],
-    correct: 2
-  },
-  {
-    q: "Torque in magnetic field is given by:",
-    options: ["m · B", "|m|/|B|", "m × B", "m · B / |m||B|"],
-    correct: 2
-  },
-  {
-    q: "α-particle (10 MeV) head-on with Copper (Z=29). Min distance of approach is:",
-    options: ["8.4 × 10^-15 cm", "8.4 × 10^-15 m", "4.2 × 10^-15 m", "4.2 × 10^-15 cm"],
-    correct: 1
-  },
-  {
-    q: "Planet 10x massive and 10x smaller radius than Earth (ve=11 km/s). Escape velocity is:",
-    options: ["1.1 km/s", "11 km/s", "110 km/s", "0.11 km/s"],
-    correct: 2
-  },
-  {
-    q: "Charges q1=q2=2µC interact with Q=4µC. Net force on Q is:",
-    options: ["0.23N (+x)", "0.46N (+x)", "0.23N (-x)", "0.46N (-x)"],
-    correct: 1
-  },
-  {
-    q: "Correct quantum numbers for electron in 4f orbital:",
-    options: ["n=4, l=3, m=+1, s=+1/2", "n=4, l=4, m=-4, s=-1/2", "n=4, l=3, m=+4, s=+1/2", "n=3, l=2, m=-2, s=+1/2"],
-    correct: 0
-  },
-  {
-    q: "Increasing order of ionic radii: C4-, N3-, F-, O2-",
-    options: ["C4- < N3- < O2- < F-", "N3- < C4- < O2- < F-", "F- < O2- < N3- < C4-", "O2- < F- < N3- < C4-"],
-    correct: 2
-  },
-  {
-    q: "BDE of X2, Y2, XY ratio 1:0.5:1. ΔH formation XY is -200 kJ/mol. BDE of X2 is:",
-    options: ["200", "100", "400", "800"],
-    correct: 3
-  },
-  {
-    q: "Increasing base strength of CN-, F-, NO2- based on Ka values:",
-    options: ["F- < CN- < NO2-", "NO2- < CN- < F-", "F- < NO2- < CN-", "NO2- < F- < CN-"],
-    correct: 2
-  },
-  {
-    q: "Products formed when diborane is hydrolysed:",
-    options: ["B2O3, H3BO3", "B2O3 only", "H3BO3, H2", "H3BO3 only"],
-    correct: 2
-  },
-  {
-    q: "CH3CH=CHCH3 and CH3CH2CH=CH2 are:",
-    options: ["Tautomers", "Position isomers", "Same sp3-sp2 bonds", "Dynamic equilibrium"],
-    correct: 1
-  },
-  {
-    q: "Addition of HBr to Propene (A) and Peroxide (B):",
-    options: ["Both Markovnikov", "A: Mark, B: Anti-Mark", "Both Anti-Mark", "B: Mark, A: Anti-Mark"],
-    correct: 1
-  },
-  {
-    q: "Which has Frenkel defects?",
-    options: ["NaCl", "AgBr", "Graphite", "Diamond"],
-    correct: 1
-  },
-  {
-    q: "BCC element (200pm, 5g/cm3). Atoms in 300g is:",
-    options: ["5 NA", "6 NA", "15 NA", "25 NA"],
-    correct: 3
-  },
-  {
-    q: "Current through AgNO3 and CuSO4 in series. 0.18g Ag deposited. Cu deposited is:",
-    options: ["0.529g", "10.623g", "0.0529g", "1.2708g"],
-    correct: 2
-  },
-  {
-    q: "Molar conductivity of 0.1M CH3COOH is 7.8. Limiting values given. Degree of dissociation is:",
-    options: ["0.10", "0.02", "0.15", "0.03"],
-    correct: 1
-  },
-  {
-    q: "Rate = k[A]n[B]m. Double [A] and halve [B], new rate ratio is:",
-    options: ["(m+n)", "(n-m)", "2^(n-m)", "1/2^(m+n)"],
-    correct: 2
-  },
-  {
-    q: "Threshold energy equals:",
-    options: ["Ea + Normal energy", "Ea - Normal energy", "Normal - Ea", "Avg KE"],
-    correct: 0
-  },
-  {
-    q: "Property common to white and red phosphorus:",
-    options: ["Burns in air", "Reacts with NaOH", "Chemiluminescence", "Soluble in CS2"],
-    correct: 0
-  },
-  {
-    q: "XeO4 molecule is tetrahedral having:",
-    options: ["Two pπ-dπ", "One pπ-dπ", "Four pπ-dπ", "Three pπ-dπ"],
-    correct: 2
-  },
-  {
-    q: "Cuprous ion is colourless, cupric is coloured because:",
-    options: ["Half filled orbitals", "Cuprous incomplete d", "Unpaired d electrons", "Cuprous complete d, Cupric incomplete d"],
-    correct: 3
-  },
-  {
-    q: "Greater range of oxidation states in actinoids is due to:",
-    options: ["Contraction", "5f, 6d, 7s comparable energies", "4f, 5d close", "Radioactivity"],
-    correct: 1
-  },
-  {
-    q: "Geometry and magnetism of [Ni(CO)4]:",
-    options: ["Sq planar, Dia", "Tetrahedral, Dia", "Tetrahedral, Para", "Sq planar, Para"],
-    correct: 1
-  },
-  {
-    q: "Complex ion showing geometrical isomerism:",
-    options: ["[Cr(H2O)4Cl2]+", "[Pt(NH3)3Cl]2-", "[Co(NH3)6]3-", "[Co(CN)5(NC)]3-"],
-    correct: 0
-  },
-  {
-    q: "Reaction of C6H5CH2Br with aq. NaOH follows:",
-    options: ["SN1", "SN2", "Temperature dependent", "Saytzeff"],
-    correct: 0
-  },
-  {
-    q: "Order of reactivity of alcohols with HCl/ZnCl2:",
-    options: ["1 > 2 > 3", "3 > 2 > 1", "1 < 2 < 3", "3 > 1 > 2"],
-    correct: 1
-  },
-  {
-    q: "Cannot be made by Williamson's synthesis:",
-    options: ["Methoxybenzene", "Benzyl ether", "Methyl tert-butyl ether", "Di-tert-butyl ether"],
-    correct: 3
-  },
-  {
-    q: "Yields benzaldehyde as product (reactions A-D):",
-    options: ["B and C", "C and D", "A and D", "A and C"],
-    correct: 2
-  },
-  {
-    q: "Clemmensen reduction uses:",
-    options: ["Zn-Hg + HCl", "Na-Hg + HCl", "Zn-Hg + HNO3", "Na-Hg + HNO3"],
-    correct: 0
-  },
-  {
-    q: "Increasing basic strength order (I-III):",
-    options: ["II < III < I", "III < I < II", "III < II < I", "II < I < III"],
-    correct: 3
-  },
-  {
-    q: "Major product of the chemical reaction shown:",
-    options: ["Product A", "Product B", "Product C", "Product D"],
-    correct: 1
-  },
-  {
-    q: "Blister copper is:",
-    options: ["Impure Cu", "Cu alloy", "Pure Cu", "Cu with 1% impurity"],
-    correct: 3
-  },
-  {
-    q: "Total pressure of ideal binary solution A and B:",
-    options: ["PA + XA(PB-PA)", "PB + XA(PB-PA)", "PA + XA(PA-PB)", "PB + XA(PA-PB)"],
-    correct: 3
-  },
-  {
-    q: "Complex showing sp3d2 hybridization:",
-    options: ["[Cr(NO2)6]3-", "[Fe(CN)6]4-", "[CoF6]3-", "[Ni(CO)4]"],
-    correct: 2
-  },
-  {
-    q: "2-Pentene contains:",
-    options: ["15σ, 1π", "14σ, 1π", "15σ, 2π", "14σ, 2π"],
-    correct: 1
-  },
-  {
-    q: "Correct pyranose structure for hemiacetal (X):",
-    options: ["A", "B", "C", "D"],
-    correct: 3
-  },
-  {
-    q: "Sucrose hydrolysis products:",
-    options: ["Glu L, Fru D", "Glu D, Fru L", "Mixture is L", "Both D"],
-    correct: 2
-  },
-  {
-    q: "Allyl cyanide contains:",
-    options: ["9σ, 4π, 0 LP", "9σ, 3π, 1 LP", "8σ, 5π, 1 LP", "8σ, 3π, 2 LP"],
-    correct: 1
-  },
-  {
-    q: "Isoelectronic and isostructural pair:",
-    options: ["TeI2, XeF2", "IBr2-, XeF2", "IF3, XeF2", "BeCl2, XeF2"],
-    correct: 1
-  },
-  {
-    q: "Case where entropy change is negative:",
-    options: ["Evaporation", "Expansion", "Sublimation", "2H(g) -> H2(g)"],
-    correct: 3
-  },
-  {
-    q: "Argument of complex number [(i-1)/(cos π/3 + i sin π/3)] is:",
-    options: ["π", "3π", "π/12", "π/4"],
-    correct: 3
-  },
-  {
-    q: "Lines perpendicular to common line for p:",
-    options: ["Exactly one", "Exactly two", "More than two", "No value"],
-    correct: 0
-  },
-  {
-    q: "Probability card is Diamond or King:",
-    options: ["1/52", "2/13", "4/13", "1/13"],
-    correct: 2
-  },
-  {
-    q: "n(A)=4, n(B)=7. Difference between max/min n(A ∪ B) is:",
-    options: ["1", "2", "3", "4"],
-    correct: 3
-  },
-  {
-    q: "Domain of f(x) = 1/√(9 - x^2):",
-    options: ["-3 <= x <= 3", "-3 < x < 3", "-9 <= x <= 9", "-9 < x < 9"],
-    correct: 1
-  },
-  {
-    q: "If sin x + cos x = 1, then tan 2x is:",
-    options: ["25/17", "7/25", "25", "24"],
-    correct: 3
-  },
-  {
-    q: "Binary operation a * b = a + b + ab is:",
-    options: ["Not associative", "Commutative", "Not commutative", "Both A and B"],
-    correct: 1
-  },
-  {
-    q: "cos-1(1/2) + sin-1(1) + tan-1(1/√3) equals:",
-    options: ["π", "π/2", "4π", "3π"],
-    correct: 0
-  },
-  {
-    q: "If A, B matrices satisfy (A+B)^2 = A^2 + B^2, then x + y:",
-    options: ["2", "3", "4", "5"],
-    correct: 3
-  },
-  {
-    q: "Determinant value of the given 3x3 matrix:",
-    options: ["0", "1", "2", "3"],
-    correct: 0
-  },
-  {
-    q: "Adj. A for matrix [[a, β], [γ, d]]:",
-    options: ["Option A", "[[d, -β], [-γ, a]]", "Option C", "Option D"],
-    correct: 1
-  },
-  {
-    q: "If sec((x-y)/(x+y)) = a, then dy/dx is:",
-    options: ["-y/x", "x/y", "-x/y", "y/x"],
-    correct: 3
-  },
-  {
-    q: "Non-zero terms in (1 + 3√2x)^9 + (1 - 3√2x)^9:",
-    options: ["2", "3", "4", "5"],
-    correct: 3
-  },
-  {
-    q: "If (a^n+b^n)/(a^n-1+b^n-1) is A.M. of a and b, then n is:",
-    options: ["1", "2", "3", "4"],
-    correct: 0
-  },
-  {
-    q: "Sum of series 1/(1+√2) + 1/(√2+√3) ... upto 15 terms:",
-    options: ["1", "2", "3", "4"],
-    correct: 2
-  },
-  {
-    q: "Circle center (0,2) radius 2 is x^2 + y^2 - my = 0. m is:",
-    options: ["1", "2", "4", "3"],
-    correct: 2
-  },
-  {
-    q: "∫ x^x(1 + log x) dx equals:",
-    options: ["x^x + C", "x^2x + C", "x^x log x + C", "1/2(1 + log x)^2 + C"],
-    correct: 0
-  },
-  {
-    q: "∫(0 to π/2) (√tan x + √cot x) dx equals:",
-    options: ["π/√2", "π√2", "π", "√2"],
-    correct: 1
-  },
-  {
-    q: "Area of region bounded by ellipse x^2/16 + y^2/9 = 1:",
-    options: ["12π", "3π", "24π", "π"],
-    correct: 0
-  },
-  {
-    q: "Parabola vertex (2,-1), directrix 4x-3y=21. Latus rectum is:",
-    options: ["2", "8", "12", "16"],
-    correct: 1
-  },
-  {
-    q: "Eccentricity of ellipse passing through (9,5) and (12,4):",
-    options: ["√3/4", "√4/5", "√5/6", "√6/7"],
-    correct: 3
-  },
-  {
-    q: "Midpoints of sides of ΔABC given. (AB^2+BC^2+CA^2)/(l^2+m^2+n^2) is:",
-    options: ["8", "16", "9", "25"],
-    correct: 0
-  },
-  {
-    q: "If f(x) = (x+|x|)/x, value of lim x->0 f(x) is:",
-    options: ["0", "2", "Does not exist", "None"],
-    correct: 2
-  },
-  {
-    q: "Negation of Boolean expression p ∨ (q ∧ p) is:",
-    options: ["(~p) ∨ q", "(p) ∧ (~q)", "(~p) ∨ (~q)", "(~p) ∧ (~q)"],
-    correct: 3
-  },
-  {
-    q: "R = { (x,y) : x is 7cm taller than y }. R is:",
-    options: ["Not symmetric", "Reflexive", "Symmetric not transitive", "Equivalence"],
-    correct: 0
-  },
-  {
-    q: "Solution of log(dy/dx) = 3x + 4y, y(0)=0 is:",
-    options: ["e^3x + 3e^-4y = 4", "4e^3x - 3e^-4y = 3", "3e^3x + 4e^4y = 7", "4e^3x + 3e^-4y = 7"],
-    correct: 3
-  },
-  {
-    q: "tan-1x + tan-1y = c is solution of:",
-    options: ["dy/dx = (1+y2)/(1+x2)", "dy/dx = (1+x2)/(1+y2)", "(1+x2)dy + (1+y2)dx = 0", "(1+x2)dx + (1+y2)dy = 0"],
-    correct: 2
-  },
-  {
-    q: "If |a|=3, |b|=4, value of λ for which a+λb is perpendicular to a-λb:",
-    options: ["9/16", "3/4", "3", "4"],
-    correct: 1
-  },
-  {
-    q: "Area of parallelogram with diagonals 3i+j-k and 2i-6j+8k:",
-    options: ["5√3", "5√2", "25√3", "25√2"],
-    correct: 0
-  },
-  {
-    q: "Bag P (6R, 4B), Q (5R, 6B). Transfer P to Q, then draw from Q. Prob blue is:",
-    options: ["7/15", "8/15", "4/19", "8/19"],
-    correct: 1
-  },
-  {
-    q: "Mean 4, Variance 2 in binomial distribution. P(X=1) is:",
-    options: ["1", "1/32", "1/16", "1/8"],
-    correct: 1
-  },
-  {
-    q: "Value of tan(cos-1(4/5) + tan-1(2)):",
-    options: ["6/17", "7/16", "16/7", "None"],
-    correct: 3
-  },
-  {
-    q: "f(x) continuous at 2 and 4. Values of a and b:",
-    options: ["a=3, b=-5", "a=-5, b=3", "a=-3, b=5", "a=5, b=-3"],
-    correct: 0
-  },
-  {
-    q: "Derivative of sin-1(2x/(1+x2)) w.r.t cos-1((1-x2)/(1+x2)):",
-    options: ["1", "-1", "2", "None"],
-    correct: 0
-  },
-  {
-    q: "Number of distinct real roots of x^7 - 7x - 2 = 0:",
-    options: ["5", "7", "1", "3"],
-    correct: 3
-  },
-  {
-    q: "Min value of y = x^4 - 2x^2 + 1 in [1, 2]:",
-    options: ["0", "2", "8", "9"],
-    correct: 0
-  },
-  {
-    q: "∫ (sin 2x - cos 2x)/(sin x cos x) dx equals:",
-    options: ["tan x + cot x + c", "cosec x + sec x + c", "tan x + sec x + c", "tan x + cosec x + c"],
-    correct: 0
-  },
-  {
-    q: "Area A1 is twice A2. Normal perpendicular to 2x-12y=15 doesn't pass through:",
-    options: ["(6, 21)", "(8, 9)", "(10, -4)", "(12, -15)"],
-    correct: 2
-  },
-  {
-    q: "Shortest distance between x = y + 2 = 6z - 6 and (x+1)/4 = y/2 = z/(-1/12):",
-    options: ["1", "2", "1/2", "3"],
-    correct: 1
-  },
-  {
-    q: "Angle between line (x+1)/1=(y+3)/2=(z-4)/-1 and (x-4)/2=(y+4)/2=(z+1)/1:",
-    options: ["cos-1(1/3)", "cos-1(4/9)", "cos-1(2/9)", "cos-1(3/9)"],
-    correct: 1
-  },
-  {
-    q: "Approx percentage increase in Monopoly production 1993 to 1995:",
-    options: ["10", "20", "30", "25"],
-    correct: 1
-  },
-  {
-    q: "Toy category with continuous increase in production over years:",
-    options: ["Ludo", "Chess", "Monopoly", "Carrom"],
-    correct: 2
-  },
-  {
-    q: "Percentage drop in Ludo production 1992 to 1994:",
-    options: ["30", "50", "20", "10"],
-    correct: 3
-  },
-  {
-    q: "Next number in series: 285, 253, 221, 189, ?",
-    options: ["150", "182", "157", "156"],
-    correct: 2
-  },
-  {
-    q: "PRESENTATION -> ENESTAITPRON. INTELLIGENCE -> ?",
-    options: ["TETGLLTNENCE", "LUENLINTETG", "LLKKTGTEEBTB", "LLTEIGENINCE"],
-    correct: 3
-  },
-  {
-    q: "Ram moves 20m N, 40m W, 20m N, 40m E, 10m R. Y distance/direction from X:",
-    options: ["30m North", "40m North", "30m South", "40m South"],
-    correct: 0
-  },
-  {
-    q: "5th is Tuesday. Date 3 days after 3rd Friday of month:",
-    options: ["17", "22", "19", "18"],
-    correct: 3
-  },
-  {
-    q: "Cats/Dogs/Toys Syllogism. Which conclusions follow?",
-    options: ["I and either II or III", "II and III", "I and II", "Only I"],
-    correct: 0
-  },
-  {
-    q: "H related to B? (Data Sufficiency I & II)",
-    options: ["I only", "II only", "Either I or II", "Neither", "Both together"],
-    correct: 2
-  },
-  {
-    q: "Who is second tallest among D, E, F, G, H? (Data Sufficiency I & II)",
-    options: ["I only", "II only", "Either I or II", "Neither", "Both together"],
-    correct: 0
-  },
-  {
-    q: "If someone's opinion makes us angry, it means:",
-    options: ["Subconsciously no reason", "Good reasons exist", "Our opinion lacks reason", "Aware of no reason"],
-    correct: 2
-  },
-  {
-    q: "'Your own contrary conviction' refers to:",
-    options: ["Feel pity not anger", "2+2=4", "2+2=5", "Little knowledge"],
-    correct: 0
-  },
-  {
-    q: "Conviction means:",
-    options: ["Persuasion", "Disbelief", "Strong belief", "Ignorance"],
-    correct: 2
-  },
-  {
-    q: "If someone says 2+2=5 you feel pity because you:",
-    options: ["Have sympathy", "Disagree", "Want to help", "Sorry for ignorance"],
-    correct: 3
-  },
-  {
-    q: "The second sentence in the passage:",
-    options: ["Restates opposite", "Main point", "Further point", "Illustrates first"],
-    correct: 3
-  }
-];
-
- BITSAT:[
-  {q:"Speed of light?",options:["3e8","1e6","2e5","None"],correct:0}
- ],
- ADV:[
-  {q:"x dx integration?",options:["x^2/2","x","1","0"],correct:0}
- ]
-};
-
-let testType="JEE";
-let questions=questionBank[testType];
-
-let currentQ=0;
-let answers=[],review=[],visited=[];
-let time=config[testType].time;
-let timerInterval;
-
-// INIT
-function resetState(){
- answers=new Array(questions.length).fill(null);
- review=new Array(questions.length).fill(false);
- visited=new Array(questions.length).fill(false);
- currentQ=0;
- time=config[testType].time;
+// CHAT
+function add(msg){
+  let box = document.getElementById("chat-box");
+  box.innerHTML += "<p>"+msg+"</p>";
+  box.scrollTop = box.scrollHeight;
 }
 
-// LOAD/SAVE
-function save(){
- localStorage.setItem("answers",JSON.stringify(answers));
- localStorage.setItem("review",JSON.stringify(review));
- localStorage.setItem("visited",JSON.stringify(visited));
- localStorage.setItem("time",time);
-}
+// AI LOGIC
+function reply(){
+  let input = document.getElementById("input");
+  let msg = input.value;
+  let lower = msg.toLowerCase();
+  let res="";
 
-function loadData(){
- answers=JSON.parse(localStorage.getItem("answers"));
- review=JSON.parse(localStorage.getItem("review"));
- visited=JSON.parse(localStorage.getItem("visited"));
- time=parseInt(localStorage.getItem("time"));
-}
+  add("<b>You:</b> "+msg);
 
-// QUESTION LOAD
-function loadQuestion(){
- let q=questions[currentQ];
- document.getElementById("question").innerText=(currentQ+1)+". "+q.q;
-
- let html="";
- q.options.forEach((opt,i)=>{
-  html+=`<div class="option ${answers[currentQ]==i?'selected':''}" onclick="select(${i})">${opt}</div>`;
- });
-
- document.getElementById("options").innerHTML=html;
-
- visited[currentQ]=true;
- updatePalette();
- save();
-}
-
-// SELECT
-function select(i){
- answers[currentQ]=i;
- loadQuestion();
-}
-
-// NAV
-function nextQ(){ if(currentQ<questions.length-1){currentQ++;loadQuestion();}}
-function prevQ(){ if(currentQ>0){currentQ--;loadQuestion();}}
-function gotoQ(i){currentQ=i;loadQuestion();}
-
-// REVIEW
-function markReview(){
- review[currentQ]=!review[currentQ];
- updatePalette();
-}
-
-// PALETTE
-function updatePalette(){
- let html="";
- for(let i=0;i<questions.length;i++){
-  let cls="notvisited";
-
-  if(answers[i]!=null) cls="attempted";
-  if(review[i]) cls="review";
-  if(i==currentQ) cls+=" current";
-
-  html+=`<button class="${cls}" onclick="gotoQ(${i})">${i+1}</button>`;
- }
- document.getElementById("palette").innerHTML=html;
-}
-
-// TIMER
-function updateTimer(){
- let m=Math.floor(time/60);
- let s=time%60;
- document.getElementById("timer").innerText=m+":"+s;
-}
-
-function startTimer(){
- timerInterval=setInterval(()=>{
-  time--;
-  updateTimer();
-  save();
-
-  if(time==300) alert("5 min left");
-
-  if(time<=0){
-   clearInterval(timerInterval);
-   submitTest();
-  }
- },1000);
-}
-
-// SUBMIT
-function submitTest(){
-
- if(!confirm("Submit test?")) return;
-
- clearInterval(timerInterval);
-
- let score=0,correct=0,wrong=0,attempted=0;
-
- questions.forEach((q,i)=>{
-  if(answers[i]!=null){
-   attempted++;
-   if(answers[i]==q.correct){
-    score+=config[testType].pos;
-    correct++;
-   } else {
-    score+=config[testType].neg;
-    wrong++;
-   }
-  }
- });
-
- let unattempted=questions.length-attempted;
- let acc=attempted?((correct/attempted)*100).toFixed(2):0;
-
- alert(`Score:${score}
-Correct:${correct}
-Wrong:${wrong}
-Attempted:${attempted}
-Unattempted:${unattempted}
-Accuracy:${acc}%`);
-
- localStorage.clear();
- resetState();
-
- loadQuestion();
- updateTimer();
- updatePalette();
-
- alert("New Test Started");
-}
-
-// FULLSCREEN
-function toggleFull(){
- if(!document.fullscreenElement){
-  document.documentElement.requestFullscreen();
- } else {
-  document.exitFullscreen();
- }
-}
-
-// CHANGE TEST
-function changeTest(type){
- if(!confirm("Switch test?")) return;
-
- testType=type;
- questions=questionBank[testType];
-
- localStorage.clear();
- resetState();
-
- loadQuestion();
- updateTimer();
-}
-
-// PDF LOAD
-async function loadPDF(){
-
- let file=document.getElementById("pdfInput").files[0];
- if(!file) return alert("Upload PDF");
-
- let reader=new FileReader();
-
- reader.onload=async function(){
-  let pdf=await pdfjsLib.getDocument(new Uint8Array(this.result)).promise;
-
-  let text="";
-
-  for(let i=1;i<=pdf.numPages;i++){
-   let page=await pdf.getPage(i);
-   let content=await page.getTextContent();
-   text+=content.items.map(x=>x.str).join(" ")+"\n";
+  if(lower.includes("name is")){
+    memory.name = msg.split("is")[1];
+    localStorage.setItem("memory", JSON.stringify(memory));
+    res = "Yaad rakh liya 😏";
   }
 
-  convertToQuestions(text);
- };
-
- reader.readAsArrayBuffer(file);
-}
-
-// TEXT → QUESTIONS
-function convertToQuestions(text){
-
- let lines=text.split("\n");
- let newQ=[];
-
- lines.forEach(line=>{
-  let m=line.match(/(.*)\?(.*)\(A\)(.*)\(B\)(.*)\(C\)(.*)\(D\)(.*)/);
-
-  if(m){
-   newQ.push({
-    q:m[1]+"?",
-    options:[m[3],m[4],m[5],m[6]],
-    correct:0
-   });
+  else if(lower.includes("time")){
+    res = new Date().toLocaleTimeString();
   }
- });
 
- if(newQ.length==0){
-  alert("Format not supported");
-  return;
- }
+  else if(lower.includes("date")){
+    res = new Date().toDateString();
+  }
 
- questions=newQ;
- resetState();
+  else if(/[0-9+\-*/]/.test(lower)){
+    try{ res = eval(lower); } catch { res="Error"; }
+  }
 
- loadQuestion();
- updatePalette();
+  else if(lower.includes("jee")){
+    res = "Padhle bhai 😤 IIT khud nahi milega";
+  }
 
- alert("PDF Loaded!");
+  else{
+    let r = ["Samajh nahi aaya 🤔","Nice 👀","Aur bata 😏"];
+    res = r[Math.floor(Math.random()*r.length)];
+  }
+
+  setTimeout(()=>add("<b>AI:</b> "+res),200);
+  input.value="";
 }
 
-// START
-window.onload=()=>{
- if(localStorage.getItem("answers")){
-  if(confirm("Resume test?")){
-   loadData();
+// VOICE (basic)
+function voice(){
+  let rec = new webkitSpeechRecognition();
+  rec.onresult = (e)=>{
+    document.getElementById("input").value = e.results[0][0].transcript;
+    reply();
+  }
+  rec.start();
+}
+
+// NOTES SAVE
+function saveNotes(){
+  localStorage.setItem("notes", document.getElementById("notes").value);
+  alert("Saved");
+}
+document.getElementById("notes").value = localStorage.getItem("notes") || "";
+
+// PDF VIEW
+function openPDF(e){
+  let file = e.target.files[0];
+  let url = URL.createObjectURL(file);
+  document.getElementById("pdf").src = url;
+}
+
+// CBT
+function ans(x){
+  if(x==4){
+    document.getElementById("result").innerText="Correct 😎";
   } else {
-   localStorage.clear();
-   resetState();
+    document.getElementById("result").innerText="Wrong 😭";
   }
- } else {
-  resetState();
- }
+}
 
- loadQuestion();
- updateTimer();
- startTimer();
+// PWA INSTALL
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([`
+    self.addEventListener('fetch', e=>{});
+  `], {type:'text/javascript'})));
 }
 
 </script>
