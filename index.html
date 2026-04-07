@@ -4,53 +4,16 @@
 <title>AI SUPER APP</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.json">
 
 <style>
-body {
-  background:black;
-  color:white;
-  font-family:Arial;
-  margin:0;
-}
-
-.container {
-  padding:10px;
-}
-
-#chat-box {
-  height:250px;
-  overflow-y:auto;
-  border:1px solid white;
-  padding:10px;
-}
-
-.input-box {
-  display:flex;
-  margin-top:5px;
-  border:1px solid white;
-  border-radius:20px;
-}
-
-input {
-  flex:1;
-  background:none;
-  border:none;
-  color:white;
-  padding:10px;
-}
-
-button {
-  background:none;
-  border:none;
-  color:white;
-  padding:10px;
-}
-
-.section {
-  margin-top:15px;
-  border:1px solid white;
-  padding:10px;
-}
+body {background:black;color:white;font-family:Arial;margin:0;}
+.container {padding:10px;}
+#chat {height:250px;overflow:auto;border:1px solid white;padding:10px;}
+.input {display:flex;border:1px solid white;border-radius:20px;margin-top:5px;}
+input {flex:1;background:none;border:none;color:white;padding:10px;}
+button {background:none;border:none;color:white;padding:10px;}
+.section {margin-top:10px;border:1px solid white;padding:10px;}
 </style>
 
 </head>
@@ -58,134 +21,127 @@ button {
 <body>
 
 <div class="container">
-
 <h2>WELCOME 🤝</h2>
 
-<!-- CHAT -->
-<div id="chat-box"></div>
+<div id="chat"></div>
 
-<div class="input-box">
-  <input id="input" placeholder="Type here">
-  <button onclick="reply()">➤</button>
-  <button onclick="voice()">🎤</button>
+<div class="input">
+<input id="msg" placeholder="Type here">
+<button onclick="send()">➤</button>
 </div>
 
-<!-- NOTES -->
 <div class="section">
 <h3>Notes</h3>
 <textarea id="notes" style="width:100%;height:80px;background:black;color:white;"></textarea>
 <button onclick="saveNotes()">Save</button>
 </div>
 
-<!-- PDF -->
 <div class="section">
 <h3>PDF Viewer</h3>
-<input type="file" onchange="openPDF(event)">
-<iframe id="pdf" width="100%" height="200"></iframe>
+<input type="file" onchange="pdf(event)">
+<iframe id="viewer" width="100%" height="200"></iframe>
 </div>
 
-<!-- CBT -->
 <div class="section">
-<h3>CBT Test</h3>
-<p id="q">2+2 = ?</p>
-<button onclick="ans(4)">4</button>
-<button onclick="ans(5)">5</button>
-<button onclick="ans(6)">6</button>
-<p id="result"></p>
+<h3>CBT</h3>
+<p id="q"></p>
+<div id="opt"></div>
+<p id="res"></p>
 </div>
 
 </div>
 
 <script>
 
+// REGISTER SERVICE WORKER
+if("serviceWorker" in navigator){
+ navigator.serviceWorker.register("sw.js");
+}
+
 // MEMORY
-let memory = JSON.parse(localStorage.getItem("memory")) || {};
+let mem = JSON.parse(localStorage.getItem("mem")) || {};
 
 // CHAT
-function add(msg){
-  let box = document.getElementById("chat-box");
-  box.innerHTML += "<p>"+msg+"</p>";
-  box.scrollTop = box.scrollHeight;
+function add(x){
+ let c=document.getElementById("chat");
+ c.innerHTML+=x;
+ c.scrollTop=c.scrollHeight;
 }
 
-// AI LOGIC
-function reply(){
-  let input = document.getElementById("input");
-  let msg = input.value;
-  let lower = msg.toLowerCase();
-  let res="";
+// AI
+function send(){
+ let m=document.getElementById("msg").value;
+ let l=m.toLowerCase();
+ add("<p><b>You:</b>"+m+"</p>");
+ let r="";
 
-  add("<b>You:</b> "+msg);
+ if(l.includes("name is")){
+   mem.name=m.split("is")[1];
+   localStorage.setItem("mem",JSON.stringify(mem));
+   r="Yaad rakh liya 😏";
+ }
+ else if(l.includes("time")){
+   r=new Date().toLocaleTimeString();
+ }
+ else if(l.includes("date")){
+   r=new Date().toDateString();
+ }
+ else if(/[0-9+\-*/]/.test(l)){
+   try{r=eval(l);}catch{r="Error";}
+ }
+ else if(l.includes("photosynthesis")){
+   r="Photosynthesis is process where plants make food using sunlight 🌱";
+ }
+ else if(l.includes("jee")){
+   r="Padhle bhai 😤 IIT tera wait kar raha hai";
+ }
+ else{
+   let arr=["Samajh nahi aaya 🤔","Aur bata 😏","Interesting 👀"];
+   r=arr[Math.floor(Math.random()*arr.length)];
+ }
 
-  if(lower.includes("name is")){
-    memory.name = msg.split("is")[1];
-    localStorage.setItem("memory", JSON.stringify(memory));
-    res = "Yaad rakh liya 😏";
-  }
-
-  else if(lower.includes("time")){
-    res = new Date().toLocaleTimeString();
-  }
-
-  else if(lower.includes("date")){
-    res = new Date().toDateString();
-  }
-
-  else if(/[0-9+\-*/]/.test(lower)){
-    try{ res = eval(lower); } catch { res="Error"; }
-  }
-
-  else if(lower.includes("jee")){
-    res = "Padhle bhai 😤 IIT khud nahi milega";
-  }
-
-  else{
-    let r = ["Samajh nahi aaya 🤔","Nice 👀","Aur bata 😏"];
-    res = r[Math.floor(Math.random()*r.length)];
-  }
-
-  setTimeout(()=>add("<b>AI:</b> "+res),200);
-  input.value="";
+ setTimeout(()=>add("<p><b>AI:</b>"+r+"</p>"),200);
+ document.getElementById("msg").value="";
 }
 
-// VOICE (basic)
-function voice(){
-  let rec = new webkitSpeechRecognition();
-  rec.onresult = (e)=>{
-    document.getElementById("input").value = e.results[0][0].transcript;
-    reply();
-  }
-  rec.start();
-}
-
-// NOTES SAVE
+// NOTES
 function saveNotes(){
-  localStorage.setItem("notes", document.getElementById("notes").value);
-  alert("Saved");
+ localStorage.setItem("notes",document.getElementById("notes").value);
+ alert("Saved");
 }
-document.getElementById("notes").value = localStorage.getItem("notes") || "";
+document.getElementById("notes").value=localStorage.getItem("notes")||"";
 
-// PDF VIEW
-function openPDF(e){
-  let file = e.target.files[0];
-  let url = URL.createObjectURL(file);
-  document.getElementById("pdf").src = url;
+// PDF
+function pdf(e){
+ let f=e.target.files[0];
+ document.getElementById("viewer").src=URL.createObjectURL(f);
 }
 
 // CBT
-function ans(x){
-  if(x==4){
-    document.getElementById("result").innerText="Correct 😎";
-  } else {
-    document.getElementById("result").innerText="Wrong 😭";
-  }
-}
+let questions=[
+ {q:"2+2=?",o:[3,4,5],a:4},
+ {q:"5*3=?",o:[15,10,20],a:15}
+];
+let i=0;
 
-// PWA INSTALL
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register(URL.createObjectURL(new Blob([`
-    self.addEventListener('fetch', e=>{});
-  `], {type:'text/javascript'})));
+function loadQ(){
+ document.getElementById("q").innerText=questions[i].q;
+ let html="";
+ questions[i].o.forEach(x=>{
+  html+=`<button onclick="check(${x})">${x}</button>`;
+ });
+ document.getElementById("opt").innerHTML=html;
+}
+loadQ();
+
+function check(x){
+ if(x==questions[i].a){
+  document.getElementById("res").innerText="Correct 😎";
+ } else{
+  document.getElementById("res").innerText="Wrong 😭";
+ }
+ i=(i+1)%questions.length;
+ setTimeout(loadQ,1000);
 }
 
 </script>
