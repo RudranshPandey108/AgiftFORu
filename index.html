@@ -1,56 +1,41 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
-<title>JEE CBT Simulator</title>
-
-<style>
-body { font-family: Arial; background:#0f172a; color:white; display:flex; }
-
+<title>JEE CBT Simulator PRO</title><style>
+body { font-family: Arial; background:#0f172a; color:white; display:flex; margin:0; }
 #left { width:70%; padding:20px; }
-#right { width:30%; background:#1e293b; padding:20px; }
+#right { width:30%; background:#1e293b; padding:20px; overflow:auto; }
 
-button { padding:10px; margin:5px; cursor:pointer; border:none; }
+h2 { font-size:28px; }
+#question { font-size:20px; margin-top:20px; }
 
-.option { display:block; width:100%; background:#334155; color:white; margin:5px 0; }
+button { padding:10px; margin:5px; cursor:pointer; border:none; border-radius:6px; }
+
+.option { display:block; width:100%; background:#334155; color:white; margin:8px 0; }
+.option:hover { background:#475569; }
 .selected { background:green !important; }
 
-.palette button {
-  width:40px; height:40px; margin:3px;
-}
-
+.palette button { width:40px; height:40px; margin:3px; }
 .answered { background:green; }
 .notanswered { background:red; }
 .review { background:purple; }
+.reviewAnswered { background:orange; }
 
-</style>
-</head>
+</style></head><body><div id="left">
+<h2>JEE CBT Simulator PRO</h2>
+<div id="timer">Time: 180:00</div><h3 id="question"></h3>
+<div id="options"></div><button onclick="prevQ()">Prev</button> <button onclick="nextQ()">Next</button> <button onclick="markReview()">Mark for Review</button> <button onclick="clearResponse()">Clear</button> <br><br> <button onclick="submitTest()">Submit</button>
 
-<body>
-
-<div id="left">
-<h2>JEE CBT Test</h2>
-<div id="timer">Time: 180:00</div>
-
-<h3 id="question"></h3>
-<div id="options"></div>
-
-<button onclick="prevQ()">Prev</button>
-<button onclick="nextQ()">Next</button>
-<button onclick="markReview()">Mark for Review</button>
-<button onclick="clearResponse()">Clear</button>
-<br><br>
-<button onclick="submitTest()">Submit</button>
-
-</div>
-
-<div id="right">
+</div><div id="right">
 <h3>Question Palette</h3>
 <div id="palette" class="palette"></div>
-</div>
+</div><script>
 
-<script>
+// Disable right click
+ document.addEventListener("contextmenu", e => e.preventDefault());
 
-// 👉 YAHAN QUESTIONS DAALNE HAIN
+// Fullscreen
+ document.documentElement.requestFullscreen();
+
 let questions = [
   {
     q: "Light of wavelength λA and λB falls on two identical metal plates A and B respectively. The maximum kinetic energy of photoelectrons is KA and KB respectively, then which one of the following relations is true (λA = 2λB)",
@@ -680,18 +665,18 @@ let questions = [
 ];
 
 
-let answers = new Array(questions.length).fill(null);
+let answers = JSON.parse(localStorage.getItem("answers")) || new Array(questions.length).fill(null);
 let review = new Array(questions.length).fill(false);
 
 let currentQ = 0;
 
-// LOAD QUESTION
+function save(){
+ localStorage.setItem("answers", JSON.stringify(answers));
+}
+
 function loadQuestion(){
  let q = questions[currentQ];
-
- document.getElementById("question").innerText =
-  `Q${currentQ+1}. ${q.q}`;
-
+ document.getElementById("question").innerText = `Q${currentQ+1}. ${q.q}`;
  let optDiv = document.getElementById("options");
  optDiv.innerHTML = "";
 
@@ -700,13 +685,12 @@ function loadQuestion(){
    btn.innerText = opt;
    btn.classList.add("option");
 
-   if(answers[currentQ] === i){
-     btn.classList.add("selected");
-   }
+   if(answers[currentQ] === i) btn.classList.add("selected");
 
    btn.onclick = ()=>{
      answers[currentQ] = i;
      review[currentQ] = false;
+     save();
      loadQuestion();
      updatePalette();
    };
@@ -717,35 +701,13 @@ function loadQuestion(){
  updatePalette();
 }
 
-// NAVIGATION
-function nextQ(){
- if(currentQ < questions.length-1){
-   currentQ++;
-   loadQuestion();
- }
-}
+function nextQ(){ if(currentQ < questions.length-1){ currentQ++; loadQuestion(); }}
+function prevQ(){ if(currentQ > 0){ currentQ--; loadQuestion(); }}
 
-function prevQ(){
- if(currentQ > 0){
-   currentQ--;
-   loadQuestion();
- }
-}
+function markReview(){ review[currentQ] = true; nextQ(); }
 
-// MARK REVIEW
-function markReview(){
- review[currentQ] = true;
- nextQ();
-}
+function clearResponse(){ answers[currentQ] = null; review[currentQ] = false; save(); loadQuestion(); }
 
-// CLEAR
-function clearResponse(){
- answers[currentQ] = null;
- review[currentQ] = false;
- loadQuestion();
-}
-
-// PALETTE
 function updatePalette(){
  let pal = document.getElementById("palette");
  pal.innerHTML = "";
@@ -754,54 +716,45 @@ function updatePalette(){
    let btn = document.createElement("button");
    btn.innerText = i+1;
 
-   if(review[i]) btn.classList.add("review");
+   if(review[i] && answers[i] !== null) btn.classList.add("reviewAnswered");
+   else if(review[i]) btn.classList.add("review");
    else if(answers[i] !== null) btn.classList.add("answered");
    else btn.classList.add("notanswered");
 
-   btn.onclick = ()=>{
-     currentQ = i;
-     loadQuestion();
-   };
+   btn.onclick = ()=>{ currentQ = i; loadQuestion(); };
 
    pal.appendChild(btn);
  });
 }
 
-// TIMER (180 min)
 let time = 180*60;
-
 let timer = setInterval(()=>{
  let min = Math.floor(time/60);
  let sec = time%60;
-
- document.getElementById("timer").innerText =
-  `Time: ${min}:${sec<10?"0"+sec:sec}`;
-
+ document.getElementById("timer").innerText = `Time: ${min}:${sec<10?"0"+sec:sec}`;
  time--;
-
- if(time < 0){
-   clearInterval(timer);
-   submitTest();
- }
-
+ if(time < 0){ clearInterval(timer); submitTest(); }
 },1000);
 
-
-// SUBMIT
 function submitTest(){
- let score = 0;
+ if(!confirm("Are you sure you want to submit?")) return;
+
+ let score = 0, attempted=0, correct=0;
 
  questions.forEach((q,i)=>{
-   if(answers[i] === q.correct) score += 4;
-   else if(answers[i] !== null) score -= 1;
+   if(answers[i] !== null) attempted++;
+   if(answers[i] === q.correct){ score+=4; correct++; }
+   else if(answers[i] !== null && q.type==="mcq") score-=1;
  });
 
- alert("Your Score: " + score);
+ let accuracy = attempted ? ((correct/attempted)*100).toFixed(2) : 0;
+
+ alert(`Score: ${score}\nAttempted: ${attempted}\nAccuracy: ${accuracy}%`);
+
+ localStorage.clear();
 }
 
 loadQuestion();
 
-</script>
-
-</body>
+</script></body>
 </html>
