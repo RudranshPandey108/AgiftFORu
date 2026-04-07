@@ -1,148 +1,217 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>AI SUPER APP</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<title>Batman AI</title>
 
 <style>
-body {background:black;color:white;font-family:Arial;margin:0;}
-.container {padding:10px;}
-#chat {height:250px;overflow:auto;border:1px solid white;padding:10px;}
-.input {display:flex;border:1px solid white;border-radius:20px;margin-top:5px;}
-input {flex:1;background:none;border:none;color:white;padding:10px;}
-button {background:none;border:none;color:white;padding:10px;}
-.section {margin-top:10px;border:1px solid white;padding:10px;}
-</style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0f172a;
+    color:white;
+}
 
+/* FAB */
+#ai-fab{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:#111;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 0 15px gold;
+}
+#ai-fab img{
+    width:100%;
+    border-radius:50%;
+}
+
+/* PANEL */
+#ai-panel{
+    position:fixed;
+    bottom:90px;
+    right:20px;
+    width:320px;
+    height:450px;
+    background:#020617;
+    border:1px solid #334155;
+    border-radius:12px;
+    display:none;
+    flex-direction:column;
+}
+
+/* HEADER */
+#ai-header{
+    padding:10px;
+    border-bottom:1px solid #334155;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+/* CHAT */
+#chat-box{
+    flex:1;
+    overflow:auto;
+    padding:10px;
+}
+
+/* MESSAGE */
+.msg{
+    margin:8px 0;
+    max-width:80%;
+    padding:8px;
+    border-radius:10px;
+}
+.user{
+    background:#2563eb;
+    align-self:flex-end;
+}
+.bot{
+    background:#1e293b;
+}
+
+/* INPUT */
+#ai-footer{
+    display:flex;
+    border-top:1px solid #334155;
+}
+#input{
+    flex:1;
+    padding:10px;
+    border:none;
+    outline:none;
+    background:#020617;
+    color:white;
+}
+#send{
+    padding:10px;
+    cursor:pointer;
+    background:gold;
+    border:none;
+}
+</style>
 </head>
 
 <body>
 
-<div class="container">
-<h2>WELCOME 🤝</h2>
-
-<div id="chat"></div>
-
-<div class="input">
-<input id="msg" placeholder="Type here">
-<button onclick="send()">➤</button>
+<!-- FAB -->
+<div id="ai-fab" onclick="toggleAI()">
+<img src="https://i.imgur.com/6VBx3io.png">
 </div>
 
-<div class="section">
-<h3>Notes</h3>
-<textarea id="notes" style="width:100%;height:80px;background:black;color:white;"></textarea>
-<button onclick="saveNotes()">Save</button>
-</div>
+<!-- PANEL -->
+<div id="ai-panel">
 
-<div class="section">
-<h3>PDF Viewer</h3>
-<input type="file" onchange="pdf(event)">
-<iframe id="viewer" width="100%" height="200"></iframe>
-</div>
+    <div id="ai-header">
+        <b>🦇 Batman AI</b>
+        <button onclick="toggleAI()">✕</button>
+    </div>
 
-<div class="section">
-<h3>CBT</h3>
-<p id="q"></p>
-<div id="opt"></div>
-<p id="res"></p>
-</div>
+    <div id="chat-box"></div>
+
+    <div id="ai-footer">
+        <input id="input" placeholder="Ask anything...">
+        <button id="send" onclick="sendMsg()">➤</button>
+    </div>
 
 </div>
 
 <script>
 
-// REGISTER SERVICE WORKER
-if("serviceWorker" in navigator){
- navigator.serviceWorker.register("sw.js");
+/* =========================
+   BASIC TOGGLE
+========================= */
+function toggleAI(){
+    const panel=document.getElementById('ai-panel');
+    panel.style.display = panel.style.display==="flex" ? "none":"flex";
 }
 
-// MEMORY
-let mem = JSON.parse(localStorage.getItem("mem")) || {};
+/* =========================
+   OFFLINE REPLIES
+========================= */
+const replies = {
+    "install":"📱 Chrome → 3 dots → Add to home screen",
+    "bookmark":"⭐ Press Ctrl+D to bookmark",
+    "feature":"🔥 AI chat, progress tracker, themes"
+};
 
-// CHAT
-function add(x){
- let c=document.getElementById("chat");
- c.innerHTML+=x;
- c.scrollTop=c.scrollHeight;
+function offlineReply(text){
+    text=text.toLowerCase();
+    for(let k in replies){
+        if(text.includes(k)) return replies[k];
+    }
+    return null;
 }
 
-// AI
-function send(){
- let m=document.getElementById("msg").value;
- let l=m.toLowerCase();
- add("<p><b>You:</b>"+m+"</p>");
- let r="";
-
- if(l.includes("name is")){
-   mem.name=m.split("is")[1];
-   localStorage.setItem("mem",JSON.stringify(mem));
-   r="Yaad rakh liya 😏";
- }
- else if(l.includes("time")){
-   r=new Date().toLocaleTimeString();
- }
- else if(l.includes("date")){
-   r=new Date().toDateString();
- }
- else if(/[0-9+\-*/]/.test(l)){
-   try{r=eval(l);}catch{r="Error";}
- }
- else if(l.includes("photosynthesis")){
-   r="Photosynthesis is process where plants make food using sunlight 🌱";
- }
- else if(l.includes("jee")){
-   r="Padhle bhai 😤 IIT tera wait kar raha hai";
- }
- else{
-   let arr=["Samajh nahi aaya 🤔","Aur bata 😏","Interesting 👀"];
-   r=arr[Math.floor(Math.random()*arr.length)];
- }
-
- setTimeout(()=>add("<p><b>AI:</b>"+r+"</p>"),200);
- document.getElementById("msg").value="";
+/* =========================
+   CHAT UI
+========================= */
+function addMsg(text,type){
+    const div=document.createElement("div");
+    div.className="msg "+type;
+    div.innerText=text;
+    document.getElementById("chat-box").appendChild(div);
 }
 
-// NOTES
-function saveNotes(){
- localStorage.setItem("notes",document.getElementById("notes").value);
- alert("Saved");
-}
-document.getElementById("notes").value=localStorage.getItem("notes")||"";
+/* =========================
+   SEND MESSAGE
+========================= */
+async function sendMsg(){
+    const input=document.getElementById("input");
+    const text=input.value.trim();
+    if(!text) return;
 
-// PDF
-function pdf(e){
- let f=e.target.files[0];
- document.getElementById("viewer").src=URL.createObjectURL(f);
+    addMsg(text,"user");
+    input.value="";
+
+    // OFFLINE
+    const off=offlineReply(text);
+    if(off){
+        addMsg(off,"bot");
+        return;
+    }
+
+    // API CALL (OpenRouter Free)
+    try{
+        const res = await fetch("https://openrouter.ai/api/v1/chat/completions",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization":"Bearer YOUR_API_KEY"
+            },
+            body:JSON.stringify({
+                model:"meta-llama/llama-3.3-70b-instruct:free",
+                messages:[
+                    {role:"system",content:"You are a helpful AI"},
+                    {role:"user",content:text}
+                ]
+            })
+        });
+
+        const data = await res.json();
+        const reply = data.choices[0].message.content;
+
+        addMsg(reply,"bot");
+
+    }catch(e){
+        addMsg("⚠️ Error: Check API key","bot");
+    }
 }
 
-// CBT
-let questions=[
- {q:"2+2=?",o:[3,4,5],a:4},
- {q:"5*3=?",o:[15,10,20],a:15}
-];
-let i=0;
+/* ENTER KEY */
+document.getElementById("input").addEventListener("keydown",function(e){
+    if(e.key==="Enter") sendMsg();
+});
 
-function loadQ(){
- document.getElementById("q").innerText=questions[i].q;
- let html="";
- questions[i].o.forEach(x=>{
-  html+=`<button onclick="check(${x})">${x}</button>`;
- });
- document.getElementById("opt").innerHTML=html;
-}
-loadQ();
-
-function check(x){
- if(x==questions[i].a){
-  document.getElementById("res").innerText="Correct 😎";
- } else{
-  document.getElementById("res").innerText="Wrong 😭";
- }
- i=(i+1)%questions.length;
- setTimeout(loadQ,1000);
-}
+/* INITIAL MESSAGE */
+addMsg("👋 Namaste! Main hoon Batman AI — Ask anything!","bot");
 
 </script>
 
