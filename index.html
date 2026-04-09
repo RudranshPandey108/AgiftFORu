@@ -1,219 +1,1610 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Batman AI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Batman AI Ultra</title>
+  <style>
+    :root{
+      --bg:#07142d;
+      --panel:#020817;
+      --panel-2:#081225;
+      --text:#e5ecff;
+      --muted:#97a4c0;
+      --border:rgba(255,255,255,.12);
+      --border-2:rgba(255,255,255,.08);
+      --gold:#ffd54a;
+      --gold-2:#ffea9a;
+      --accent:#2f67f0;
+      --accent-2:#1c4ec2;
+      --bot:#1b2940;
+      --user:#2f67f0;
+      --success:#22c55e;
+      --danger:#ef4444;
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --radius:20px;
+    }
 
-<style>
-body{
-    margin:0;
-    font-family:Arial;
-    background:#0f172a;
-    color:white;
-}
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      width:100%;
+      height:100%;
+      font-family:Inter, Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(47,103,240,.08), transparent 25%),
+        radial-gradient(circle at bottom left, rgba(255,213,74,.06), transparent 20%),
+        linear-gradient(180deg, #081633 0%, #07142d 100%);
+      color:var(--text);
+      overflow-x:hidden;
+    }
 
-/* FAB */
-#ai-fab{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    background:#111;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    box-shadow:0 0 15px gold;
-}
-#ai-fab img{
-    width:100%;
-    border-radius:50%;
-}
+    .demo-page{
+      min-height:100vh;
+      padding:28px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      color:#d7def2;
+    }
+    .demo-card{
+      width:min(900px, 100%);
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+      border-radius:26px;
+      padding:24px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+    .demo-card h1{
+      margin:0 0 10px;
+      font-size:clamp(28px, 4vw, 44px);
+    }
+    .demo-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:15px;
+    }
 
-/* PANEL */
-#ai-panel{
-    position:fixed;
-    bottom:90px;
-    right:20px;
-    width:320px;
-    height:450px;
-    background:#020617;
-    border:1px solid #334155;
-    border-radius:12px;
-    display:none;
-    flex-direction:column;
-}
+    /* FAB */
+    #ai-fab-wrap{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      z-index:99998;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      user-select:none;
+      touch-action:none;
+    }
 
-/* HEADER */
-#ai-header{
-    padding:10px;
-    border-bottom:1px solid #334155;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
+    #ai-fab-label{
+      background:rgba(2,8,23,.82);
+      border:1px solid var(--border);
+      color:var(--gold-2);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:14px;
+      font-weight:700;
+      white-space:nowrap;
+      backdrop-filter:blur(10px);
+      box-shadow:0 10px 25px rgba(0,0,0,.22);
+    }
 
-/* CHAT */
-#chat-box{
-    flex:1;
-    overflow:auto;
-    padding:10px;
-}
+    #ai-btn-ring-wrap{
+      position:relative;
+      width:72px;
+      height:72px;
+      display:grid;
+      place-items:center;
+      cursor:grab;
+      touch-action:none;
+    }
+    #ai-btn-ring-wrap.dragging{cursor:grabbing}
 
-/* MESSAGE */
-.msg{
-    margin:8px 0;
-    max-width:80%;
-    padding:8px;
-    border-radius:10px;
-}
-.user{
-    background:#2563eb;
-    align-self:flex-end;
-}
-.bot{
-    background:#1e293b;
-}
+    .pulse-ring,.pulse-ring2,.pulse-ring3{
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      border:2px solid rgba(255,213,74,.28);
+      animation:pulse 2.6s linear infinite;
+    }
+    .pulse-ring2{animation-delay:.65s}
+    .pulse-ring3{animation-delay:1.3s}
 
-/* INPUT */
-#ai-footer{
-    display:flex;
-    border-top:1px solid #334155;
-}
-#input{
-    flex:1;
-    padding:10px;
-    border:none;
-    outline:none;
-    background:#020617;
-    color:white;
-}
-#send{
-    padding:10px;
-    cursor:pointer;
-    background:gold;
-    border:none;
-}
-</style>
+    @keyframes pulse{
+      0%{transform:scale(.78);opacity:0}
+      15%{opacity:.75}
+      100%{transform:scale(1.35);opacity:0}
+    }
+
+    #ai-chat-btn{
+      position:relative;
+      width:62px;
+      height:62px;
+      border:none;
+      border-radius:50%;
+      overflow:hidden;
+      padding:0;
+      background:#0b1220;
+      box-shadow:0 0 0 2px rgba(255,213,74,.18), 0 0 22px rgba(255,213,74,.34);
+      cursor:pointer;
+    }
+    #ai-chat-btn img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .notif{
+      position:absolute;
+      top:2px;
+      right:2px;
+      min-width:20px;
+      height:20px;
+      border-radius:999px;
+      background:#ef4444;
+      color:#fff;
+      font-size:12px;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:0 6px;
+      font-weight:700;
+      border:2px solid #081633;
+    }
+
+    #ai-show-tab{
+      position:fixed;
+      z-index:99997;
+      display:none;
+      background:rgba(2,8,23,.9);
+      color:var(--gold-2);
+      border:1px solid var(--border);
+      padding:12px 10px;
+      border-radius:0 14px 14px 0;
+      font-weight:700;
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      backdrop-filter:blur(10px);
+    }
+    #ai-show-tab.r{
+      border-radius:14px 0 0 14px;
+    }
+
+    /* PANEL */
+    #ai-panel{
+      position:fixed;
+      right:18px;
+      bottom:102px;
+      width:min(96vw, 520px);
+      height:min(88vh, 820px);
+      background:linear-gradient(180deg, rgba(2,8,23,.98), rgba(3,10,28,.98));
+      border:1px solid var(--border);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      display:none;
+      flex-direction:column;
+      z-index:99999;
+      backdrop-filter:blur(16px);
+    }
+    #ai-panel.open{display:flex}
+    #ai-panel.expanded{
+      width:min(98vw, 740px);
+      height:min(94vh, 940px);
+      right:12px;
+      bottom:12px;
+    }
+
+    #ai-header{
+      padding:14px 14px 12px;
+      border-bottom:1px solid var(--border-2);
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-shrink:0;
+    }
+    .ai-head-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .ai-head-left img{
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      object-fit:cover;
+      border:1px solid var(--border);
+      flex-shrink:0;
+    }
+    .ai-title{
+      font-weight:800;
+      font-size:18px;
+      color:#fff;
+    }
+    #ai-status-txt{
+      font-size:12px;
+      color:#87f7a7;
+      margin-top:2px;
+    }
+    .head-btns{
+      display:flex;
+      gap:8px;
+      flex-shrink:0;
+    }
+    .icon-btn{
+      border:1px solid var(--border);
+      background:#0c1527;
+      color:#fff;
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    #ai-provider-panel{
+      display:none;
+      border-bottom:1px solid var(--border-2);
+      background:rgba(255,255,255,.02);
+      padding:12px;
+      flex-shrink:0;
+    }
+    #ai-provider-panel.show{display:block}
+    .small-label{
+      font-size:11px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:9px;
+      font-weight:700;
+    }
+    .providers{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+    .provider-card{
+      border:1px solid var(--border);
+      background:#0c1527;
+      padding:11px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .provider-card:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,213,74,.35);
+    }
+    .provider-card.active{
+      border-color:rgba(255,213,74,.55);
+      box-shadow:0 0 0 1px rgba(255,213,74,.2) inset;
+      background:#111c33;
+    }
+    .provider-name{
+      font-size:14px;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+    .badge{
+      display:inline-flex;
+      padding:3px 7px;
+      border-radius:999px;
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.06em;
+    }
+    .badge.free{background:rgba(34,197,94,.14); color:#8ff0af}
+    .badge.paid{background:rgba(239,68,68,.14); color:#ff9f9f}
+    .badge.trial{background:rgba(59,130,246,.14); color:#9dc0ff}
+
+    #ai-body{
+      flex:1;
+      min-height:0;
+      padding:14px;
+      overflow-y:auto;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,0)),
+        radial-gradient(circle at top, rgba(47,103,240,.04), transparent 26%);
+    }
+
+    .chips-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .qchip{
+      border:1px solid var(--border);
+      background:#0d1730;
+      color:#d9e6ff;
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .qchip:hover{border-color:rgba(255,213,74,.3); color:#fff}
+
+    .cm{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+    }
+    .cm.user{
+      justify-content:flex-end;
+    }
+    .cm.bot{
+      justify-content:flex-start;
+    }
+
+    .bot-av{
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      overflow:hidden;
+      flex-shrink:0;
+      border:1px solid var(--border);
+      background:#0d1730;
+      display:grid;
+      place-items:center;
+    }
+    .bot-av img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .msg-wrap{
+      max-width:82%;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .cm-bub{
+      border-radius:18px;
+      padding:13px 14px;
+      font-size:15px;
+      line-height:1.55;
+      word-wrap:break-word;
+      white-space:pre-wrap;
+      border:1px solid rgba(255,255,255,.04);
+    }
+    .cm.user .cm-bub{
+      background:linear-gradient(180deg, var(--user), var(--accent-2));
+      color:#fff;
+      border-bottom-right-radius:8px;
+    }
+    .cm.bot .cm-bub{
+      background:linear-gradient(180deg, #1d2a3f, #182538);
+      color:#eef3ff;
+      border-bottom-left-radius:8px;
+    }
+
+    .cm-time{
+      font-size:11px;
+      color:var(--muted);
+      padding:0 6px;
+    }
+    .cm.user .cm-time{text-align:right}
+
+    .cm-img{
+      width:100%;
+      max-height:220px;
+      object-fit:cover;
+      border-radius:14px;
+      margin-bottom:8px;
+      border:1px solid var(--border);
+    }
+
+    .typing-bub{
+      min-width:72px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .typing-bub span{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:#b5c3e2;
+      animation:blink 1.1s infinite ease-in-out;
+    }
+    .typing-bub span:nth-child(2){animation-delay:.12s}
+    .typing-bub span:nth-child(3){animation-delay:.24s}
+    @keyframes blink{
+      0%,80%,100%{transform:translateY(0);opacity:.45}
+      40%{transform:translateY(-4px);opacity:1}
+    }
+
+    #img-preview-wrap{
+      display:none;
+      border-top:1px solid var(--border-2);
+      padding:10px 14px;
+      background:rgba(255,255,255,.02);
+      flex-shrink:0;
+    }
+    #img-preview-wrap.show{display:block}
+    .img-preview-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    #img-preview{
+      width:62px;
+      height:62px;
+      border-radius:14px;
+      object-fit:cover;
+      border:1px solid var(--border);
+      background:#0d1730;
+    }
+    .tiny-danger{
+      border:none;
+      background:#2a0d14;
+      color:#ff9f9f;
+      padding:8px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    #ai-key-area{
+      border-top:1px solid var(--border-2);
+      padding:12px 14px;
+      background:rgba(255,255,255,.02);
+      flex-shrink:0;
+    }
+    #key-label-txt{
+      font-size:12px;
+      font-weight:800;
+      color:var(--gold-2);
+      margin-bottom:5px;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+    #key-hint-txt{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.55;
+      margin-bottom:10px;
+    }
+    #key-hint-txt a{
+      color:#9dc0ff;
+      text-decoration:none;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .key-row{
+      display:flex;
+      gap:8px;
+    }
+    .key-row input{
+      flex:1;
+      min-width:0;
+      padding:11px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#0d1730;
+      color:#fff;
+      outline:none;
+      font-size:14px;
+    }
+    .gold-btn{
+      border:none;
+      background:linear-gradient(180deg, var(--gold), #f5bf20);
+      color:#161616;
+      padding:0 16px;
+      border-radius:12px;
+      font-weight:900;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    #ai-footer{
+      border-top:1px solid var(--border-2);
+      padding:12px 14px 14px;
+      background:linear-gradient(180deg, rgba(255,255,255,.01), rgba(255,255,255,0));
+      flex-shrink:0;
+    }
+    .input-row{
+      display:flex;
+      align-items:flex-end;
+      gap:8px;
+      margin-bottom:10px;
+    }
+    .round-btn{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#0d1730;
+      color:#fff;
+      cursor:pointer;
+      font-size:18px;
+      flex-shrink:0;
+    }
+    #chat-input-txt{
+      flex:1;
+      min-height:46px;
+      max-height:130px;
+      resize:none;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:#0d1730;
+      color:#fff;
+      outline:none;
+      font-size:15px;
+      line-height:1.45;
+      font-family:inherit;
+    }
+    #chat-send-btn{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      border:none;
+      background:linear-gradient(180deg, var(--gold), #f5bf20);
+      color:#161616;
+      cursor:pointer;
+      flex-shrink:0;
+      font-size:18px;
+      font-weight:900;
+    }
+    .foot-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    #provider-badge-btn{
+      border:1px solid var(--border);
+      background:#111b31;
+      color:var(--gold-2);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      cursor:pointer;
+      font-weight:800;
+    }
+    .foot-tools{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .tiny-btn{
+      border:1px solid var(--border);
+      background:#0d1730;
+      color:#dce7ff;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    .foot-hint{
+      font-size:11px;
+      color:var(--muted);
+    }
+
+    .snap-anim{transition:left .38s ease, top .38s ease}
+    .offscreen{visibility:hidden}
+
+    @keyframes sparkleFloat{
+      0%{transform:translate(-50%,-50%) scale(.6);opacity:1}
+      100%{transform:translate(calc(-50% + var(--sx)), calc(-50% + var(--sy))) scale(1.4);opacity:0}
+    }
+
+    @media (max-width: 768px){
+      #ai-panel{
+        top:10px;
+        left:10px;
+        right:10px;
+        bottom:10px;
+        width:auto;
+        height:auto;
+        border-radius:22px;
+      }
+      #ai-panel.expanded{
+        top:6px;
+        left:6px;
+        right:6px;
+        bottom:6px;
+        width:auto;
+        height:auto;
+      }
+      #ai-fab-wrap{
+        right:14px;
+        bottom:14px;
+      }
+      #ai-fab-label{
+        display:none;
+      }
+      .msg-wrap{max-width:88%}
+      .providers{grid-template-columns:1fr}
+      .foot-row{align-items:flex-start}
+    }
+  </style>
 </head>
-
 <body>
 
-<!-- FAB -->
-<div id="ai-fab" onclick="toggleAI()">
-<img src="https://i.imgur.com/6VBx3io.png">
-</div>
+  <div class="demo-page">
+    <div class="demo-card">
+      <h1>Batman AI Ultra</h1>
+      <p>
+        Ye demo page hai. Bottom-right wale floating Batman button ko dabao.
+        Chat window phone pe bhi badi open hogi. Drag karke side pe chhupa bhi sakta hai.
+      </p>
+    </div>
+  </div>
 
-<!-- PANEL -->
-<div id="ai-panel">
+  <!-- AI FAB -->
+  <div id="ai-fab-wrap">
+    <div id="ai-fab-label">🦇 Batman AI</div>
+    <div id="ai-btn-ring-wrap">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring2"></div>
+      <div class="pulse-ring3"></div>
+      <button id="ai-chat-btn" title="Open Batman AI">
+        <img
+          src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop"
+          alt="Batman AI"
+        />
+        <div class="notif" id="ai-notif">1</div>
+      </button>
+    </div>
+  </div>
 
+  <!-- Side peek tab -->
+  <div id="ai-show-tab" onclick="aiShowBtn()" title="Show AI">🦇 AI</div>
+
+  <!-- AI PANEL -->
+  <div id="ai-panel">
     <div id="ai-header">
-        <b>🦇 Batman AI</b>
-        <button onclick="toggleAI()">✕</button>
+      <div class="ai-head-left">
+        <img
+          src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop"
+          alt="AI"
+        />
+        <div>
+          <div class="ai-title">🦇 Batman AI</div>
+          <div id="ai-status-txt">● Online — Ask anything!</div>
+        </div>
+      </div>
+      <div class="head-btns">
+        <button class="icon-btn" onclick="toggleProviderPanel()" title="Providers">⚙️</button>
+        <button class="icon-btn" onclick="aiExpand()" title="Expand">⛶</button>
+        <button class="icon-btn" onclick="clearChat()" title="Clear chat">🗑️</button>
+        <button class="icon-btn" onclick="aiToggle()" title="Close">✕</button>
+      </div>
     </div>
 
-    <div id="chat-box"></div>
+    <div id="ai-provider-panel">
+      <div class="small-label">Choose AI Provider</div>
+      <div class="providers">
+        <div class="provider-card" id="pcard-gemini" onclick="selectProvider('gemini')">
+          <div class="provider-name">⚡ Gemini Flash</div>
+          <span class="badge free">FREE</span>
+        </div>
+        <div class="provider-card" id="pcard-groq" onclick="selectProvider('groq')">
+          <div class="provider-name">🚀 Groq</div>
+          <span class="badge free">FREE</span>
+        </div>
+        <div class="provider-card" id="pcard-openrouter" onclick="selectProvider('openrouter')">
+          <div class="provider-name">🔀 OpenRouter</div>
+          <span class="badge free">FREE</span>
+        </div>
+        <div class="provider-card" id="pcard-openai" onclick="selectProvider('openai')">
+          <div class="provider-name">🤖 OpenAI</div>
+          <span class="badge paid">PAID</span>
+        </div>
+        <div class="provider-card" id="pcard-cohere" onclick="selectProvider('cohere')">
+          <div class="provider-name">🌊 Cohere</div>
+          <span class="badge trial">TRIAL</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="ai-body">
+      <div id="chat-msgs" style="display:flex; flex-direction:column; gap:12px;"></div>
+      <div id="chips-row" class="chips-row">
+        <span class="qchip" onclick="quickAsk(this)">📚 Study tips</span>
+        <span class="qchip" onclick="quickAsk(this)">📱 Install app</span>
+        <span class="qchip" onclick="quickAsk(this)">🔑 Get free API key</span>
+        <span class="qchip" onclick="quickAsk(this)">🧮 Math help</span>
+        <span class="qchip" onclick="quickAsk(this)">🎤 Use voice input</span>
+      </div>
+    </div>
+
+    <div id="img-preview-wrap">
+      <div class="img-preview-row">
+        <img id="img-preview" src="" alt="preview" />
+        <button class="tiny-danger" onclick="removeImage()">Remove</button>
+      </div>
+    </div>
+
+    <div id="ai-key-area">
+      <div id="key-label-txt"></div>
+      <div id="key-hint-txt"></div>
+      <div class="key-row">
+        <input id="ai-api-input" type="password" placeholder="Paste API key here..." />
+        <button class="gold-btn" onclick="saveKey()">Save</button>
+      </div>
+    </div>
 
     <div id="ai-footer">
-        <input id="input" placeholder="Ask anything...">
-        <button id="send" onclick="sendMsg()">➤</button>
+      <div class="input-row">
+        <button class="round-btn" id="img-upload-btn" onclick="document.getElementById('file-input-hidden').click()" title="Upload image">🖼️</button>
+        <button class="round-btn" onclick="startVoiceInput()" title="Voice input">🎤</button>
+        <textarea
+          id="chat-input-txt"
+          rows="1"
+          placeholder="Koi bhi doubt poochho... 🦇"
+          oninput="aiResize(this)"
+        ></textarea>
+        <button id="chat-send-btn" onclick="aiSend()" title="Send">➤</button>
+      </div>
+
+      <div class="foot-row">
+        <button id="provider-badge-btn" onclick="toggleProviderPanel()">⚙️ Gemini Flash</button>
+        <div class="foot-tools">
+          <button class="tiny-btn" onclick="exportChat()">Export chat</button>
+          <button class="tiny-btn" onclick="toggleThemeHint()">Help</button>
+          <span class="foot-hint">Enter = Send • Shift+Enter = New line</span>
+        </div>
+      </div>
     </div>
+  </div>
 
-</div>
+  <input id="file-input-hidden" type="file" accept="image/*" style="display:none" />
 
-<script>
+  <script>
+    /* =========================
+       OFFLINE INFO / HELP DB
+    ========================= */
+    const K4HAV_INFO = {
+      keywords: {
+        'download|homescreen|install|pwa|add to home|phone pe install|mobile install':
+`📲 Phone pe install kaise karein:
 
-/* =========================
-   BASIC TOGGLE
-========================= */
-function toggleAI(){
-    const panel=document.getElementById('ai-panel');
-    panel.style.display = panel.style.display==="flex" ? "none":"flex";
-}
+Android Chrome:
+1. Website kholo
+2. 3-dot menu dabao
+3. "Add to Home screen" ya "Install app" choose karo
+4. Done
 
-/* =========================
-   OFFLINE REPLIES
-========================= */
-const replies = {
-    "install":"📱 Chrome → 3 dots → Add to home screen",
-    "bookmark":"⭐ Press Ctrl+D to bookmark",
-    "feature":"🔥 AI chat, progress tracker, themes"
-};
+iPhone Safari:
+1. Website kholo
+2. Share button dabao
+3. "Add to Home Screen"
 
-function offlineReply(text){
-    text=text.toLowerCase();
-    for(let k in replies){
-        if(text.includes(k)) return replies[k];
+Agar address bar me install icon aaye, usko bhi dabaa sakte ho.`,
+
+        'bookmark|save website|laptop bookmark':
+`🔖 Bookmark kaise karein:
+
+Laptop/Desktop:
+• Chrome/Edge/Firefox: Ctrl + D
+• Safari: Cmd + D
+
+Mobile Chrome:
+• 3-dot menu → Star`,
+
+        'offline|without internet|bina internet':
+`📡 Offline use:
+Kuch local features offline chal sakte hain, lekin AI features ke liye internet chahiye.`,
+
+        'progress|save progress|data save|reset':
+`💾 Progress:
+Progress localStorage me save hoti hai.
+
+Warning:
+Browser cache/data clear karoge toh progress delete ho sakti hai.`,
+
+        'feature|about|help|features|kya kya':
+`🌟 Batman AI Ultra features:
+• Multiple AI providers
+• Image upload preview
+• Voice input
+• Export chat
+• Clear chat
+• Offline help replies
+• Big mobile UI
+• Chat history save`,
+
+        'theme|color|change theme':
+`🎨 Theme abhi dark premium style me hai. Baad me multi-theme bhi add kar sakte ho.`,
+
+        'subject|subjects|chapters|syllabus':
+`📖 General support:
+Maths, Physics, Chemistry, Biology, English, Coding aur general doubts me help karega.`,
+
+        'share|friend ko share|link share':
+`🔗 Share:
+Is file ko seedha kisi ko de sakte ho. But agar API key embedded hai toh public share mat karna.`,
+
+        'creator|who made|kisne banaya':
+`👨‍💻 Ye custom AI chat UI tumhare project ke liye banaya gaya hai.`,
+
+        'upi|support|donate|payment|pay':
+`❤️ Donation/support section tum alag se add kar sakte ho landing page me.`,
+
+        'api key|get free api key|free key|api':
+`🔑 Free API key options:
+
+1. OpenRouter
+   https://openrouter.ai/keys
+
+2. Gemini
+   https://aistudio.google.com/apikey
+
+3. Groq
+   https://console.groq.com/keys
+
+Note:
+Browser-side use me key public ho sakti hai. Personal testing ke liye theek hai.`
+      }
+    };
+
+    function getOfflineReply(text) {
+      const t = text.toLowerCase();
+      for (const [keys, reply] of Object.entries(K4HAV_INFO.keywords)) {
+        const arr = keys.split('|');
+        if (arr.some(k => t.includes(k))) return reply;
+      }
+      return null;
     }
-    return null;
-}
 
-/* =========================
-   CHAT UI
-========================= */
-function addMsg(text,type){
-    const div=document.createElement("div");
-    div.className="msg "+type;
-    div.innerText=text;
-    document.getElementById("chat-box").appendChild(div);
-}
+    /* =========================
+       PROVIDERS
+    ========================= */
+    const AI_PROVIDERS = {
+      gemini: {
+        name: 'Gemini Flash',
+        label: '⚡ Setup Gemini (Free)',
+        hint: `Go to <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a> → Create API key → paste below`,
+        storageKey: 'batman_key_gemini',
+        supportsImage: true
+      },
+      groq: {
+        name: 'Groq (Fast & Free)',
+        label: '🚀 Setup Groq (Free)',
+        hint: `Go to <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a> → Create key → paste below`,
+        storageKey: 'batman_key_groq',
+        supportsImage: false
+      },
+      openrouter: {
+        name: 'OpenRouter',
+        label: '🔀 Setup OpenRouter (Free models)',
+        hint: `Go to <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a> → Create key → paste below`,
+        storageKey: 'batman_key_openrouter',
+        supportsImage: true
+      },
+      openai: {
+        name: 'OpenAI GPT-4o',
+        label: '🤖 Setup OpenAI',
+        hint: `Go to <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a> → Create key → paste below`,
+        storageKey: 'batman_key_openai',
+        supportsImage: true
+      },
+      cohere: {
+        name: 'Cohere',
+        label: '🌊 Setup Cohere',
+        hint: `Go to <a href="https://dashboard.cohere.com/api-keys" target="_blank">dashboard.cohere.com</a> → Create key → paste below`,
+        storageKey: 'batman_key_cohere',
+        supportsImage: false
+      }
+    };
 
-/* =========================
-   SEND MESSAGE
-========================= */
-async function sendMsg(){
-    const input=document.getElementById("input");
-    const text=input.value.trim();
-    if(!text) return;
+    const SYSTEM_PROMPT = `You are Batman AI, a friendly, smart study assistant.
+Help with student doubts clearly.
+Use simple Hinglish when natural.
+Keep answers useful, readable, and encouraging.
+If user asks academic questions, answer properly.
+If user asks casual help, respond normally.
+Avoid unnecessary over-explanations.`;
 
-    addMsg(text,"user");
-    input.value="";
+    let aiProvider = localStorage.getItem('batman_provider') || 'gemini';
+    let chatHistory = JSON.parse(localStorage.getItem('batman_chat_history') || '[]');
+    let isBusy = false;
+    let pendingImageB64 = null;
+    let pendingImageMime = null;
 
-    // OFFLINE
-    const off=offlineReply(text);
-    if(off){
-        addMsg(off,"bot");
+    const fabWrap = document.getElementById('ai-fab-wrap');
+    const ringWrap = document.getElementById('ai-btn-ring-wrap');
+    const showTab = document.getElementById('ai-show-tab');
+    const BTN_W = 90, EDGE_ZONE = 35;
+
+    let fabL = window.innerWidth - 130;
+    let fabT = window.innerHeight - 120;
+    let pointerDownX, pointerDownY, fabDownL, fabDownT;
+    let dragging = false, moved = false;
+
+    function clamp(v, lo, hi){ return Math.max(lo, Math.min(v, hi)); }
+
+    function setPos(l, t, animate) {
+      const maxL = window.innerWidth - BTN_W + 30;
+      const maxT = window.innerHeight - BTN_W - 10;
+      fabL = clamp(l, -50, maxL);
+      fabT = clamp(t, 10, maxT);
+      if (animate) fabWrap.classList.add('snap-anim');
+      else fabWrap.classList.remove('snap-anim');
+      fabWrap.style.left = fabL + 'px';
+      fabWrap.style.top = fabT + 'px';
+      fabWrap.style.right = 'auto';
+      fabWrap.style.bottom = 'auto';
+    }
+
+    function getPoint(e){ return e.touches ? e.touches[0] : e; }
+
+    function onFabDown(e) {
+      if (e.button && e.button !== 0) return;
+      const pt = getPoint(e);
+      pointerDownX = pt.clientX;
+      pointerDownY = pt.clientY;
+      fabDownL = fabL;
+      fabDownT = fabT;
+      dragging = false;
+      moved = false;
+      fabWrap.classList.remove('snap-anim');
+
+      document.addEventListener('mousemove', onFabMove, { passive:false });
+      document.addEventListener('mouseup', onFabUp);
+      document.addEventListener('touchmove', onFabMove, { passive:false });
+      document.addEventListener('touchend', onFabUp);
+      document.addEventListener('touchcancel', onFabUp);
+      e.preventDefault();
+    }
+
+    function onFabMove(e) {
+      const pt = getPoint(e);
+      const dx = pt.clientX - pointerDownX;
+      const dy = pt.clientY - pointerDownY;
+
+      if (!dragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+        dragging = true;
+        moved = true;
+        ringWrap.classList.add('dragging');
+      }
+      if (!dragging) return;
+      if (e.cancelable) e.preventDefault();
+      setPos(fabDownL + dx, fabDownT + dy, false);
+    }
+
+    function onFabUp() {
+      document.removeEventListener('mousemove', onFabMove);
+      document.removeEventListener('mouseup', onFabUp);
+      document.removeEventListener('touchmove', onFabMove);
+      document.removeEventListener('touchend', onFabUp);
+      document.removeEventListener('touchcancel', onFabUp);
+      ringWrap.classList.remove('dragging');
+
+      if (!moved) {
+        aiToggle();
         return;
+      }
+
+      dragging = false;
+
+      const goLeft = fabL < EDGE_ZONE - BTN_W / 2;
+      const goRight = fabL > window.innerWidth - BTN_W / 2 - EDGE_ZONE;
+
+      if (goLeft) {
+        setPos(-BTN_W + 8, fabT, true);
+        setTimeout(() => {
+          fabWrap.classList.add('offscreen');
+          showTab.style.display = 'block';
+          showTab.style.top = clamp(fabT + 20, 10, window.innerHeight - 70) + 'px';
+          showTab.style.left = '0';
+          showTab.style.right = 'auto';
+          showTab.classList.remove('r');
+        }, 380);
+      } else if (goRight) {
+        setPos(window.innerWidth - 8, fabT, true);
+        setTimeout(() => {
+          fabWrap.classList.add('offscreen');
+          showTab.style.display = 'block';
+          showTab.style.top = clamp(fabT + 20, 10, window.innerHeight - 70) + 'px';
+          showTab.style.right = '0';
+          showTab.style.left = 'auto';
+          showTab.classList.add('r');
+        }, 380);
+      } else {
+        setPos(fabL, fabT, true);
+      }
     }
 
-    // API CALL (OpenRouter Free)
-    try{
-        const res = await fetch("https://openrouter.ai/api/v1/chat/completions",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json",
-                "Authorization":"Bearer YOUR_API_KEY"
-            },
-            body:JSON.stringify({
-                model:"meta-llama/llama-3.3-70b-instruct:free",
-                messages:[
-                    {role:"system",content:"You are a helpful AI"},
-                    {role:"user",content:text}
-                ]
-            })
+    function aiShowBtn() {
+      showTab.style.display = 'none';
+      fabWrap.classList.remove('offscreen');
+      const fromRight = showTab.classList.contains('r');
+      setPos(fromRight ? window.innerWidth - 110 : 10, fabT, true);
+    }
+
+    ringWrap.addEventListener('mousedown', onFabDown, { passive:false });
+    ringWrap.addEventListener('touchstart', onFabDown, { passive:false });
+
+    window.addEventListener('resize', () => {
+      setPos(fabL, fabT, false);
+    });
+
+    function spawnSparkles() {
+      const colors = ['#ffd54a','#fff','#8ab4ff','#9a7dff','#67e8f9'];
+      const btn = document.getElementById('ai-chat-btn');
+      const r = btn.getBoundingClientRect();
+      const cx = r.left + r.width/2, cy = r.top + r.height/2;
+      for(let i=0;i<12;i++){
+        const s = document.createElement('div');
+        const ang = (i/12) * Math.PI * 2;
+        const dist = 30 + Math.random() * 26;
+        const sx = Math.cos(ang) * dist;
+        const sy = Math.sin(ang) * dist - 10;
+        s.style.cssText = `
+          position:fixed;
+          width:${3 + Math.random()*4}px;
+          height:${3 + Math.random()*4}px;
+          border-radius:50%;
+          background:${colors[i % colors.length]};
+          pointer-events:none;
+          z-index:100000;
+          left:${cx}px;
+          top:${cy}px;
+          --sx:${sx}px;
+          --sy:${sy}px;
+          animation:sparkleFloat .8s ease-out ${i*.03}s forwards;
+        `;
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 1000);
+      }
+    }
+
+    function aiToggle() {
+      const p = document.getElementById('ai-panel');
+      p.classList.toggle('open');
+      if (p.classList.contains('open')) {
+        spawnSparkles();
+        renderProvider();
+        checkKeyArea();
+        document.getElementById('ai-notif').style.display = 'none';
+
+        if (!chatHistory.length && !document.getElementById('chat-msgs').children.length) {
+          botMsg(`Namaste! 👋 Main hoon Batman AI.
+
+Main kya kar sakta hoon:
+• padhai me help
+• simple chat
+• voice input
+• image preview
+• different AI providers
+
+No API key?
+Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
+        }
+      }
+    }
+
+    function aiExpand() {
+      const p = document.getElementById('ai-panel');
+      p.classList.toggle('expanded');
+    }
+
+    function toggleProviderPanel() {
+      document.getElementById('ai-provider-panel').classList.toggle('show');
+    }
+
+    function selectProvider(p) {
+      aiProvider = p;
+      localStorage.setItem('batman_provider', p);
+      renderProvider();
+      checkKeyArea();
+      document.getElementById('ai-provider-panel').classList.remove('show');
+      botMsg(`Provider switched to ${AI_PROVIDERS[p].name}.`);
+    }
+
+    function renderProvider() {
+      Object.keys(AI_PROVIDERS).forEach(k => {
+        document.getElementById('pcard-' + k).classList.remove('active');
+      });
+      document.getElementById('pcard-' + aiProvider).classList.add('active');
+
+      const pv = AI_PROVIDERS[aiProvider];
+      document.getElementById('provider-badge-btn').textContent = '⚙️ ' + pv.name;
+      document.getElementById('key-label-txt').textContent = pv.label;
+      document.getElementById('key-hint-txt').innerHTML = pv.hint;
+
+      const imgBtn = document.getElementById('img-upload-btn');
+      imgBtn.style.opacity = pv.supportsImage ? '1' : '.4';
+      imgBtn.title = pv.supportsImage ? 'Upload image' : 'Image not supported by this provider';
+    }
+
+    function checkKeyArea() {
+      const key = localStorage.getItem(AI_PROVIDERS[aiProvider].storageKey);
+      document.getElementById('ai-key-area').style.display = key ? 'none' : 'block';
+    }
+
+    function saveKey() {
+      const v = document.getElementById('ai-api-input').value.trim();
+      if (!v) {
+        alert('Pehle key daalo.');
+        return;
+      }
+      localStorage.setItem(AI_PROVIDERS[aiProvider].storageKey, v);
+      document.getElementById('ai-api-input').value = '';
+      checkKeyArea();
+      botMsg(`Key saved for ${AI_PROVIDERS[aiProvider].name}.`);
+    }
+
+    function getTime() {
+      return new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+    }
+
+    function formatText(text) {
+      return text
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+        .replace(/\n/g, '<br>');
+    }
+
+    function botMsg(text, imgSrc) {
+      const c = document.getElementById('chat-msgs');
+      const d = document.createElement('div');
+      d.className = 'cm bot';
+      d.innerHTML = `
+        <div class="bot-av">
+          <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop" alt="AI" />
+        </div>
+        <div class="msg-wrap">
+          <div class="cm-bub">${imgSrc ? `<img class="cm-img" src="${imgSrc}" alt="img" />` : ''}${formatText(text)}</div>
+          <div class="cm-time">${getTime()}</div>
+        </div>
+      `;
+      c.appendChild(d);
+      c.scrollTop = c.scrollHeight;
+    }
+
+    function userMsg(text, imgSrc) {
+      const c = document.getElementById('chat-msgs');
+      const d = document.createElement('div');
+      d.className = 'cm user';
+      d.innerHTML = `
+        <div class="msg-wrap">
+          <div class="cm-bub">${imgSrc ? `<img class="cm-img" src="${imgSrc}" alt="img" />` : ''}${text ? formatText(text) : ''}</div>
+          <div class="cm-time">${getTime()}</div>
+        </div>
+      `;
+      c.appendChild(d);
+      c.scrollTop = c.scrollHeight;
+    }
+
+    function showTyping() {
+      const c = document.getElementById('chat-msgs');
+      const d = document.createElement('div');
+      d.className = 'cm bot';
+      d.id = 'ai-typing';
+      d.innerHTML = `
+        <div class="bot-av">
+          <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop" alt="AI" />
+        </div>
+        <div class="msg-wrap">
+          <div class="cm-bub typing-bub"><span></span><span></span><span></span></div>
+        </div>
+      `;
+      c.appendChild(d);
+      c.scrollTop = c.scrollHeight;
+    }
+
+    function hideTyping() {
+      const t = document.getElementById('ai-typing');
+      if (t) t.remove();
+    }
+
+    function persistChat() {
+      localStorage.setItem('batman_chat_history', JSON.stringify(chatHistory.slice(-40)));
+    }
+
+    function renderSavedChat() {
+      if (!chatHistory.length) return;
+      for (const item of chatHistory) {
+        if (item.role === 'user') userMsg(item.text || '', item.imgSrc || null);
+        else botMsg(item.text || '', item.imgSrc || null);
+      }
+    }
+
+    function clearChat() {
+      if (!confirm('Clear full chat?')) return;
+      chatHistory = [];
+      persistChat();
+      document.getElementById('chat-msgs').innerHTML = '';
+      botMsg('Chat cleared. Naya start karte hain 👌');
+    }
+
+    function exportChat() {
+      if (!chatHistory.length) {
+        alert('Chat empty hai.');
+        return;
+      }
+      const lines = chatHistory.map(m => `[${m.role.toUpperCase()}] ${m.text || '[image]'}`);
+      const blob = new Blob([lines.join('\n\n')], { type:'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'batman-ai-chat.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function quickAsk(el) {
+      const inp = document.getElementById('chat-input-txt');
+      inp.value = el.textContent.trim();
+      aiResize(inp);
+      aiSend();
+    }
+
+    function aiResize(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 130) + 'px';
+    }
+
+    function toggleThemeHint() {
+      botMsg(`Quick help:
+
+• Provider choose karne ke liye ⚙️
+• Voice ke liye 🎤
+• Image preview ke liye 🖼️
+• Export ke liye "Export chat"
+• Clear ke liye 🗑️
+
+Note:
+Public website pe direct API key use mat karna. Backend better hota hai.`);
+    }
+
+    /* =========================
+       IMAGE
+    ========================= */
+    document.getElementById('file-input-hidden').addEventListener('change', handleImageSelect);
+
+    function handleImageSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const pv = AI_PROVIDERS[aiProvider];
+      if (!pv.supportsImage) {
+        alert('Current provider image support nahi karta. Gemini/OpenAI/OpenRouter use karo.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const dataUrl = ev.target.result;
+        pendingImageB64 = dataUrl.split(',')[1];
+        pendingImageMime = file.type;
+        document.getElementById('img-preview').src = dataUrl;
+        document.getElementById('img-preview-wrap').classList.add('show');
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    }
+
+    function removeImage() {
+      pendingImageB64 = null;
+      pendingImageMime = null;
+      document.getElementById('img-preview-wrap').classList.remove('show');
+      document.getElementById('img-preview').src = '';
+    }
+
+    /* =========================
+       VOICE INPUT
+    ========================= */
+    function startVoiceInput() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) {
+        alert('Voice input is browser me supported nahi hai.');
+        return;
+      }
+      const rec = new SR();
+      rec.lang = 'en-IN';
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+
+      rec.onstart = () => {
+        document.getElementById('ai-status-txt').textContent = '● Listening...';
+      };
+      rec.onresult = (event) => {
+        const text = event.results[0][0].transcript;
+        const inp = document.getElementById('chat-input-txt');
+        inp.value = text;
+        aiResize(inp);
+        document.getElementById('ai-status-txt').textContent = '● Voice captured';
+      };
+      rec.onerror = () => {
+        document.getElementById('ai-status-txt').textContent = '● Voice error';
+      };
+      rec.onend = () => {
+        setTimeout(() => {
+          document.getElementById('ai-status-txt').textContent = '● Online — Ask anything!';
+        }, 1200);
+      };
+      rec.start();
+    }
+
+    /* =========================
+       SEND
+    ========================= */
+    document.getElementById('chat-input-txt').addEventListener('keydown', function(e){
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        aiSend();
+      }
+    });
+
+    async function aiSend() {
+      const inp = document.getElementById('chat-input-txt');
+      const text = inp.value.trim();
+      if ((!text && !pendingImageB64) || isBusy) return;
+
+      const imgSnapshot = pendingImageB64 ? `data:${pendingImageMime};base64,${pendingImageB64}` : null;
+
+      inp.value = '';
+      aiResize(inp);
+      userMsg(text, imgSnapshot);
+
+      chatHistory.push({ role:'user', text:text || '[image]', imgSrc: imgSnapshot || null });
+      persistChat();
+
+      document.getElementById('chips-row').style.display = 'none';
+
+      if (imgSnapshot) removeImage();
+
+      if (!imgSnapshot) {
+        const offlineReply = getOfflineReply(text);
+        if (offlineReply) {
+          showTyping();
+          await new Promise(r => setTimeout(r, 450));
+          hideTyping();
+          botMsg(offlineReply);
+          chatHistory.push({ role:'bot', text:offlineReply, imgSrc:null });
+          persistChat();
+          return;
+        }
+      }
+
+      const key = localStorage.getItem(AI_PROVIDERS[aiProvider].storageKey);
+      if (!key) {
+        const msg = `API key nahi mili for ${AI_PROVIDERS[aiProvider].name}.
+
+Free options:
+• OpenRouter
+• Gemini
+• Groq
+
+Key save karo, phir AI reply aayega.`;
+        botMsg(msg);
+        chatHistory.push({ role:'bot', text:msg, imgSrc:null });
+        persistChat();
+        checkKeyArea();
+        return;
+      }
+
+      isBusy = true;
+      document.getElementById('chat-send-btn').disabled = true;
+      document.getElementById('ai-status-txt').textContent = '● Thinking...';
+      showTyping();
+
+      try {
+        let reply = '';
+        if (aiProvider === 'gemini') reply = await callGemini(key, text, imgSnapshot);
+        else if (aiProvider === 'groq') reply = await callGroq(key, text);
+        else if (aiProvider === 'openrouter') reply = await callOpenRouter(key, text, imgSnapshot);
+        else if (aiProvider === 'openai') reply = await callOpenAI(key, text, imgSnapshot);
+        else if (aiProvider === 'cohere') reply = await callCohere(key, text);
+
+        hideTyping();
+        botMsg(reply || 'Koi response nahi mila.');
+        chatHistory.push({ role:'bot', text:reply || 'Koi response nahi mila.', imgSrc:null });
+        persistChat();
+      } catch (err) {
+        hideTyping();
+        const em = err?.message || 'Unknown error';
+
+        let msg = `Error: ${em}`;
+        if (/401|403|invalid/i.test(em)) {
+          msg = `Invalid API key lag rahi hai for ${AI_PROVIDERS[aiProvider].name}.`;
+        } else if (/429|quota|rate/i.test(em)) {
+          msg = `Quota/rate limit hit ho gayi. Dusra provider try karo.`;
+        }
+
+        botMsg(msg);
+        chatHistory.push({ role:'bot', text:msg, imgSrc:null });
+        persistChat();
+      } finally {
+        isBusy = false;
+        document.getElementById('chat-send-btn').disabled = false;
+        document.getElementById('ai-status-txt').textContent = '● Online — Ask anything!';
+      }
+    }
+
+    /* =========================
+       API CALLS
+    ========================= */
+    async function callOpenRouter(key, text, imgDataUrl) {
+      const content = [];
+      if (imgDataUrl) content.push({ type:'image_url', image_url:{ url: imgDataUrl } });
+      if (text) content.push({ type:'text', text });
+
+      const messages = [
+        { role:'system', content:SYSTEM_PROMPT },
+        ...chatHistory.slice(-8).map(m => ({
+          role: m.role === 'user' ? 'user' : 'assistant',
+          content: m.text
+        })),
+        { role:'user', content: imgDataUrl ? content : text }
+      ];
+
+      const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer ' + key,
+          'HTTP-Referer': location.origin || 'http://localhost',
+          'X-Title':'Batman AI Ultra'
+        },
+        body: JSON.stringify({
+          model:'meta-llama/llama-3.3-70b-instruct:free',
+          messages,
+          max_tokens:700
+        })
+      });
+
+      const d = await r.json();
+      if (!r.ok || d.error) throw new Error(d?.error?.message || 'OpenRouter request failed');
+      return d?.choices?.[0]?.message?.content || 'No response';
+    }
+
+    async function callGemini(key, text, imgDataUrl) {
+      const parts = [];
+      if (imgDataUrl) {
+        parts.push({
+          inlineData: {
+            mimeType: imgDataUrl.split(';')[0].split(':')[1],
+            data: imgDataUrl.split(',')[1]
+          }
         });
+      }
+      if (text) parts.push({ text });
 
-        const data = await res.json();
-        const reply = data.choices[0].message.content;
+      const history = [
+        { role:'user', parts:[{ text:SYSTEM_PROMPT }] },
+        { role:'model', parts:[{ text:'Understood.' }] },
+        ...chatHistory.slice(-8).map(m => ({
+          role: m.role === 'user' ? 'user' : 'model',
+          parts: [{ text: m.text }]
+        })),
+        { role:'user', parts }
+      ];
 
-        addMsg(reply,"bot");
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({
+          contents: history,
+          generationConfig: {
+            temperature: 0.8,
+            maxOutputTokens: 700
+          }
+        })
+      });
 
-    }catch(e){
-        addMsg("⚠️ Error: Check API key","bot");
+      const d = await r.json();
+      if (!r.ok || d.error) throw new Error(d?.error?.message || 'Gemini request failed');
+      return d?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response';
     }
-}
 
-/* ENTER KEY */
-document.getElementById("input").addEventListener("keydown",function(e){
-    if(e.key==="Enter") sendMsg();
-});
+    async function callGroq(key, text) {
+      const messages = [
+        { role:'system', content:SYSTEM_PROMPT },
+        ...chatHistory.slice(-8).map(m => ({
+          role: m.role === 'user' ? 'user' : 'assistant',
+          content: m.text
+        })),
+        { role:'user', content:text }
+      ];
 
-/* INITIAL MESSAGE */
-addMsg("👋 Namaste! Main hoon Batman AI — Ask anything!","bot");
+      const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer ' + key
+        },
+        body: JSON.stringify({
+          model:'llama-3.3-70b-versatile',
+          messages,
+          max_tokens:700,
+          temperature:0.8
+        })
+      });
 
-</script>
+      const d = await r.json();
+      if (!r.ok || d.error) throw new Error(d?.error?.message || 'Groq request failed');
+      return d?.choices?.[0]?.message?.content || 'No response';
+    }
 
+    async function callOpenAI(key, text, imgDataUrl) {
+      const content = [];
+      if (imgDataUrl) content.push({ type:'image_url', image_url:{ url: imgDataUrl } });
+      if (text) content.push({ type:'text', text });
+
+      const messages = [
+        { role:'system', content:SYSTEM_PROMPT },
+        ...chatHistory.slice(-8).map(m => ({
+          role: m.role === 'user' ? 'user' : 'assistant',
+          content: m.text
+        })),
+        { role:'user', content: imgDataUrl ? content : text }
+      ];
+
+      const r = await fetch('https://api.openai.com/v1/chat/completions', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer ' + key
+        },
+        body: JSON.stringify({
+          model:'gpt-4o',
+          messages,
+          max_tokens:700
+        })
+      });
+
+      const d = await r.json();
+      if (!r.ok || d.error) throw new Error(d?.error?.message || 'OpenAI request failed');
+      return d?.choices?.[0]?.message?.content || 'No response';
+    }
+
+    async function callCohere(key, text) {
+      const chatH = chatHistory.slice(-8).map(m => ({
+        role: m.role === 'user' ? 'USER' : 'CHATBOT',
+        message: m.text
+      }));
+
+      const r = await fetch('https://api.cohere.ai/v1/chat', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer ' + key
+        },
+        body: JSON.stringify({
+          model:'command-r-plus',
+          message:text,
+          chat_history:chatH,
+          preamble:SYSTEM_PROMPT,
+          max_tokens:700
+        })
+      });
+
+      const d = await r.json();
+      if (!r.ok || d.message) throw new Error(d?.message || 'Cohere request failed');
+      return d?.text || 'No response';
+    }
+
+    /* =========================
+       INIT
+    ========================= */
+    renderProvider();
+    checkKeyArea();
+    renderSavedChat();
+
+    setPos(fabL, fabT, false);
+  </script>
 </body>
 </html>
