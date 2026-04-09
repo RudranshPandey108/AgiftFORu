@@ -1,102 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#07142d">
+<link rel="apple-touch-icon" href="icon-192.png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Batman AI Ultra Study App</title>
-
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#0b1020" />
+  <title>Batman AI Ultra Final</title>
 
   <style>
     :root{
-      --bg:#0b1020;
-      --bg2:#111936;
-      --panel:#0d1530;
-      --panel2:#151f42;
-      --card:#121c3b;
-      --text:#eef3ff;
-      --muted:#9db0d9;
+      --bg:#07142d;
+      --bg2:#0b1c3d;
+      --panel:#020817;
+      --panel2:#0a1428;
+      --text:#eaf1ff;
+      --muted:#9fb0d1;
+      --gold:#ffd84c;
+      --gold2:#ffeaa0;
+      --blue:#2f67f0;
+      --blue2:#1e4cc0;
       --border:rgba(255,255,255,.12);
-      --gold:#ffd34d;
-      --gold2:#ffe8a0;
-      --blue:#346df1;
-      --blue2:#2552c7;
-      --green:#22c55e;
-      --red:#ef4444;
-      --orange:#f59e0b;
-      --purple:#8b5cf6;
-      --shadow:0 18px 60px rgba(0,0,0,.45);
+      --border2:rgba(255,255,255,.07);
+      --bot:#1b2940;
+      --user:#2f67f0;
+      --success:#22c55e;
+      --danger:#ef4444;
+      --shadow:0 18px 60px rgba(0,0,0,.42);
       --radius:22px;
     }
 
-    body.theme-midnight{
-      --bg:#0b1020; --bg2:#111936; --panel:#0d1530; --panel2:#151f42; --card:#121c3b;
-      --text:#eef3ff; --muted:#9db0d9; --border:rgba(255,255,255,.12);
-      --gold:#ffd34d; --gold2:#ffe8a0; --blue:#346df1; --blue2:#2552c7;
-    }
-    body.theme-emerald{
-      --bg:#071d18; --bg2:#0d2d25; --panel:#0b241d; --panel2:#113128; --card:#113128;
-      --text:#eafff7; --muted:#9fcbbe; --border:rgba(255,255,255,.11);
-      --gold:#f7d154; --gold2:#fff0b3; --blue:#1fa98a; --blue2:#157863;
-    }
-    body.theme-crimson{
-      --bg:#1a0d12; --bg2:#33131f; --panel:#26101a; --panel2:#361624; --card:#341724;
-      --text:#fff0f5; --muted:#d4a7b7; --border:rgba(255,255,255,.10);
-      --gold:#ffc95a; --gold2:#ffe7a8; --blue:#e14b76; --blue2:#b42f57;
-    }
-    body.theme-royal{
-      --bg:#120a28; --bg2:#23154a; --panel:#1a1137; --panel2:#2a1a56; --card:#23154a;
-      --text:#f6f0ff; --muted:#c4b3ea; --border:rgba(255,255,255,.11);
-      --gold:#ffd660; --gold2:#ffefb8; --blue:#8b5cf6; --blue2:#6f3df0;
-    }
-
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;width:100%;height:100%;font-family:Arial,Helvetica,sans-serif;background:
-      radial-gradient(circle at top right, rgba(52,109,241,.15), transparent 26%),
-      radial-gradient(circle at bottom left, rgba(255,211,77,.08), transparent 18%),
-      linear-gradient(180deg,var(--bg2),var(--bg));color:var(--text);overflow-x:hidden}
+    html,body{
+      margin:0;
+      padding:0;
+      width:100%;
+      height:100%;
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(47,103,240,.18), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(255,216,76,.08), transparent 22%),
+        linear-gradient(180deg, #081633 0%, #07142d 100%);
+      color:var(--text);
+      overflow-x:hidden;
+    }
 
-    button,input,select,textarea{font:inherit}
-    a{color:#9cc2ff}
-    .hidden{display:none!important}
+    body{
+      min-height:100vh;
+    }
 
-    .landing{
-      max-width:1080px;
-      margin:0 auto;
+    .demo-wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
       padding:24px;
     }
+
     .hero{
+      width:min(980px,100%);
       border:1px solid var(--border);
       background:rgba(255,255,255,.03);
-      backdrop-filter:blur(10px);
-      box-shadow:var(--shadow);
       border-radius:28px;
-      padding:28px;
-      margin-top:20px;
+      box-shadow:var(--shadow);
+      padding:26px;
+      backdrop-filter:blur(10px);
     }
-    .hero h1{margin:0 0 10px;font-size:clamp(30px,4vw,54px)}
-    .hero p{margin:0;color:var(--muted);line-height:1.7}
+
+    .hero h1{
+      margin:0 0 10px;
+      font-size:clamp(28px,4vw,48px);
+      color:#fff;
+    }
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:15px;
+    }
+
     .hero-grid{
-      margin-top:20px;
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
       gap:14px;
+      margin-top:22px;
     }
+
     .hero-card{
       border:1px solid var(--border);
       background:rgba(255,255,255,.03);
       border-radius:20px;
       padding:16px;
     }
-    .hero-card h3{margin:0 0 8px;color:var(--gold2);font-size:16px}
-    .hero-card p{margin:0;font-size:14px}
+
+    .hero-card h3{
+      margin:0 0 6px;
+      font-size:17px;
+      color:var(--gold2);
+    }
+
+    .hero-card p{
+      margin:0;
+      font-size:14px;
+    }
 
     /* FAB */
     #ai-fab-wrap{
       position:fixed;
       right:16px;
-      bottom:16px;
+      bottom:18px;
       z-index:99998;
       display:flex;
       align-items:center;
@@ -104,875 +117,1055 @@
       touch-action:none;
       user-select:none;
     }
+
     #ai-fab-label{
-      background:rgba(5,9,20,.88);
-      border:1px solid var(--border);
+      background:rgba(2,8,23,.86);
       color:var(--gold2);
+      border:1px solid var(--border);
       border-radius:999px;
       padding:10px 14px;
-      font-weight:700;
       font-size:14px;
-      box-shadow:var(--shadow);
+      font-weight:700;
       white-space:nowrap;
+      box-shadow:0 10px 25px rgba(0,0,0,.24);
+      backdrop-filter:blur(10px);
     }
+
     #ai-btn-ring-wrap{
-      width:78px;height:78px;position:relative;display:grid;place-items:center;
-      cursor:grab;touch-action:none
+      position:relative;
+      width:76px;
+      height:76px;
+      display:grid;
+      place-items:center;
+      cursor:grab;
+      touch-action:none;
     }
     #ai-btn-ring-wrap.dragging{cursor:grabbing}
+
     .pulse-ring,.pulse-ring2,.pulse-ring3{
-      position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,211,77,.24);
-      animation:pulse 2.8s linear infinite
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      border:2px solid rgba(255,216,76,.24);
+      animation:pulse 2.8s linear infinite;
     }
     .pulse-ring2{animation-delay:.7s}
     .pulse-ring3{animation-delay:1.4s}
+
     @keyframes pulse{
       0%{transform:scale(.78);opacity:0}
       18%{opacity:.8}
-      100%{transform:scale(1.38);opacity:0}
+      100%{transform:scale(1.36);opacity:0}
     }
+
     #ai-chat-btn{
-      width:64px;height:64px;border:none;border-radius:50%;overflow:hidden;padding:0;cursor:pointer;
-      background:#111;box-shadow:0 0 0 2px rgba(255,211,77,.16),0 0 20px rgba(255,211,77,.26)
+      position:relative;
+      width:64px;
+      height:64px;
+      border:none;
+      border-radius:50%;
+      overflow:hidden;
+      padding:0;
+      cursor:pointer;
+      background:#111;
+      box-shadow:
+        0 0 0 2px rgba(255,216,76,.18),
+        0 0 18px rgba(255,216,76,.26);
     }
-    #ai-chat-btn img{width:100%;height:100%;object-fit:cover;display:block}
+
+    #ai-chat-btn img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
     .notif{
-      position:absolute;top:2px;right:2px;min-width:20px;height:20px;border-radius:999px;
-      background:var(--red);color:#fff;font-size:12px;display:none;align-items:center;justify-content:center;
-      padding:0 6px;font-weight:700;border:2px solid var(--bg)
+      position:absolute;
+      top:2px;
+      right:2px;
+      min-width:20px;
+      height:20px;
+      border-radius:999px;
+      background:#ef4444;
+      color:#fff;
+      font-size:12px;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:0 6px;
+      font-weight:700;
+      border:2px solid #081633;
     }
+
     #ai-show-tab{
-      position:fixed;z-index:99997;display:none;background:rgba(5,9,20,.92);color:var(--gold2);
-      border:1px solid var(--border);padding:12px 10px;border-radius:0 14px 14px 0;font-weight:700;
-      cursor:pointer;box-shadow:var(--shadow)
+      position:fixed;
+      z-index:99997;
+      display:none;
+      background:rgba(2,8,23,.9);
+      color:var(--gold2);
+      border:1px solid var(--border);
+      padding:12px 10px;
+      border-radius:0 14px 14px 0;
+      font-weight:700;
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      backdrop-filter:blur(10px);
     }
-    #ai-show-tab.r{border-radius:14px 0 0 14px}
+    #ai-show-tab.r{
+      border-radius:14px 0 0 14px;
+    }
 
     /* PANEL */
-    #app-panel{
+    #ai-panel{
       position:fixed;
-      right:14px;
-      bottom:100px;
-      width:min(98vw,1180px);
-      height:min(92vh,880px);
-      background:linear-gradient(180deg,rgba(8,12,25,.98),rgba(11,16,32,.98));
+      right:16px;
+      bottom:104px;
+      width:min(96vw,540px);
+      height:min(88vh,820px);
+      background:linear-gradient(180deg, rgba(2,8,23,.98), rgba(3,11,28,.98));
       border:1px solid var(--border);
-      border-radius:28px;
+      border-radius:24px;
       box-shadow:var(--shadow);
-      display:none;
       overflow:hidden;
+      display:none;
+      flex-direction:column;
       z-index:99999;
       backdrop-filter:blur(16px);
     }
-    #app-panel.open{display:grid;grid-template-columns:280px 1fr}
-    #app-panel.expanded{
-      top:8px;left:8px;right:8px;bottom:8px;width:auto;height:auto
+    #ai-panel.open{display:flex}
+    #ai-panel.expanded{
+      width:min(98vw,760px);
+      height:min(94vh,940px);
+      right:10px;
+      bottom:10px;
     }
 
-    .sidebar{
-      border-right:1px solid var(--border);
-      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0));
+    #ai-header{
       padding:14px;
-      overflow-y:auto;
-    }
-    .main{
+      border-bottom:1px solid var(--border2);
       display:flex;
-      flex-direction:column;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-shrink:0;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
+    }
+
+    .ai-head-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
       min-width:0;
-      min-height:0;
     }
 
-    .brand{
-      display:flex;align-items:center;gap:10px;margin-bottom:14px
+    .ai-head-left img{
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      object-fit:cover;
+      border:1.5px solid var(--border);
+      flex-shrink:0;
     }
-    .brand img{
-      width:42px;height:42px;border-radius:50%;object-fit:cover;border:1px solid var(--border)
-    }
-    .brand h2{margin:0;font-size:18px}
-    .status{font-size:12px;color:#93f3b1;margin-top:3px}
 
-    .side-section{margin-top:14px}
-    .side-label{
-      font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700;margin-bottom:8px
+    .ai-title{
+      font-weight:800;
+      font-size:18px;
+      color:#fff;
     }
-    .nav-btn{
-      width:100%;text-align:left;border:1px solid var(--border);background:var(--card);color:var(--text);
-      padding:12px 14px;border-radius:14px;cursor:pointer;margin-bottom:8px;font-weight:700
-    }
-    .nav-btn.active{border-color:rgba(255,211,77,.5);box-shadow:0 0 0 1px rgba(255,211,77,.15) inset;color:var(--gold2)}
-    .small-row{display:flex;gap:8px;flex-wrap:wrap}
-    .tiny-btn,.chip{
-      border:1px solid var(--border);background:var(--card);color:var(--text);padding:8px 10px;border-radius:999px;
-      cursor:pointer;font-size:12px;font-weight:700
-    }
-    .tiny-btn.gold{background:linear-gradient(180deg,var(--gold),#f0c12a);color:#111;border:none}
-    .tiny-btn.red{background:#35131b;color:#ffb6c5}
-    .tiny-btn.green{background:#10331f;color:#a5f3c0}
 
-    .content-header{
-      padding:14px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap
+    #ai-status-txt{
+      margin-top:2px;
+      font-size:12px;
+      color:#87f7a7;
     }
-    .content-title{font-size:18px;font-weight:800}
-    .content-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .round-btn{
-      width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);
-      cursor:pointer;font-size:18px
-    }
-    .segmented{
-      display:flex;border:1px solid var(--border);border-radius:12px;overflow:hidden
-    }
-    .segmented button{
-      border:none;background:var(--card);color:var(--text);padding:10px 12px;cursor:pointer;font-weight:700
-    }
-    .segmented button.active{background:var(--blue);color:#fff}
 
-    .page{
+    .head-btns{
+      display:flex;
+      gap:8px;
+      flex-shrink:0;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .icon-btn{
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#0d1730;
+      color:#fff;
+      cursor:pointer;
+      font-size:17px;
+    }
+
+    #ai-provider-panel{
       display:none;
+      padding:12px 14px;
+      border-bottom:1px solid var(--border2);
+      background:rgba(255,255,255,.02);
+      flex-shrink:0;
+    }
+    #ai-provider-panel.show{display:block}
+
+    .small-label{
+      font-size:11px;
+      color:var(--muted);
+      margin-bottom:8px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:700;
+    }
+
+    .providers{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+
+    .provider-card{
+      border:1px solid var(--border);
+      background:#0d1730;
+      border-radius:14px;
+      padding:11px 12px;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .provider-card:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,216,76,.35);
+    }
+    .provider-card.active{
+      border-color:rgba(255,216,76,.58);
+      background:#101b34;
+      box-shadow:0 0 0 1px rgba(255,216,76,.18) inset;
+    }
+
+    .provider-name{
+      font-size:14px;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    .badge{
+      display:inline-flex;
+      padding:3px 7px;
+      border-radius:999px;
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.06em;
+    }
+    .badge.free{background:rgba(34,197,94,.15);color:#97ffb5}
+    .badge.paid{background:rgba(239,68,68,.14);color:#ffafaf}
+    .badge.trial{background:rgba(59,130,246,.15);color:#aecaFF}
+
+    #ai-body{
       flex:1;
       min-height:0;
-      overflow:auto;
+      overflow-y:auto;
       padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,0)),
+        radial-gradient(circle at top, rgba(47,103,240,.05), transparent 28%);
     }
-    .page.active{display:block}
 
-    .grid{
-      display:grid;gap:14px
+    .chips-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
     }
-    .grid-2{grid-template-columns:1.2fr .8fr}
-    .grid-3{grid-template-columns:repeat(3,1fr)}
-    .card{
+
+    .qchip{
       border:1px solid var(--border);
-      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
-      border-radius:20px;
-      padding:14px;
+      background:#0d1730;
+      color:#e2ecff;
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+      transition:.18s ease;
     }
-    .card h3{margin:0 0 10px;font-size:16px;color:var(--gold2)}
-    .muted{color:var(--muted)}
-    .stat{
-      padding:14px;border:1px solid var(--border);border-radius:18px;background:var(--card)
+    .qchip:hover{
+      border-color:rgba(255,216,76,.3);
+      color:#fff;
     }
-    .stat b{display:block;font-size:28px;margin-bottom:6px}
-    .progress{
-      height:12px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden
-    }
-    .progress > div{height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));width:0%}
 
-    /* CHAT */
-    #chat-wrap{display:grid;grid-template-rows:1fr auto;gap:12px;min-height:68vh}
-    #chat-msgs{
-      min-height:0;overflow:auto;display:flex;flex-direction:column;gap:12px;padding-right:4px
+    .cm{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
     }
-    .cm{display:flex;gap:10px;align-items:flex-end}
     .cm.user{justify-content:flex-end}
+    .cm.bot{justify-content:flex-start}
+
     .bot-av{
-      width:30px;height:30px;border-radius:50%;overflow:hidden;flex-shrink:0;border:1px solid var(--border);background:var(--card)
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      overflow:hidden;
+      flex-shrink:0;
+      border:1px solid var(--border);
+      background:#0d1730;
+      display:grid;
+      place-items:center;
     }
-    .bot-av img{width:100%;height:100%;object-fit:cover}
-    .msg-wrap{max-width:82%;display:flex;flex-direction:column;gap:4px}
+    .bot-av img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .msg-wrap{
+      max-width:82%;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
     .cm-bub{
-      padding:13px 14px;border-radius:18px;line-height:1.55;font-size:15px;word-wrap:break-word;white-space:pre-wrap;
-      border:1px solid rgba(255,255,255,.04)
+      padding:13px 14px;
+      border-radius:18px;
+      font-size:15px;
+      line-height:1.55;
+      word-wrap:break-word;
+      border:1px solid rgba(255,255,255,.04);
+      white-space:pre-wrap;
     }
-    .cm.user .cm-bub{background:linear-gradient(180deg,var(--blue),var(--blue2));color:#fff;border-bottom-right-radius:8px}
-    .cm.bot .cm-bub{background:linear-gradient(180deg,var(--panel2),var(--panel));color:var(--text);border-bottom-left-radius:8px}
-    .cm-time{font-size:11px;color:var(--muted);padding:0 6px}
+
+    .cm.user .cm-bub{
+      background:linear-gradient(180deg, var(--user), var(--blue2));
+      color:#fff;
+      border-bottom-right-radius:8px;
+    }
+
+    .cm.bot .cm-bub{
+      background:linear-gradient(180deg, #1d2a3f, #182538);
+      color:#eef3ff;
+      border-bottom-left-radius:8px;
+    }
+
+    .cm-time{
+      font-size:11px;
+      color:var(--muted);
+      padding:0 6px;
+    }
     .cm.user .cm-time{text-align:right}
-    .cm-img{width:100%;max-height:220px;object-fit:cover;border-radius:14px;margin-bottom:8px;border:1px solid var(--border)}
-    .typing-bub{min-width:74px;display:flex;gap:6px;align-items:center}
+
+    .cm-img{
+      width:100%;
+      max-height:220px;
+      object-fit:cover;
+      border-radius:14px;
+      margin-bottom:8px;
+      border:1px solid var(--border);
+    }
+
+    .typing-bub{
+      min-width:74px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
     .typing-bub span{
-      width:8px;height:8px;border-radius:50%;background:#c6d4f3;animation:blink 1.1s infinite ease-in-out
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:#bcc9e5;
+      animation:blink 1.1s infinite ease-in-out;
     }
     .typing-bub span:nth-child(2){animation-delay:.12s}
     .typing-bub span:nth-child(3){animation-delay:.24s}
-    @keyframes blink{0%,80%,100%{transform:translateY(0);opacity:.45}40%{transform:translateY(-4px);opacity:1}}
+    @keyframes blink{
+      0%,80%,100%{transform:translateY(0);opacity:.45}
+      40%{transform:translateY(-4px);opacity:1}
+    }
 
-    .chat-bottom{display:grid;gap:10px}
-    .chips{display:flex;gap:8px;flex-wrap:wrap}
-    .input-row{display:flex;align-items:flex-end;gap:8px}
-    #chat-input{
-      flex:1;min-height:48px;max-height:130px;resize:none;padding:12px 14px;border-radius:16px;
-      border:1px solid var(--border);background:var(--card);color:var(--text);outline:none;line-height:1.45
-    }
-    #send-btn{
-      width:48px;height:48px;border:none;border-radius:14px;background:linear-gradient(180deg,var(--gold),#efc12a);
-      color:#111;cursor:pointer;font-weight:900;font-size:18px
-    }
     #img-preview-wrap{
-      display:none;padding:10px;border:1px solid var(--border);border-radius:16px;background:var(--card)
+      display:none;
+      padding:10px 14px;
+      border-top:1px solid var(--border2);
+      background:rgba(255,255,255,.02);
+      flex-shrink:0;
     }
     #img-preview-wrap.show{display:block}
-    #img-preview{width:72px;height:72px;border-radius:14px;object-fit:cover;border:1px solid var(--border)}
 
-    /* tracker */
-    .task-list{display:grid;gap:10px}
-    .task-item{
-      display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--border);
-      border-radius:16px;background:var(--card)
-    }
-    .task-item.done{opacity:.8}
-    .task-item input[type="checkbox"]{transform:scale(1.2)}
-    .pill{font-size:11px;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--muted);font-weight:700}
-
-    /* forms */
-    input[type="text"],input[type="number"],input[type="password"],select,textarea.note{
-      width:100%;padding:12px;border-radius:14px;border:1px solid var(--border);background:var(--card);color:var(--text);outline:none
-    }
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-
-    /* pomodoro */
-    .timer-box{
-      display:grid;place-items:center;border:1px solid var(--border);border-radius:22px;background:var(--card);padding:18px
-    }
-    .big-time{font-size:54px;font-weight:900;letter-spacing:.04em}
-    .subtle{font-size:12px;color:var(--muted)}
-
-    /* formulas */
-    .formula-item{
-      padding:12px;border:1px solid var(--border);border-radius:16px;background:var(--card);margin-bottom:10px
-    }
-    .formula-item b{color:var(--gold2)}
-
-    /* notes */
-    .note-item{
-      padding:12px;border:1px solid var(--border);border-radius:16px;background:var(--card);margin-bottom:10px
+    .img-preview-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
     }
 
-    /* CBT */
-    .cbt-layout{display:grid;grid-template-columns:1fr 280px;gap:14px}
-    .question-box{
-      border:1px solid var(--border);background:var(--card);border-radius:20px;padding:16px;min-height:360px
-    }
-    .options{display:grid;gap:10px;margin-top:14px}
-    .option{
-      padding:12px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.03);cursor:pointer
-    }
-    .option.selected{border-color:rgba(255,211,77,.55);background:rgba(255,211,77,.10)}
-    .palette{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-    .pbtn{
-      width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-weight:700
-    }
-    .pbtn.answered{background:#133422;color:#b9f7cf}
-    .pbtn.marked{background:#2a173f;color:#d7beff}
-    .pbtn.current{outline:2px solid var(--gold)}
-    .legend{display:grid;gap:8px;font-size:13px;color:var(--muted)}
-
-    .offline-badge{
-      display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;
-      background:#123020;color:#aef0c3;font-size:12px;font-weight:700
+    #img-preview{
+      width:62px;
+      height:62px;
+      border-radius:14px;
+      object-fit:cover;
+      border:1px solid var(--border);
+      background:#0d1730;
     }
 
-    .danger-text{color:#ffb2bd}
-    .good-text{color:#a7f2c3}
-
-    @media (max-width: 980px){
-      #app-panel.open{grid-template-columns:1fr}
-      .sidebar{display:none}
-      .grid-2,.grid-3,.cbt-layout,.row,.row-3{grid-template-columns:1fr}
+    .tiny-danger{
+      border:none;
+      background:#2a0d14;
+      color:#ffb1b1;
+      padding:8px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
     }
+
+    #ai-key-area{
+      padding:12px 14px;
+      border-top:1px solid var(--border2);
+      background:rgba(255,255,255,.02);
+      flex-shrink:0;
+    }
+
+    #key-label-txt{
+      font-size:12px;
+      font-weight:800;
+      color:var(--gold2);
+      margin-bottom:5px;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    #key-hint-txt{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.55;
+      margin-bottom:10px;
+    }
+
+    #key-hint-txt a{
+      color:#9dc0ff;
+      text-decoration:none;
+      font-weight:700;
+    }
+
+    .key-row{
+      display:flex;
+      gap:8px;
+    }
+
+    .key-row input{
+      flex:1;
+      min-width:0;
+      padding:11px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#0d1730;
+      color:#fff;
+      outline:none;
+      font-size:14px;
+    }
+
+    .gold-btn{
+      border:none;
+      background:linear-gradient(180deg, var(--gold), #f5bf20);
+      color:#171717;
+      padding:0 16px;
+      border-radius:12px;
+      font-weight:900;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    #ai-footer{
+      padding:12px 14px 14px;
+      border-top:1px solid var(--border2);
+      background:linear-gradient(180deg, rgba(255,255,255,.01), rgba(255,255,255,0));
+      flex-shrink:0;
+    }
+
+    .input-row{
+      display:flex;
+      align-items:flex-end;
+      gap:8px;
+      margin-bottom:10px;
+    }
+
+    .round-btn{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#0d1730;
+      color:#fff;
+      cursor:pointer;
+      font-size:18px;
+      flex-shrink:0;
+    }
+
+    #chat-input-txt{
+      flex:1;
+      min-height:46px;
+      max-height:130px;
+      resize:none;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:#0d1730;
+      color:#fff;
+      outline:none;
+      font-size:15px;
+      line-height:1.45;
+      font-family:inherit;
+    }
+
+    #chat-send-btn{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      border:none;
+      background:linear-gradient(180deg, var(--gold), #f5bf20);
+      color:#171717;
+      cursor:pointer;
+      flex-shrink:0;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .foot-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    #provider-badge-btn{
+      border:1px solid var(--border);
+      background:#111b31;
+      color:var(--gold2);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      cursor:pointer;
+      font-weight:800;
+    }
+
+    .foot-tools{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .tiny-btn{
+      border:1px solid var(--border);
+      background:#0d1730;
+      color:#dbe7ff;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    .foot-hint{
+      font-size:11px;
+      color:var(--muted);
+    }
+
+    .snap-anim{
+      transition:left .38s ease, top .38s ease;
+    }
+
+    .offscreen{
+      visibility:hidden;
+    }
+
+    @keyframes sparkleFloat{
+      0%{
+        transform:translate(-50%,-50%) scale(.6);
+        opacity:1;
+      }
+      100%{
+        transform:translate(calc(-50% + var(--sx)), calc(-50% + var(--sy))) scale(1.35);
+        opacity:0;
+      }
+    }
+
     @media (max-width: 768px){
-      #app-panel{top:8px;left:8px;right:8px;bottom:8px;width:auto;height:auto;border-radius:22px}
-      #ai-fab-label{display:none}
-      .msg-wrap{max-width:90%}
-      .big-time{font-size:42px}
-      .content-header{padding:12px}
-      .page{padding:12px}
+      .demo-wrap{padding:16px}
+      .hero{padding:18px}
+      #ai-panel{
+        top:10px;
+        left:10px;
+        right:10px;
+        bottom:10px;
+        width:auto;
+        height:auto;
+        border-radius:22px;
+      }
+      #ai-panel.expanded{
+        top:6px;
+        left:6px;
+        right:6px;
+        bottom:6px;
+        width:auto;
+        height:auto;
+      }
+      #ai-fab-wrap{
+        right:14px;
+        bottom:14px;
+      }
+      #ai-fab-label{
+        display:none;
+      }
+      .msg-wrap{
+        max-width:88%;
+      }
+      .providers{
+        grid-template-columns:1fr;
+      }
+      .head-btns{
+        gap:6px;
+      }
+      .icon-btn{
+        width:36px;
+        height:36px;
+      }
     }
   </style>
 </head>
-<body class="theme-midnight">
+<body>
+  <script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js")
+        .then(() => {
+          console.log("Service Worker registered successfully");
+        })
+        .catch(err => {
+          console.log("Service Worker error:", err);
+        });
+    });
+  }
+  </script>
 
-  <div class="landing">
+  <div class="demo-wrap">
     <div class="hero">
-      <h1>Batman AI Ultra Study App</h1>
+      <h1>Batman AI Ultra Final</h1>
       <p>
-        Ye ek all-in-one student dashboard hai — AI chat, offline help, tracker, pomodoro, formulas, notes, mock CBT, themes, backups aur PWA install support.
+        Bottom-right wale Batman button ko dabao. Chat kholo. Drag karo. Voice use karo. Image preview use karo.
+        API key ho toh online AI call karega, nahi ho toh offline help replies dega.
       </p>
+
       <div class="hero-grid">
-        <div class="hero-card"><h3>AI + Offline</h3><p>API key ho toh online AI, warna offline help aur simple math solver.</p></div>
-        <div class="hero-card"><h3>Study Tools</h3><p>Tracker, streak, tasks, pomodoro, formulas aur notes.</p></div>
-        <div class="hero-card"><h3>Mock CBT</h3><p>Timer, palette, mark review, result calculation, save state.</p></div>
-        <div class="hero-card"><h3>PWA Ready</h3><p>Install prompt, service worker cache, offline open.</p></div>
+        <div class="hero-card">
+          <h3>Offline Ready</h3>
+          <p>Install, bookmark, features, offline mode, API help jaisi cheezein bina key ke reply karega.</p>
+        </div>
+        <div class="hero-card">
+          <h3>Big Mobile UI</h3>
+          <p>Phone pe chhota popup nahi — bada app-jaisa chat panel open hoga.</p>
+        </div>
+        <div class="hero-card">
+          <h3>Multi Provider</h3>
+          <p>Gemini, Groq, OpenRouter, OpenAI, Cohere provider selector diya gaya hai.</p>
+        </div>
+        <div class="hero-card">
+          <h3>Utilities</h3>
+          <p>Voice input, image preview, export chat, clear chat, saved history sab diya gaya hai.</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- FAB -->
+  <!-- AI FAB Button -->
   <div id="ai-fab-wrap">
     <div id="ai-fab-label">🦇 Batman AI</div>
     <div id="ai-btn-ring-wrap">
       <div class="pulse-ring"></div>
       <div class="pulse-ring2"></div>
       <div class="pulse-ring3"></div>
-      <button id="ai-chat-btn" title="Open app">
-        <img alt="Batman AI"
-             src='data:image/svg+xml;utf8,
-             <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
-               <rect width="256" height="256" rx="40" fill="%230b1020"/>
-               <circle cx="128" cy="128" r="84" fill="%23141d3f" stroke="%23ffd34d" stroke-width="8"/>
-               <path d="M54 146c22-22 42-32 56-30 7-27 19-43 18-43l19 17 20-17s11 15 18 43c13-2 34 8 57 30-19-3-33-1-43 7 0 0 2 31-19 31h-104c-21 0-19-31-19-31-10-8-24-10-43-7z" fill="%23ffd34d"/>
-               <circle cx="102" cy="128" r="7" fill="%230b1020"/>
-               <circle cx="154" cy="128" r="7" fill="%230b1020"/>
-               <path d="M104 154c8 8 40 8 48 0" stroke="%230b1020" stroke-width="6" stroke-linecap="round" fill="none"/>
-             </svg>' />
+
+      <button id="ai-chat-btn" title="Open Batman AI">
+        <img
+          src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop"
+          alt="Batman AI"
+          loading="lazy"
+          decoding="async"
+        />
         <div class="notif" id="ai-notif">1</div>
       </button>
     </div>
   </div>
 
-  <div id="ai-show-tab" title="Show app">🦇 AI</div>
+  <!-- Edge peek tab -->
+  <div id="ai-show-tab" onclick="aiShowBtn()" title="Show AI">🦇 AI</div>
 
-  <!-- APP PANEL -->
-  <div id="app-panel">
-    <aside class="sidebar">
-      <div class="brand">
-        <img alt="Batman AI"
-             src='data:image/svg+xml;utf8,
-             <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 256 256">
-               <rect width="256" height="256" rx="40" fill="%230b1020"/>
-               <circle cx="128" cy="128" r="84" fill="%23141d3f" stroke="%23ffd34d" stroke-width="8"/>
-               <path d="M54 146c22-22 42-32 56-30 7-27 19-43 18-43l19 17 20-17s11 15 18 43c13-2 34 8 57 30-19-3-33-1-43 7 0 0 2 31-19 31h-104c-21 0-19-31-19-31-10-8-24-10-43-7z" fill="%23ffd34d"/>
-               <circle cx="102" cy="128" r="7" fill="%230b1020"/>
-               <circle cx="154" cy="128" r="7" fill="%230b1020"/>
-               <path d="M104 154c8 8 40 8 48 0" stroke="%230b1020" stroke-width="6" stroke-linecap="round" fill="none"/>
-             </svg>' />
+  <!-- AI PANEL -->
+  <div id="ai-panel">
+
+    <!-- Header -->
+    <div id="ai-header">
+      <div class="ai-head-left">
+        <img
+          src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop"
+          alt="AI"
+        />
         <div>
-          <h2>Batman AI</h2>
-          <div class="status" id="live-status">● Ready</div>
+          <div class="ai-title">🦇 Batman AI</div>
+          <div id="ai-status-txt">● Online — Ask anything!</div>
         </div>
       </div>
 
-      <div class="side-section">
-        <div class="side-label">Navigation</div>
-        <button class="nav-btn active" data-page="dashboard">🏠 Dashboard</button>
-        <button class="nav-btn" data-page="chat">💬 AI Chat</button>
-        <button class="nav-btn" data-page="tracker">📚 Study Tracker</button>
-        <button class="nav-btn" data-page="pomodoro">⏱ Pomodoro</button>
-        <button class="nav-btn" data-page="cbt">🧪 CBT Mock</button>
-        <button class="nav-btn" data-page="formulas">🧮 Formulas</button>
-        <button class="nav-btn" data-page="notes">📝 Notes</button>
-        <button class="nav-btn" data-page="settings">⚙ Settings</button>
+      <div class="head-btns">
+        <button class="icon-btn" onclick="toggleProviderPanel()" title="Providers">⚙️</button>
+        <button class="icon-btn" onclick="aiExpand()" title="Expand">⛶</button>
+        <button class="icon-btn" onclick="clearChat()" title="Clear chat">🗑️</button>
+        <button class="icon-btn" onclick="showHelpMessage()" title="Help">?</button>
+        <button class="icon-btn" onclick="aiToggle()" title="Close">✕</button>
       </div>
+    </div>
 
-      <div class="side-section">
-        <div class="side-label">Quick Actions</div>
-        <div class="small-row">
-          <button class="tiny-btn gold" id="install-btn" style="display:none">Install App</button>
-          <button class="tiny-btn" id="notify-btn">Enable Alerts</button>
-          <button class="tiny-btn" id="backup-btn">Export Backup</button>
-          <button class="tiny-btn" id="restore-btn">Import Backup</button>
-          <input type="file" id="restore-file" class="hidden" accept=".json" />
+    <!-- Provider panel -->
+    <div id="ai-provider-panel">
+      <div class="small-label">Choose AI Provider</div>
+
+      <div class="providers">
+        <div class="provider-card" id="pcard-gemini" onclick="selectProvider('gemini')">
+          <div class="provider-name">⚡ Gemini Flash</div>
+          <span class="badge free">FREE</span>
         </div>
-      </div>
 
-      <div class="side-section">
-        <div class="side-label">Quick Themes</div>
-        <div class="small-row">
-          <button class="tiny-btn" onclick="setTheme('midnight')">Midnight</button>
-          <button class="tiny-btn" onclick="setTheme('emerald')">Emerald</button>
-          <button class="tiny-btn" onclick="setTheme('crimson')">Crimson</button>
-          <button class="tiny-btn" onclick="setTheme('royal')">Royal</button>
+        <div class="provider-card" id="pcard-groq" onclick="selectProvider('groq')">
+          <div class="provider-name">🚀 Groq</div>
+          <span class="badge free">FREE</span>
         </div>
-      </div>
 
-      <div class="side-section">
-        <div class="side-label">Pinned Notes</div>
-        <div id="pinned-list" class="muted" style="font-size:13px">No pinned notes yet.</div>
-      </div>
-    </aside>
+        <div class="provider-card" id="pcard-openrouter" onclick="selectProvider('openrouter')">
+          <div class="provider-name">🔀 OpenRouter</div>
+          <span class="badge free">FREE</span>
+        </div>
 
-    <main class="main">
-      <div class="content-header">
-        <div class="content-title" id="page-title">Dashboard</div>
-        <div class="content-tools">
-          <span class="offline-badge" id="offline-indicator">🟢 Online</span>
+        <div class="provider-card" id="pcard-openai" onclick="selectProvider('openai')">
+          <div class="provider-name">🤖 OpenAI GPT-4o</div>
+          <span class="badge paid">PAID</span>
+        </div>
 
-          <div class="segmented" id="mode-toggle">
-            <button class="active" data-mode="study">Study Mode</button>
-            <button data-mode="chat">Chat Mode</button>
-          </div>
-
-          <button class="round-btn" id="speak-toggle" title="Toggle TTS">🔊</button>
-          <button class="round-btn" id="expand-btn" title="Expand">⛶</button>
-          <button class="round-btn" id="close-btn" title="Close">✕</button>
+        <div class="provider-card" id="pcard-cohere" onclick="selectProvider('cohere')">
+          <div class="provider-name">🌊 Cohere</div>
+          <span class="badge trial">TRIAL</span>
         </div>
       </div>
+    </div>
 
-      <!-- DASHBOARD -->
-      <section class="page active" id="page-dashboard">
-        <div class="grid grid-3">
-          <div class="stat"><b id="stat-tasks">0</b><span class="muted">Tasks Completed</span></div>
-          <div class="stat"><b id="stat-streak">0</b><span class="muted">Study Streak</span></div>
-          <div class="stat"><b id="stat-pomo">0</b><span class="muted">Pomodoro Sessions</span></div>
+    <!-- Chat body -->
+    <div id="ai-body">
+      <div id="chat-msgs" style="display:flex;flex-direction:column;gap:12px;"></div>
+
+      <div id="chips-row" class="chips-row">
+        <span class="qchip" onclick="quickAsk(this)">📚 Study tips</span>
+        <span class="qchip" onclick="quickAsk(this)">📱 Install app</span>
+        <span class="qchip" onclick="quickAsk(this)">🔑 Get free API key</span>
+        <span class="qchip" onclick="quickAsk(this)">🧮 Math help</span>
+        <span class="qchip" onclick="quickAsk(this)">📡 Offline mode</span>
+        <span class="qchip" onclick="quickAsk(this)">🎤 Voice input</span>
+      </div>
+    </div>
+
+    <!-- Image preview -->
+    <div id="img-preview-wrap">
+      <div class="img-preview-row">
+        <img id="img-preview" src="" alt="preview" />
+        <button class="tiny-danger" onclick="removeImage()">Remove</button>
+      </div>
+    </div>
+
+    <!-- API key area -->
+    <div id="ai-key-area">
+      <div id="key-label-txt"></div>
+      <div id="key-hint-txt"></div>
+
+      <div class="key-row">
+        <input id="ai-api-input" type="password" placeholder="Paste API key here..." />
+        <button class="gold-btn" onclick="saveKey()">Save</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="ai-footer">
+      <div class="input-row">
+        <button class="round-btn" id="img-upload-btn" onclick="document.getElementById('file-input-hidden').click()" title="Upload image">🖼️</button>
+        <button class="round-btn" onclick="startVoiceInput()" title="Voice input">🎤</button>
+
+        <textarea
+          id="chat-input-txt"
+          rows="1"
+          placeholder="Koi bhi doubt poochho... 🦇"
+          oninput="aiResize(this)"
+        ></textarea>
+
+        <button id="chat-send-btn" onclick="aiSend()" title="Send">➤</button>
+      </div>
+
+      <div class="foot-row">
+        <button id="provider-badge-btn" onclick="toggleProviderPanel()">⚙️ Gemini Flash</button>
+
+        <div class="foot-tools">
+          <button class="tiny-btn" onclick="exportChat()">Export chat</button>
+          <button class="tiny-btn" onclick="toggleInstallGuide()">Install help</button>
+          <span class="foot-hint">Enter = Send • Shift+Enter = New line</span>
         </div>
-
-        <div class="grid grid-2" style="margin-top:14px">
-          <div class="card">
-            <h3>Today's Progress</h3>
-            <div class="progress"><div id="main-progress-fill"></div></div>
-            <div class="muted" id="main-progress-text" style="margin-top:8px">0% complete</div>
-          </div>
-          <div class="card">
-            <h3>Quick Focus</h3>
-            <div class="small-row">
-              <button class="tiny-btn green" onclick="goPage('pomodoro')">Start Pomodoro</button>
-              <button class="tiny-btn" onclick="goPage('chat'); setQuickPrompt('Give me study motivation')">Study Motivation</button>
-              <button class="tiny-btn" onclick="goPage('chat'); setQuickPrompt('Explain integration simply')">Math Help</button>
-              <button class="tiny-btn" onclick="goPage('cbt')">Open CBT</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-2" style="margin-top:14px">
-          <div class="card">
-            <h3>Upcoming Suggestions</h3>
-            <div id="dashboard-suggestions" class="muted">Add tracker tasks to get suggestions.</div>
-          </div>
-          <div class="card">
-            <h3>System Notes</h3>
-            <div class="muted">
-              OCR aur PDF-to-CBT auto parser is build me placeholder level par hai. Baaki major features ready hain.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- CHAT -->
-      <section class="page" id="page-chat">
-        <div id="chat-wrap">
-          <div id="chat-msgs"></div>
-
-          <div class="chat-bottom">
-            <div class="chips" id="chip-row">
-              <button class="chip" onclick="setQuickPrompt('Install app kaise karein?')">📱 Install help</button>
-              <button class="chip" onclick="setQuickPrompt('What are the features?')">🌟 Features</button>
-              <button class="chip" onclick="setQuickPrompt('Solve 2x + 5 = 17')">🧮 Simple math</button>
-              <button class="chip" onclick="setQuickPrompt('Give me chemistry revision tips')">🧪 Revision tips</button>
-              <button class="chip" onclick="setQuickPrompt('Get free API key')">🔑 API key</button>
-            </div>
-
-            <div id="img-preview-wrap">
-              <div style="display:flex;gap:10px;align-items:center">
-                <img id="img-preview" alt="preview" />
-                <button class="tiny-btn red" onclick="removeImage()">Remove image</button>
-              </div>
-            </div>
-
-            <div class="input-row">
-              <button class="round-btn" id="upload-btn" title="Upload image">🖼</button>
-              <button class="round-btn" id="voice-btn" title="Voice input">🎤</button>
-              <button class="round-btn" id="clear-chat-btn" title="Clear chat">🗑</button>
-              <textarea id="chat-input" placeholder="Koi bhi doubt poochho..."></textarea>
-              <button id="send-btn">➤</button>
-            </div>
-
-            <div class="small-row">
-              <button class="tiny-btn" onclick="exportChat()">Export Chat</button>
-              <button class="tiny-btn" onclick="copyLastBot()">Copy Last Reply</button>
-              <button class="tiny-btn" onclick="speakLastBot()">Speak Last Reply</button>
-              <button class="tiny-btn" onclick="pinLastBot()">Pin Last Reply</button>
-            </div>
-          </div>
-        </div>
-        <input type="file" id="image-input" class="hidden" accept="image/*" />
-      </section>
-
-      <!-- TRACKER -->
-      <section class="page" id="page-tracker">
-        <div class="grid grid-2">
-          <div class="card">
-            <h3>Add Study Task</h3>
-            <div class="row">
-              <input type="text" id="task-title" placeholder="Task title" />
-              <select id="task-subject">
-                <option>Maths</option>
-                <option>Physics</option>
-                <option>Chemistry</option>
-                <option>Biology</option>
-                <option>English</option>
-                <option>Computer</option>
-                <option>General</option>
-              </select>
-            </div>
-            <div class="row" style="margin-top:10px">
-              <select id="task-priority">
-                <option value="High">High Priority</option>
-                <option value="Medium">Medium Priority</option>
-                <option value="Low">Low Priority</option>
-              </select>
-              <input type="text" id="task-deadline" placeholder="Deadline e.g. Today / Tomorrow" />
-            </div>
-            <div class="small-row" style="margin-top:10px">
-              <button class="tiny-btn gold" onclick="addTask()">Add Task</button>
-              <button class="tiny-btn" onclick="seedTasks()">Sample Tasks</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Tracker Stats</h3>
-            <div class="grid grid-3">
-              <div class="stat"><b id="tracker-total">0</b><span class="muted">Total</span></div>
-              <div class="stat"><b id="tracker-done">0</b><span class="muted">Done</span></div>
-              <div class="stat"><b id="tracker-pending">0</b><span class="muted">Pending</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <h3>Your Tasks</h3>
-          <div id="task-list" class="task-list"></div>
-        </div>
-      </section>
-
-      <!-- POMODORO -->
-      <section class="page" id="page-pomodoro">
-        <div class="grid grid-2">
-          <div class="timer-box">
-            <div class="subtle" id="pomo-state-label">Focus Session</div>
-            <div class="big-time" id="pomo-time">25:00</div>
-            <div class="small-row">
-              <button class="tiny-btn green" onclick="startPomodoro()">Start</button>
-              <button class="tiny-btn" onclick="pausePomodoro()">Pause</button>
-              <button class="tiny-btn red" onclick="resetPomodoro()">Reset</button>
-              <button class="tiny-btn" onclick="skipPomodoro()">Skip</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Pomodoro Settings</h3>
-            <div class="row">
-              <input type="number" id="focus-min" value="25" min="1" />
-              <input type="number" id="break-min" value="5" min="1" />
-            </div>
-            <div class="small-row" style="margin-top:10px">
-              <button class="tiny-btn gold" onclick="applyPomodoroSettings()">Apply</button>
-              <button class="tiny-btn" onclick="setPreset(25,5)">25/5</button>
-              <button class="tiny-btn" onclick="setPreset(50,10)">50/10</button>
-              <button class="tiny-btn" onclick="setPreset(90,15)">90/15</button>
-            </div>
-            <div class="muted" style="margin-top:10px">Completed sessions: <b id="pomo-count">0</b></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- CBT -->
-      <section class="page" id="page-cbt">
-        <div class="grid grid-2">
-          <div class="card">
-            <h3>Mock Test Controls</h3>
-            <div class="row">
-              <input type="number" id="cbt-duration" value="30" min="1" />
-              <select id="cbt-subject">
-                <option>Mixed</option>
-                <option>Maths</option>
-                <option>Physics</option>
-                <option>Chemistry</option>
-              </select>
-            </div>
-            <div class="small-row" style="margin-top:10px">
-              <button class="tiny-btn gold" onclick="loadSampleTest()">Load Sample Test</button>
-              <button class="tiny-btn green" onclick="startTest()">Start Test</button>
-              <button class="tiny-btn red" onclick="submitTest()">Submit</button>
-              <button class="tiny-btn" onclick="resetTest()">Reset</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Mock Test Status</h3>
-            <div class="muted">Timer: <b id="cbt-timer">00:00</b></div>
-            <div class="muted" style="margin-top:6px">Attempted: <b id="cbt-attempted">0</b></div>
-            <div class="muted" style="margin-top:6px">Marked: <b id="cbt-marked">0</b></div>
-            <div class="muted" style="margin-top:6px">Result: <b id="cbt-result">Not submitted</b></div>
-          </div>
-        </div>
-
-        <div class="cbt-layout" style="margin-top:14px">
-          <div class="question-box">
-            <div class="muted" id="q-index">Question 1</div>
-            <h3 id="q-text">Load a sample test first.</h3>
-            <div class="options" id="options-box"></div>
-            <div class="small-row" style="margin-top:14px">
-              <button class="tiny-btn" onclick="prevQ()">Prev</button>
-              <button class="tiny-btn" onclick="nextQ()">Next</button>
-              <button class="tiny-btn" onclick="markReview()">Mark Review</button>
-              <button class="tiny-btn red" onclick="clearResponse()">Clear Response</button>
-            </div>
-          </div>
-          <div class="card">
-            <h3>Question Palette</h3>
-            <div class="palette" id="palette-box"></div>
-            <div class="legend" style="margin-top:12px">
-              <div>🟩 Answered</div>
-              <div>🟪 Marked for review</div>
-              <div>⭐ Current question highlighted</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- FORMULAS -->
-      <section class="page" id="page-formulas">
-        <div class="card">
-          <h3>Quick Formula Bank</h3>
-          <div id="formula-list"></div>
-        </div>
-      </section>
-
-      <!-- NOTES -->
-      <section class="page" id="page-notes">
-        <div class="card">
-          <h3>Create Note</h3>
-          <input type="text" id="note-title" placeholder="Note title" />
-          <textarea class="note" id="note-body" rows="5" placeholder="Write your note..." style="margin-top:10px"></textarea>
-          <div class="small-row" style="margin-top:10px">
-            <button class="tiny-btn gold" onclick="saveNote()">Save Note</button>
-            <button class="tiny-btn" onclick="clearNoteInputs()">Clear</button>
-          </div>
-        </div>
-        <div class="card" style="margin-top:14px">
-          <h3>Saved Notes</h3>
-          <div id="notes-list"></div>
-        </div>
-      </section>
-
-      <!-- SETTINGS -->
-      <section class="page" id="page-settings">
-        <div class="grid grid-2">
-          <div class="card">
-            <h3>AI Provider</h3>
-            <select id="provider-select"></select>
-            <input type="password" id="api-key-input" placeholder="Paste API key here..." style="margin-top:10px" />
-            <div class="small-row" style="margin-top:10px">
-              <button class="tiny-btn gold" onclick="saveApiKey()">Save Key</button>
-              <button class="tiny-btn" onclick="removeApiKey()">Remove Key</button>
-            </div>
-            <div class="muted" id="provider-hint" style="margin-top:10px"></div>
-          </div>
-
-          <div class="card">
-            <h3>App Settings</h3>
-            <div class="row">
-              <select id="theme-select">
-                <option value="midnight">Midnight</option>
-                <option value="emerald">Emerald</option>
-                <option value="crimson">Crimson</option>
-                <option value="royal">Royal</option>
-              </select>
-              <select id="voice-lang">
-                <option value="en-IN">en-IN</option>
-                <option value="hi-IN">hi-IN</option>
-              </select>
-            </div>
-            <div class="small-row" style="margin-top:10px">
-              <button class="tiny-btn gold" onclick="applySettings()">Apply</button>
-              <button class="tiny-btn" onclick="toggleTTS()">Toggle Voice Reply</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-2" style="margin-top:14px">
-          <div class="card">
-            <h3>Offline Limits</h3>
-            <div class="muted">
-              Is build me offline help replies, local tracker, notes, pomodoro aur CBT save hoga.
-              Live AI, OCR aur PDF parsing ke liye internet/backend ya external library chahiye.
-            </div>
-          </div>
-          <div class="card">
-            <h3>Auto Fallback Order</h3>
-            <div class="muted" id="fallback-order"></div>
-          </div>
-        </div>
-      </section>
-    </main>
+      </div>
+    </div>
   </div>
+
+  <input id="file-input-hidden" type="file" accept="image/*" style="display:none;" />
 
   <script>
     /* =========================
-       APP STATE
+       OFFLINE KNOWLEDGE BASE
     ========================= */
-    const STORAGE_KEY = "batman_ultra_state_v3";
+    const OFFLINE_KB = [
+      {
+        patterns: [
+          "install", "install app", "add to home screen", "homescreen",
+          "phone pe install", "mobile install", "pwa", "install help"
+        ],
+        reply: `📲 App install kaise karein:
 
-    const APP = {
-      theme: "midnight",
-      mode: "study",
-      tts: false,
-      voiceLang: "en-IN",
-      provider: "gemini",
-      providerKeys: {
-        gemini: "",
-        groq: "",
-        openrouter: "",
-        openai: "",
-        cohere: ""
+Android Chrome:
+1. Website kholo
+2. 3-dot menu dabao
+3. "Add to Home screen" ya "Install app" choose karo
+4. Done ✅
+
+iPhone Safari:
+1. Website kholo
+2. Share button dabao
+3. "Add to Home Screen" choose karo ✅
+
+Laptop:
+Browser ke address bar ke paas install icon bhi aa sakta hai.`
       },
-      chatHistory: [],
-      pinned: [],
-      notes: [],
-      tasks: [],
-      tracker: {
-        streak: 0,
-        lastStudyDate: ""
+      {
+        patterns: [
+          "bookmark", "save website", "save", "bookmark kaise", "website save", "star"
+        ],
+        reply: `🔖 Bookmark kaise karein:
+
+Laptop/Desktop:
+• Chrome / Edge / Firefox: Ctrl + D
+• Safari: Cmd + D
+
+Mobile Chrome:
+• 3-dot menu → Star icon`
       },
-      pomodoro: {
-        focusMin: 25,
-        breakMin: 5,
-        remaining: 1500,
-        running: false,
-        onBreak: false,
-        sessions: 0
+      {
+        patterns: [
+          "offline", "without internet", "bina internet", "net ke bina", "offline mode"
+        ],
+        reply: `📡 Offline mode:
+
+Ye app offline me basic help replies de sakta hai.
+Online AI replies ke liye internet chahiye.
+
+Offline me:
+• app UI chalega
+• saved chat history dikhegi
+• install/help/features wale replies milenge`
       },
-      cbt: {
-        durationMin: 30,
-        remaining: 1800,
-        running: false,
-        questions: [],
-        current: 0,
-        submitted: false
+      {
+        patterns: [
+          "progress", "save progress", "data save", "reset progress", "history"
+        ],
+        reply: `💾 Data save:
+
+Chat history localStorage me save hoti hai.
+Browser data clear karoge toh history delete ho sakti hai.
+
+Clear chat button se current chat manually bhi hata sakte ho.`
+      },
+      {
+        patterns: [
+          "features", "feature", "help", "kya kya", "what can you do", "about"
+        ],
+        reply: `🌟 Batman AI Ultra Features:
+
+• Draggable floating AI button
+• Big mobile chat panel
+• Offline replies
+• API based online AI
+• Provider switch
+• Image preview
+• Voice input
+• Export chat
+• Clear chat
+• Saved chat history`
+      },
+      {
+        patterns: [
+          "api", "api key", "free api key", "key kaha se", "get api key"
+        ],
+        reply: `🔑 Free API key options:
+
+1. OpenRouter
+2. Gemini
+3. Groq
+
+Agar sirf offline use karna hai toh API key zaroori nahi hai.`
+      },
+      {
+        patterns: [
+          "hi", "hello", "hey", "namaste", "hii", "yo"
+        ],
+        reply: `Namaste bhai 👋
+Main Batman AI hoon.
+
+Tum mujhse poochh sakte ho:
+• install app
+• bookmark
+• offline mode
+• features
+• api key`
+      },
+      {
+        patterns: [
+          "voice", "voice input", "mic", "speak", "bolke"
+        ],
+        reply: `🎤 Voice input:
+
+Mic button dabao.
+Browser permission maange toh allow karo.
+Jo bologe woh input box me aa jayega.`
       }
-    };
+    ];
 
-    function loadState(){
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw) return;
-        const parsed = JSON.parse(raw);
-        Object.assign(APP, parsed);
-      }catch(e){}
-    }
-    function saveState(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(APP));
+    function normalizeText(text) {
+      return text
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s]/g, " ")
+        .replace(/\s+/g, " ");
     }
 
-    loadState();
+    function getOfflineReply(text) {
+      const t = normalizeText(text);
+
+      for (const item of OFFLINE_KB) {
+        for (const p of item.patterns) {
+          const pattern = normalizeText(p);
+
+          if (
+            t.includes(pattern) ||
+            pattern.includes(t) ||
+            t.split(" ").some(word => pattern.includes(word) || word.includes(pattern))
+          ) {
+            return item.reply;
+          }
+        }
+      }
+
+      return `🤖 Offline mode me main basic help de sakta hoon.
+
+Try these:
+• install app
+• bookmark
+• offline mode
+• features
+• api key`;
+    }
 
     /* =========================
        PROVIDERS
     ========================= */
     const AI_PROVIDERS = {
       gemini: {
-        name: "Gemini Flash",
-        hint: "Google AI Studio se free API key mil sakti hai.",
+        name: 'Gemini Flash',
+        label: '⚡ Setup Gemini (Free)',
+        hint: `Go to <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a> → Create API key → paste below`,
+        storageKey: 'batman_key_gemini',
         supportsImage: true
       },
       groq: {
-        name: "Groq",
-        hint: "Fast free text chat provider.",
+        name: 'Groq (Fast & Free)',
+        label: '🚀 Setup Groq (Free)',
+        hint: `Go to <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a> → Create key → paste below`,
+        storageKey: 'batman_key_groq',
         supportsImage: false
       },
       openrouter: {
-        name: "OpenRouter",
-        hint: "Multiple free/paid models with one key.",
+        name: 'OpenRouter',
+        label: '🔀 Setup OpenRouter (Free Models)',
+        hint: `Go to <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a> → Create key → paste below`,
+        storageKey: 'batman_key_openrouter',
         supportsImage: true
       },
       openai: {
-        name: "OpenAI GPT-4o",
-        hint: "Paid provider.",
+        name: 'OpenAI GPT-4o',
+        label: '🤖 Setup OpenAI',
+        hint: `Go to <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a> → Create key → paste below`,
+        storageKey: 'batman_key_openai',
         supportsImage: true
       },
       cohere: {
-        name: "Cohere",
-        hint: "Good text provider.",
+        name: 'Cohere',
+        label: '🌊 Setup Cohere',
+        hint: `Go to <a href="https://dashboard.cohere.com/api-keys" target="_blank">dashboard.cohere.com</a> → Create key → paste below`,
+        storageKey: 'batman_key_cohere',
         supportsImage: false
       }
     };
 
-    const FALLBACK_ORDER = ["gemini","openrouter","groq","cohere","openai"];
-    document.getElementById("fallback-order").textContent =
-      FALLBACK_ORDER.map(k => AI_PROVIDERS[k].name).join(" → ");
+    const SYSTEM_PROMPT = `You are Batman AI, a helpful and friendly study assistant.
+Explain things clearly.
+Use simple Hinglish when natural.
+Keep answers readable and useful.
+Do not overcomplicate.`;
 
-    /* =========================
-       THEMES / SETTINGS
-    ========================= */
-    function setTheme(name){
-      document.body.classList.remove("theme-midnight","theme-emerald","theme-crimson","theme-royal");
-      document.body.classList.add("theme-" + name);
-      APP.theme = name;
-      document.getElementById("theme-select").value = name;
-      saveState();
-    }
-    setTheme(APP.theme);
-
-    function applySettings(){
-      setTheme(document.getElementById("theme-select").value);
-      APP.voiceLang = document.getElementById("voice-lang").value;
-      saveState();
-      toast("Settings applied");
-    }
-
-    function toggleTTS(){
-      APP.tts = !APP.tts;
-      saveState();
-      toast("Voice reply " + (APP.tts ? "enabled" : "disabled"));
-    }
-
-    document.getElementById("theme-select").value = APP.theme;
-    document.getElementById("voice-lang").value = APP.voiceLang;
-
-    /* =========================
-       NAVIGATION
-    ========================= */
-    const navButtons = [...document.querySelectorAll(".nav-btn")];
-    navButtons.forEach(btn => {
-      btn.addEventListener("click", () => goPage(btn.dataset.page));
-    });
-
-    function goPage(page){
-      navButtons.forEach(b => b.classList.toggle("active", b.dataset.page === page));
-      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-      document.getElementById("page-" + page).classList.add("active");
-      const names = {
-        dashboard:"Dashboard",
-        chat:"AI Chat",
-        tracker:"Study Tracker",
-        pomodoro:"Pomodoro",
-        cbt:"CBT Mock",
-        formulas:"Formulas",
-        notes:"Notes",
-        settings:"Settings"
-      };
-      document.getElementById("page-title").textContent = names[page] || "App";
-    }
-
-    /* =========================
-       PANEL OPEN/CLOSE
-    ========================= */
-    const panel = document.getElementById("app-panel");
-    document.getElementById("close-btn").onclick = () => panel.classList.remove("open");
-    document.getElementById("expand-btn").onclick = () => panel.classList.toggle("expanded");
-
-    function openPanel(){
-      panel.classList.add("open");
-      document.getElementById("ai-notif").style.display = "none";
-    }
+    let aiProvider = localStorage.getItem('batman_provider') || 'gemini';
+    let chatHistory = JSON.parse(localStorage.getItem('batman_chat_history') || '[]');
+    let isBusy = false;
+    let pendingImageB64 = null;
+    let pendingImageMime = null;
 
     /* =========================
        FAB DRAG
     ========================= */
-    const fabWrap = document.getElementById("ai-fab-wrap");
-    const ringWrap = document.getElementById("ai-btn-ring-wrap");
-    const showTab = document.getElementById("ai-show-tab");
+    const fabWrap = document.getElementById('ai-fab-wrap');
+    const ringWrap = document.getElementById('ai-btn-ring-wrap');
+    const showTab = document.getElementById('ai-show-tab');
     const BTN_W = 90, EDGE_ZONE = 35;
-    let fabL = window.innerWidth - 130, fabT = window.innerHeight - 120;
+
+    let fabL = window.innerWidth - 130;
+    let fabT = window.innerHeight - 120;
     let pointerDownX, pointerDownY, fabDownL, fabDownT;
     let dragging = false, moved = false;
 
-    function clamp(v, lo, hi){ return Math.max(lo, Math.min(v, hi)); }
-    function setFabPos(l, t, animate){
+    function clamp(v, lo, hi){
+      return Math.max(lo, Math.min(v, hi));
+    }
+
+    function setPos(l, t, animate) {
       const maxL = window.innerWidth - BTN_W + 30;
       const maxT = window.innerHeight - BTN_W - 10;
       fabL = clamp(l, -50, maxL);
       fabT = clamp(t, 10, maxT);
-      fabWrap.style.left = fabL + "px";
-      fabWrap.style.top = fabT + "px";
-      fabWrap.style.right = "auto";
-      fabWrap.style.bottom = "auto";
-      fabWrap.style.transition = animate ? "left .35s ease, top .35s ease" : "none";
-    }
-    function getPoint(e){ return e.touches ? e.touches[0] : e; }
 
-    function onFabDown(e){
-      if(e.button && e.button !== 0) return;
+      if (animate) fabWrap.classList.add('snap-anim');
+      else fabWrap.classList.remove('snap-anim');
+
+      fabWrap.style.left = fabL + 'px';
+      fabWrap.style.top = fabT + 'px';
+      fabWrap.style.right = 'auto';
+      fabWrap.style.bottom = 'auto';
+    }
+
+    function getPoint(e){
+      return e.touches ? e.touches[0] : e;
+    }
+
+    function onFabDown(e) {
+      if (e.button && e.button !== 0) return;
+
       const pt = getPoint(e);
       pointerDownX = pt.clientX;
       pointerDownY = pt.clientY;
@@ -980,1225 +1173,745 @@
       fabDownT = fabT;
       dragging = false;
       moved = false;
-      document.addEventListener("mousemove", onFabMove, {passive:false});
-      document.addEventListener("mouseup", onFabUp);
-      document.addEventListener("touchmove", onFabMove, {passive:false});
-      document.addEventListener("touchend", onFabUp);
-      document.addEventListener("touchcancel", onFabUp);
+      fabWrap.classList.remove('snap-anim');
+
+      document.addEventListener('mousemove', onFabMove, { passive:false });
+      document.addEventListener('mouseup', onFabUp);
+      document.addEventListener('touchmove', onFabMove, { passive:false });
+      document.addEventListener('touchend', onFabUp);
+      document.addEventListener('touchcancel', onFabUp);
+
       e.preventDefault();
     }
 
-    function onFabMove(e){
+    function onFabMove(e) {
       const pt = getPoint(e);
       const dx = pt.clientX - pointerDownX;
       const dy = pt.clientY - pointerDownY;
-      if(!dragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)){
+
+      if (!dragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
         dragging = true;
         moved = true;
-        ringWrap.classList.add("dragging");
+        ringWrap.classList.add('dragging');
       }
-      if(!dragging) return;
-      if(e.cancelable) e.preventDefault();
-      setFabPos(fabDownL + dx, fabDownT + dy, false);
+
+      if (!dragging) return;
+      if (e.cancelable) e.preventDefault();
+
+      setPos(fabDownL + dx, fabDownT + dy, false);
     }
 
-    function onFabUp(){
-      document.removeEventListener("mousemove", onFabMove);
-      document.removeEventListener("mouseup", onFabUp);
-      document.removeEventListener("touchmove", onFabMove);
-      document.removeEventListener("touchend", onFabUp);
-      document.removeEventListener("touchcancel", onFabUp);
-      ringWrap.classList.remove("dragging");
+    function onFabUp() {
+      document.removeEventListener('mousemove', onFabMove);
+      document.removeEventListener('mouseup', onFabUp);
+      document.removeEventListener('touchmove', onFabMove);
+      document.removeEventListener('touchend', onFabUp);
+      document.removeEventListener('touchcancel', onFabUp);
+      ringWrap.classList.remove('dragging');
 
-      if(!moved){
-        openPanel();
+      if (!moved) {
+        aiToggle();
         return;
       }
+
+      dragging = false;
 
       const goLeft = fabL < EDGE_ZONE - BTN_W / 2;
       const goRight = fabL > window.innerWidth - BTN_W / 2 - EDGE_ZONE;
 
-      if(goLeft){
-        setFabPos(-BTN_W + 8, fabT, true);
+      if (goLeft) {
+        setPos(-BTN_W + 8, fabT, true);
         setTimeout(() => {
-          fabWrap.style.visibility = "hidden";
-          showTab.style.display = "block";
-          showTab.style.left = "0";
-          showTab.style.right = "auto";
-          showTab.style.top = clamp(fabT + 20, 10, window.innerHeight - 70) + "px";
-          showTab.classList.remove("r");
-        }, 360);
-      } else if(goRight){
-        setFabPos(window.innerWidth - 8, fabT, true);
+          fabWrap.classList.add('offscreen');
+          showTab.style.display = 'block';
+          showTab.style.top = clamp(fabT + 20, 10, window.innerHeight - 70) + 'px';
+          showTab.style.left = '0';
+          showTab.style.right = 'auto';
+          showTab.classList.remove('r');
+          showTab.textContent = '🦇 AI';
+        }, 380);
+      } else if (goRight) {
+        setPos(window.innerWidth - 8, fabT, true);
         setTimeout(() => {
-          fabWrap.style.visibility = "hidden";
-          showTab.style.display = "block";
-          showTab.style.right = "0";
-          showTab.style.left = "auto";
-          showTab.style.top = clamp(fabT + 20, 10, window.innerHeight - 70) + "px";
-          showTab.classList.add("r");
-        }, 360);
+          fabWrap.classList.add('offscreen');
+          showTab.style.display = 'block';
+          showTab.style.top = clamp(fabT + 20, 10, window.innerHeight - 70) + 'px';
+          showTab.style.right = '0';
+          showTab.style.left = 'auto';
+          showTab.classList.add('r');
+          showTab.textContent = '🦇 AI';
+        }, 380);
       } else {
-        setFabPos(fabL, fabT, true);
+        setPos(fabL, fabT, true);
       }
     }
 
-    ringWrap.addEventListener("mousedown", onFabDown, {passive:false});
-    ringWrap.addEventListener("touchstart", onFabDown, {passive:false});
-    showTab.onclick = () => {
-      showTab.style.display = "none";
-      fabWrap.style.visibility = "visible";
-      setFabPos(showTab.classList.contains("r") ? window.innerWidth - 110 : 10, fabT, true);
-    };
+    function aiShowBtn() {
+      showTab.style.display = 'none';
+      fabWrap.classList.remove('offscreen');
+      const fromRight = showTab.classList.contains('r');
+      setPos(fromRight ? window.innerWidth - 110 : 10, fabT, true);
+    }
 
-    window.addEventListener("resize", () => setFabPos(fabL, fabT, false));
-    setFabPos(fabL, fabT, false);
+    ringWrap.addEventListener('mousedown', onFabDown, { passive:false });
+    ringWrap.addEventListener('touchstart', onFabDown, { passive:false });
 
-    /* =========================
-       MODE TOGGLE
-    ========================= */
-    document.querySelectorAll("#mode-toggle button").forEach(btn => {
-      btn.classList.toggle("active", btn.dataset.mode === APP.mode);
-      btn.onclick = () => {
-        document.querySelectorAll("#mode-toggle button").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        APP.mode = btn.dataset.mode;
-        saveState();
-        toast("Mode: " + (APP.mode === "study" ? "Study" : "Chat"));
-      };
+    window.addEventListener('resize', () => {
+      setPos(fabL, fabT, false);
     });
 
-    document.getElementById("speak-toggle").onclick = () => toggleTTS();
+    function spawnSparkles() {
+      const colors = ['#ffd84c','#fff','#8ab4ff','#9a7dff','#67e8f9'];
+      const btn = document.getElementById('ai-chat-btn');
+      const r = btn.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+
+      for (let i = 0; i < 12; i++) {
+        const s = document.createElement('div');
+        const ang = (i / 12) * Math.PI * 2;
+        const dist = 30 + Math.random() * 26;
+        const sx = Math.cos(ang) * dist;
+        const sy = Math.sin(ang) * dist - 10;
+
+        s.style.cssText = `
+          position:fixed;
+          width:${3 + Math.random()*4}px;
+          height:${3 + Math.random()*4}px;
+          border-radius:50%;
+          background:${colors[i % colors.length]};
+          pointer-events:none;
+          z-index:100000;
+          left:${cx}px;
+          top:${cy}px;
+          --sx:${sx}px;
+          --sy:${sy}px;
+          animation:sparkleFloat .8s ease-out ${i*.03}s forwards;
+        `;
+
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 1000);
+      }
+    }
 
     /* =========================
-       OFFLINE KB + SIMPLE SOLVER
+       UI ACTIONS
     ========================= */
-    const OFFLINE_KB = [
-      { patterns:["install","install app","add to home screen","pwa","homescreen","install help"],
-        reply:`📲 Install help:
+    function aiToggle() {
+      const p = document.getElementById('ai-panel');
+      p.classList.toggle('open');
+
+      if (p.classList.contains('open')) {
+        spawnSparkles();
+        renderProvider();
+        checkKeyArea();
+        document.getElementById('ai-notif').style.display = 'none';
+
+        if (!chatHistory.length && !document.getElementById('chat-msgs').children.length) {
+          botMsg(`Namaste! 👋 Main hoon Batman AI.
+
+Main kya kar sakta hoon:
+• padhai me help
+• normal chat
+• voice input
+• image preview
+• different AI providers
+• offline replies
+
+No API key?
+Koi baat nahi. Main help-type questions ka offline jawab de dunga.`);
+        }
+      }
+    }
+
+    function aiExpand() {
+      document.getElementById('ai-panel').classList.toggle('expanded');
+    }
+
+    function toggleProviderPanel() {
+      document.getElementById('ai-provider-panel').classList.toggle('show');
+    }
+
+    function selectProvider(p) {
+      aiProvider = p;
+      localStorage.setItem('batman_provider', p);
+      renderProvider();
+      checkKeyArea();
+      document.getElementById('ai-provider-panel').classList.remove('show');
+      botMsg(`Provider switched to ${AI_PROVIDERS[p].name}.`);
+    }
+
+    function renderProvider() {
+      Object.keys(AI_PROVIDERS).forEach(k => {
+        document.getElementById('pcard-' + k).classList.remove('active');
+      });
+
+      document.getElementById('pcard-' + aiProvider).classList.add('active');
+
+      const pv = AI_PROVIDERS[aiProvider];
+      document.getElementById('provider-badge-btn').textContent = '⚙️ ' + pv.name;
+      document.getElementById('key-label-txt').textContent = pv.label;
+      document.getElementById('key-hint-txt').innerHTML = pv.hint;
+
+      const imgBtn = document.getElementById('img-upload-btn');
+      imgBtn.style.opacity = pv.supportsImage ? '1' : '.4';
+      imgBtn.title = pv.supportsImage ? 'Upload image' : 'Image not supported by this provider';
+    }
+
+    function checkKeyArea() {
+      const key = localStorage.getItem(AI_PROVIDERS[aiProvider].storageKey);
+      document.getElementById('ai-key-area').style.display = key ? 'none' : 'block';
+    }
+
+    function saveKey() {
+      const v = document.getElementById('ai-api-input').value.trim();
+      if (!v) {
+        alert('Pehle key daalo.');
+        return;
+      }
+
+      localStorage.setItem(AI_PROVIDERS[aiProvider].storageKey, v);
+      document.getElementById('ai-api-input').value = '';
+      checkKeyArea();
+      botMsg(`Key saved for ${AI_PROVIDERS[aiProvider].name}.`);
+    }
+
+    function getTime() {
+      return new Date().toLocaleTimeString('en-IN', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function formatText(text) {
+      return text
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+        .replace(/\n/g, '<br>');
+    }
+
+    function botMsg(text, imgSrc) {
+      const c = document.getElementById('chat-msgs');
+      const d = document.createElement('div');
+      d.className = 'cm bot';
+
+      d.innerHTML = `
+        <div class="bot-av">
+          <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop" alt="AI" />
+        </div>
+        <div class="msg-wrap">
+          <div class="cm-bub">${imgSrc ? `<img class="cm-img" src="${imgSrc}" alt="img" />` : ''}${formatText(text)}</div>
+          <div class="cm-time">${getTime()}</div>
+        </div>
+      `;
+
+      c.appendChild(d);
+      c.scrollTop = c.scrollHeight;
+    }
+
+    function userMsg(text, imgSrc) {
+      const c = document.getElementById('chat-msgs');
+      const d = document.createElement('div');
+      d.className = 'cm user';
+
+      d.innerHTML = `
+        <div class="msg-wrap">
+          <div class="cm-bub">${imgSrc ? `<img class="cm-img" src="${imgSrc}" alt="img" />` : ''}${text ? formatText(text) : ''}</div>
+          <div class="cm-time">${getTime()}</div>
+        </div>
+      `;
+
+      c.appendChild(d);
+      c.scrollTop = c.scrollHeight;
+    }
+
+    function showTyping() {
+      const c = document.getElementById('chat-msgs');
+      const d = document.createElement('div');
+      d.className = 'cm bot';
+      d.id = 'ai-typing';
+
+      d.innerHTML = `
+        <div class="bot-av">
+          <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop" alt="AI" />
+        </div>
+        <div class="msg-wrap">
+          <div class="cm-bub typing-bub"><span></span><span></span><span></span></div>
+        </div>
+      `;
+
+      c.appendChild(d);
+      c.scrollTop = c.scrollHeight;
+    }
+
+    function hideTyping() {
+      const t = document.getElementById('ai-typing');
+      if (t) t.remove();
+    }
+
+    function persistChat() {
+      localStorage.setItem('batman_chat_history', JSON.stringify(chatHistory.slice(-40)));
+    }
+
+    function renderSavedChat() {
+      if (!chatHistory.length) return;
+
+      for (const item of chatHistory) {
+        if (item.role === 'user') userMsg(item.text || '', item.imgSrc || null);
+        else botMsg(item.text || '', item.imgSrc || null);
+      }
+    }
+
+    function clearChat() {
+      if (!confirm('Clear full chat?')) return;
+      chatHistory = [];
+      persistChat();
+      document.getElementById('chat-msgs').innerHTML = '';
+      botMsg('Chat cleared. Naya start karte hain 👌');
+    }
+
+    function exportChat() {
+      if (!chatHistory.length) {
+        alert('Chat empty hai.');
+        return;
+      }
+
+      const lines = chatHistory.map(m => `[${m.role.toUpperCase()}] ${m.text || '[image]'}`);
+      const blob = new Blob([lines.join('\n\n')], { type:'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'batman-ai-chat.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function quickAsk(el) {
+      const inp = document.getElementById('chat-input-txt');
+      inp.value = el.textContent.replace(/^[^\w\s]+\s*/,'').trim();
+      aiResize(inp);
+      aiSend();
+    }
+
+    function aiResize(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 130) + 'px';
+    }
+
+    function showHelpMessage() {
+      botMsg(`Quick help:
+
+• Provider choose karne ke liye ⚙️
+• Voice ke liye 🎤
+• Image preview ke liye 🖼️
+• Export ke liye "Export chat"
+• Clear ke liye 🗑️
+
+Offline mode me:
+install, bookmark, features, api key, offline help ka jawab mil jayega.`);
+    }
+
+    function toggleInstallGuide() {
+      botMsg(`📲 Install guide:
 
 Android Chrome:
 1. Site kholo
-2. 3-dot menu dabao
-3. "Install app" ya "Add to Home screen"
+2. 3 dots dabao
+3. "Add to Home screen" ya "Install app"
 
 iPhone Safari:
 1. Share button dabao
-2. "Add to Home Screen"` },
-      { patterns:["features","what can you do","help","about","kya kya"],
-        reply:`🌟 Features:
-• AI chat
-• Offline help
-• Simple math solver
-• Tracker
-• Pomodoro
-• CBT mock
-• Formula bank
-• Notes
-• Export/import backup
-• PWA install` },
-      { patterns:["api","api key","free api key","key kaha se"],
-        reply:`🔑 API key options:
-• Gemini
-• OpenRouter
-• Groq
-• Cohere
-• OpenAI
+2. "Add to Home Screen"
 
-Offline mode me API key zaroori nahi hai.` },
-      { patterns:["offline","without internet","bina internet","net ke bina"],
-        reply:`📡 Offline mode:
-• App open hoga
-• Tracker/notes/CBT/pomodoro chalega
-• Basic help replies chalenge
-• Live AI replies nahi aayenge` },
-      { patterns:["bookmark","save website","star"],
-        reply:`🔖 Bookmark:
-Laptop/Desktop: Ctrl + D
-Mobile Chrome: 3-dot menu → star icon` },
-      { patterns:["voice","mic","voice input"],
-        reply:`🎤 Voice input:
-Mic button dabao aur browser permission allow karo.` },
-      { patterns:["hi","hello","hey","namaste"],
-        reply:`Namaste bhai 👋
-Main Batman AI hoon. Poochho:
-• install
-• features
-• api key
-• offline mode
-• simple maths` }
-    ];
-
-    function normalize(text){
-      return text.toLowerCase().trim().replace(/[^\w\s+\-*/=().]/g," ").replace(/\s+/g," ");
-    }
-
-    function offlineMathSolve(text){
-      const t = normalize(text);
-
-      // linear equation ax+b=c
-      let m = t.match(/([+-]?\d*)x\s*([+-]\s*\d+)?\s*=\s*([+-]?\d+)/);
-      if(m){
-        let a = m[1].replace(/\s+/g,"");
-        if(a === "" || a === "+") a = 1;
-        if(a === "-") a = -1;
-        a = Number(a);
-        let b = 0;
-        if(m[2]) b = Number(m[2].replace(/\s+/g,""));
-        let c = Number(m[3]);
-        if(a !== 0){
-          const x = (c - b)/a;
-          return `🧮 Offline solver:
-
-Equation: ${m[0]}
-x = (${c} ${b>=0?'-':'+'} ${Math.abs(b)}) / ${a}
-x = ${x}`;
-        }
-      }
-
-      // arithmetic expression
-      try{
-        if(/^[\d\s+\-*/().]+$/.test(t) && /[+\-*/]/.test(t)){
-          const val = Function('"use strict"; return (' + t + ')')();
-          if(Number.isFinite(val)){
-            return `🧮 Offline calculation:
-
-${t} = ${val}`;
-          }
-        }
-      }catch(e){}
-
-      return null;
-    }
-
-    function getOfflineReply(text){
-      const t = normalize(text);
-      const math = offlineMathSolve(t);
-      if(math) return math;
-
-      for(const item of OFFLINE_KB){
-        for(const p of item.patterns){
-          const pattern = normalize(p);
-          if(t.includes(pattern) || pattern.includes(t) || t.split(" ").some(w => pattern.includes(w) || w.includes(pattern))){
-            return item.reply;
-          }
-        }
-      }
-
-      if(APP.mode === "study"){
-        return `📚 Offline study mode:
-Main abhi basic help aur simple maths solve kar sakta hoon.
-Try:
-• Solve 2x + 5 = 17
-• What are the features?
-• Install app kaise karein?`;
-      }
-
-      return `🤖 Offline reply:
-Internet ya API key nahi hai, toh main basic help hi de sakta hoon.`;
+Note:
+True PWA install prompt ke liye alag manifest + service worker files chahiye hote hain.
+Ye single HTML version app-jaisa UI deta hai.`);
     }
 
     /* =========================
-       CHAT UI
+       IMAGE HANDLING
     ========================= */
-    const chatMsgs = document.getElementById("chat-msgs");
-    let pendingImageData = null;
-    let lastBotReply = "";
+    document.getElementById('file-input-hidden').addEventListener('change', handleImageSelect);
 
-    function fmt(text){
-      return String(text || "")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/\*\*(.*?)\*\*/g,"<b>$1</b>")
-        .replace(/\n/g,"<br>");
-    }
+    function handleImageSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
 
-    function nowTime(){
-      return new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"});
-    }
-
-    function addMsg(role, text, img){
-      const d = document.createElement("div");
-      d.className = "cm " + role;
-      if(role === "bot"){
-        d.innerHTML = `
-          <div class="bot-av">
-            <img alt="AI" src='data:image/svg+xml;utf8,
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
-              <rect width="256" height="256" rx="40" fill="%230b1020"/>
-              <circle cx="128" cy="128" r="84" fill="%23141d3f" stroke="%23ffd34d" stroke-width="8"/>
-              <path d="M54 146c22-22 42-32 56-30 7-27 19-43 18-43l19 17 20-17s11 15 18 43c13-2 34 8 57 30-19-3-33-1-43 7 0 0 2 31-19 31h-104c-21 0-19-31-19-31-10-8-24-10-43-7z" fill="%23ffd34d"/>
-              <circle cx="102" cy="128" r="7" fill="%230b1020"/>
-              <circle cx="154" cy="128" r="7" fill="%230b1020"/>
-              <path d="M104 154c8 8 40 8 48 0" stroke="%230b1020" stroke-width="6" stroke-linecap="round" fill="none"/>
-            </svg>' />
-          </div>
-          <div class="msg-wrap">
-            <div class="cm-bub">${img ? `<img class="cm-img" src="${img}" alt="img" />` : ""}${fmt(text)}</div>
-            <div class="cm-time">${nowTime()}</div>
-          </div>`;
-      } else {
-        d.innerHTML = `
-          <div class="msg-wrap">
-            <div class="cm-bub">${img ? `<img class="cm-img" src="${img}" alt="img" />` : ""}${fmt(text)}</div>
-            <div class="cm-time">${nowTime()}</div>
-          </div>`;
-      }
-      chatMsgs.appendChild(d);
-      chatMsgs.scrollTop = chatMsgs.scrollHeight;
-      if(role === "bot"){
-        lastBotReply = text || "";
-        if(APP.tts) speakText(lastBotReply);
-      }
-    }
-
-    function saveChatMessage(role,text,img){
-      APP.chatHistory.push({role,text,img});
-      if(APP.chatHistory.length > 80) APP.chatHistory = APP.chatHistory.slice(-80);
-      saveState();
-    }
-
-    function renderChatHistory(){
-      chatMsgs.innerHTML = "";
-      APP.chatHistory.forEach(m => addMsg(m.role, m.text, m.img || null));
-    }
-
-    function typingOn(){
-      const d = document.createElement("div");
-      d.className = "cm bot";
-      d.id = "typing-row";
-      d.innerHTML = `
-        <div class="bot-av"></div>
-        <div class="msg-wrap">
-          <div class="cm-bub typing-bub"><span></span><span></span><span></span></div>
-        </div>`;
-      chatMsgs.appendChild(d);
-      chatMsgs.scrollTop = chatMsgs.scrollHeight;
-    }
-
-    function typingOff(){
-      const t = document.getElementById("typing-row");
-      if(t) t.remove();
-    }
-
-    function setQuickPrompt(text){
-      goPage("chat");
-      document.getElementById("chat-input").value = text;
-      resizeChatInput();
-    }
-
-    function resizeChatInput(){
-      const el = document.getElementById("chat-input");
-      el.style.height = "auto";
-      el.style.height = Math.min(el.scrollHeight, 130) + "px";
-    }
-    document.getElementById("chat-input").addEventListener("input", resizeChatInput);
-    document.getElementById("chat-input").addEventListener("keydown", e => {
-      if(e.key === "Enter" && !e.shiftKey){
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-
-    document.getElementById("send-btn").onclick = sendMessage;
-    document.getElementById("clear-chat-btn").onclick = () => {
-      if(confirm("Clear chat?")){
-        APP.chatHistory = [];
-        saveState();
-        renderChatHistory();
-      }
-    };
-
-    function exportChat(){
-      const lines = APP.chatHistory.map(x => `[${x.role.toUpperCase()}] ${x.text || "[image]"}`).join("\n\n");
-      const blob = new Blob([lines], {type:"text/plain;charset=utf-8"});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "batman-ai-chat.txt";
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-
-    function copyLastBot(){
-      if(!lastBotReply) return toast("No bot reply yet");
-      navigator.clipboard.writeText(lastBotReply).then(() => toast("Last reply copied"));
-    }
-
-    function speakLastBot(){
-      if(!lastBotReply) return toast("No bot reply yet");
-      speakText(lastBotReply);
-    }
-
-    function pinLastBot(){
-      if(!lastBotReply) return toast("No bot reply yet");
-      APP.pinned.unshift({text:lastBotReply, time:new Date().toLocaleString()});
-      APP.pinned = APP.pinned.slice(0,10);
-      saveState();
-      renderPinned();
-      toast("Reply pinned");
-    }
-
-    function renderPinned(){
-      const box = document.getElementById("pinned-list");
-      if(!APP.pinned.length){
-        box.innerHTML = "No pinned notes yet.";
+      const pv = AI_PROVIDERS[aiProvider];
+      if (!pv.supportsImage) {
+        alert('Current provider image support nahi karta. Gemini/OpenRouter/OpenAI use karo.');
         return;
       }
-      box.innerHTML = APP.pinned.map((p,i) =>
-        `<div class="note-item" style="margin-bottom:8px">
-          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">${p.time}</div>
-          <div style="font-size:13px;line-height:1.5">${fmt(p.text)}</div>
-          <div style="margin-top:8px"><button class="tiny-btn red" onclick="deletePinned(${i})">Delete</button></div>
-        </div>`
-      ).join("");
+
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const dataUrl = ev.target.result;
+        pendingImageB64 = dataUrl.split(',')[1];
+        pendingImageMime = file.type;
+        document.getElementById('img-preview').src = dataUrl;
+        document.getElementById('img-preview-wrap').classList.add('show');
+      };
+      reader.readAsDataURL(file);
+
+      e.target.value = '';
     }
 
-    function deletePinned(i){
-      APP.pinned.splice(i,1);
-      saveState();
-      renderPinned();
-    }
-
-    function toast(text){
-      document.getElementById("live-status").textContent = "● " + text;
-      setTimeout(() => {
-        document.getElementById("live-status").textContent = "● Ready";
-      }, 2200);
+    function removeImage() {
+      pendingImageB64 = null;
+      pendingImageMime = null;
+      document.getElementById('img-preview-wrap').classList.remove('show');
+      document.getElementById('img-preview').src = '';
     }
 
     /* =========================
-       SPEECH
+       VOICE INPUT
     ========================= */
-    function speakText(text){
-      if(!("speechSynthesis" in window)) return;
-      const u = new SpeechSynthesisUtterance(String(text).slice(0, 500));
-      u.lang = APP.voiceLang;
-      speechSynthesis.cancel();
-      speechSynthesis.speak(u);
-    }
-
-    document.getElementById("voice-btn").onclick = startVoiceInput;
-
-    function startVoiceInput(){
+    function startVoiceInput() {
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if(!SR) return alert("Voice input supported nahi hai is browser me.");
+
+      if (!SR) {
+        alert('Voice input is browser me supported nahi hai.');
+        return;
+      }
+
       const rec = new SR();
-      rec.lang = APP.voiceLang;
+      rec.lang = 'en-IN';
       rec.interimResults = false;
       rec.maxAlternatives = 1;
-      rec.onstart = () => document.getElementById("live-status").textContent = "● Listening...";
-      rec.onresult = e => {
-        document.getElementById("chat-input").value = e.results[0][0].transcript;
-        resizeChatInput();
-        document.getElementById("live-status").textContent = "● Voice captured";
+
+      rec.onstart = () => {
+        document.getElementById('ai-status-txt').textContent = '● Listening...';
       };
-      rec.onerror = () => document.getElementById("live-status").textContent = "● Voice error";
-      rec.onend = () => setTimeout(() => document.getElementById("live-status").textContent = "● Ready", 1200);
+
+      rec.onresult = (event) => {
+        const text = event.results[0][0].transcript;
+        const inp = document.getElementById('chat-input-txt');
+        inp.value = text;
+        aiResize(inp);
+        document.getElementById('ai-status-txt').textContent = '● Voice captured';
+      };
+
+      rec.onerror = () => {
+        document.getElementById('ai-status-txt').textContent = '● Voice error';
+      };
+
+      rec.onend = () => {
+        setTimeout(() => {
+          document.getElementById('ai-status-txt').textContent = '● Online — Ask anything!';
+        }, 1200);
+      };
+
       rec.start();
     }
 
     /* =========================
-       IMAGE
+       INPUT SEND
     ========================= */
-    document.getElementById("upload-btn").onclick = () => {
-      const current = AI_PROVIDERS[APP.provider];
-      if(current && !current.supportsImage){
-        return alert("Current provider image support nahi karta.");
+    document.getElementById('chat-input-txt').addEventListener('keydown', function(e){
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        aiSend();
       }
-      document.getElementById("image-input").click();
-    };
-
-    document.getElementById("image-input").addEventListener("change", e => {
-      const file = e.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        pendingImageData = ev.target.result;
-        document.getElementById("img-preview").src = pendingImageData;
-        document.getElementById("img-preview-wrap").classList.add("show");
-      };
-      reader.readAsDataURL(file);
-      e.target.value = "";
     });
 
-    function removeImage(){
-      pendingImageData = null;
-      document.getElementById("img-preview").src = "";
-      document.getElementById("img-preview-wrap").classList.remove("show");
-    }
+    async function aiSend() {
+      const inp = document.getElementById('chat-input-txt');
+      const text = inp.value.trim();
 
-    /* =========================
-       API SETTINGS UI
-    ========================= */
-    const providerSelect = document.getElementById("provider-select");
-    Object.keys(AI_PROVIDERS).forEach(k => {
-      const op = document.createElement("option");
-      op.value = k;
-      op.textContent = AI_PROVIDERS[k].name;
-      providerSelect.appendChild(op);
-    });
-    providerSelect.value = APP.provider;
-    renderProviderSettings();
+      if ((!text && !pendingImageB64) || isBusy) return;
 
-    providerSelect.onchange = () => {
-      APP.provider = providerSelect.value;
-      saveState();
-      renderProviderSettings();
-    };
+      const imgSnapshot = pendingImageB64 ? `data:${pendingImageMime};base64,${pendingImageB64}` : null;
 
-    function renderProviderSettings(){
-      providerSelect.value = APP.provider;
-      document.getElementById("api-key-input").value = APP.providerKeys[APP.provider] || "";
-      document.getElementById("provider-hint").textContent = AI_PROVIDERS[APP.provider].hint;
-    }
+      inp.value = '';
+      aiResize(inp);
 
-    function saveApiKey(){
-      APP.provider = providerSelect.value;
-      APP.providerKeys[APP.provider] = document.getElementById("api-key-input").value.trim();
-      saveState();
-      renderProviderSettings();
-      toast("API key saved for " + AI_PROVIDERS[APP.provider].name);
-    }
+      userMsg(text, imgSnapshot);
+      chatHistory.push({
+        role:'user',
+        text:text || '[image]',
+        imgSrc:imgSnapshot || null
+      });
+      persistChat();
 
-    function removeApiKey(){
-      APP.providerKeys[APP.provider] = "";
-      saveState();
-      renderProviderSettings();
-      toast("API key removed");
-    }
+      document.getElementById('chips-row').style.display = 'none';
 
-    /* =========================
-       ONLINE AI CALLS
-    ========================= */
-    const SYSTEM_PROMPT = `You are Batman AI, a friendly study assistant.
-When in study mode, explain clearly and structured.
-When in chat mode, be natural and concise.
-Use Hinglish naturally when helpful.`;
+      if (imgSnapshot) removeImage();
 
-    function currentKey(){
-      return APP.providerKeys[APP.provider] || "";
-    }
+      /* OFFLINE REPLY FIRST */
+      if (!navigator.onLine || !hasProviderKey()) {
+        showTyping();
+        await new Promise(r => setTimeout(r, 450));
+        hideTyping();
 
-    async function callProvider(provider, key, text, imageDataUrl){
-      if(provider === "gemini") return callGemini(key, text, imageDataUrl);
-      if(provider === "openrouter") return callOpenRouter(key, text, imageDataUrl);
-      if(provider === "groq") return callGroq(key, text);
-      if(provider === "cohere") return callCohere(key, text);
-      if(provider === "openai") return callOpenAI(key, text, imageDataUrl);
-      throw new Error("No provider");
-    }
-
-    async function sendMessage(){
-      const input = document.getElementById("chat-input");
-      const text = input.value.trim();
-      if(!text && !pendingImageData) return;
-
-      const img = pendingImageData;
-      input.value = "";
-      resizeChatInput();
-      addMsg("user", text || "[image]", img);
-      saveChatMessage("user", text || "[image]", img);
-
-      if(img) removeImage();
-
-      // simple offline-first cases
-      const key = currentKey();
-      const onlinePossible = navigator.onLine && !!key;
-
-      if(!onlinePossible){
-        typingOn();
-        await wait(450);
-        typingOff();
-        const reply = getOfflineReply(text || "image");
-        addMsg("bot", reply);
-        saveChatMessage("bot", reply);
+        const offlineReply = getOfflineReply(text || 'image');
+        botMsg(offlineReply);
+        chatHistory.push({
+          role:'bot',
+          text:offlineReply,
+          imgSrc:null
+        });
+        persistChat();
         return;
       }
 
-      typingOn();
-      try{
-        const reply = await smartReply(text, img);
-        typingOff();
-        addMsg("bot", reply);
-        saveChatMessage("bot", reply);
-      }catch(e){
-        typingOff();
-        const fallback = getOfflineReply(text || "image");
-        addMsg("bot", "Online AI error. Offline reply:\n\n" + fallback);
-        saveChatMessage("bot", "Online AI error. Offline reply:\n\n" + fallback);
-      }
-    }
+      /* SIMPLE HELP WORDS KO OFFLINE SE JAWAB */
+      const lower = (text || '').toLowerCase();
+      const simpleHelp = (
+        lower.includes('install') ||
+        lower.includes('bookmark') ||
+        lower.includes('offline') ||
+        lower.includes('feature') ||
+        lower.includes('api') ||
+        lower.includes('help')
+      );
 
-    async function smartReply(text, imageDataUrl){
-      // helper / install / api questions offline se hi
-      const lower = (text || "").toLowerCase();
-      if(["install","feature","api","offline","bookmark","voice","help"].some(k => lower.includes(k))){
-        return getOfflineReply(text);
+      if (simpleHelp) {
+        showTyping();
+        await new Promise(r => setTimeout(r, 350));
+        hideTyping();
+
+        const offlineReply = getOfflineReply(text);
+        botMsg(offlineReply);
+        chatHistory.push({
+          role:'bot',
+          text:offlineReply,
+          imgSrc:null
+        });
+        persistChat();
+        return;
       }
 
-      const ordered = [APP.provider, ...FALLBACK_ORDER.filter(x => x !== APP.provider)];
-      let lastErr = "";
-      for(const p of ordered){
-        const key = APP.providerKeys[p];
-        if(!key) continue;
-        try{
-          return await callProvider(p, key, enhanceUserPrompt(text), imageDataUrl);
-        }catch(e){
-          lastErr = e.message || String(e);
+      const key = localStorage.getItem(AI_PROVIDERS[aiProvider].storageKey);
+
+      isBusy = true;
+      document.getElementById('chat-send-btn').disabled = true;
+      document.getElementById('ai-status-txt').textContent = '● Thinking...';
+      showTyping();
+
+      try {
+        let reply = '';
+
+        if (aiProvider === 'gemini') reply = await callGemini(key, text, imgSnapshot);
+        else if (aiProvider === 'groq') reply = await callGroq(key, text);
+        else if (aiProvider === 'openrouter') reply = await callOpenRouter(key, text, imgSnapshot);
+        else if (aiProvider === 'openai') reply = await callOpenAI(key, text, imgSnapshot);
+        else if (aiProvider === 'cohere') reply = await callCohere(key, text);
+
+        hideTyping();
+
+        const finalReply = reply || 'Koi response nahi mila.';
+        botMsg(finalReply);
+        chatHistory.push({
+          role:'bot',
+          text:finalReply,
+          imgSrc:null
+        });
+        persistChat();
+      } catch (err) {
+        hideTyping();
+
+        const em = err?.message || 'Unknown error';
+        let msg = `Error: ${em}`;
+
+        if (/401|403|invalid/i.test(em)) {
+          msg = `Invalid API key lag rahi hai for ${AI_PROVIDERS[aiProvider].name}.`;
+        } else if (/429|quota|rate/i.test(em)) {
+          msg = `Quota ya rate limit hit ho gayi. Dusra provider try karo.`;
+        } else {
+          msg = `Online AI error aaya. Offline mode use kar lo.`;
         }
+
+        botMsg(msg);
+        chatHistory.push({
+          role:'bot',
+          text:msg,
+          imgSrc:null
+        });
+        persistChat();
+      } finally {
+        isBusy = false;
+        document.getElementById('chat-send-btn').disabled = false;
+        document.getElementById('ai-status-txt').textContent = '● Online — Ask anything!';
       }
-      throw new Error(lastErr || "All providers failed");
     }
 
-    function enhanceUserPrompt(text){
-      if(APP.mode === "study"){
-        return `Mode: Study\nPlease answer clearly, structured, and student-friendly.\n\nUser: ${text}`;
-      }
-      return `Mode: Chat\nReply naturally.\n\nUser: ${text}`;
+    function hasProviderKey() {
+      const provider = AI_PROVIDERS[aiProvider];
+      if (!provider) return false;
+      return !!localStorage.getItem(provider.storageKey);
     }
 
-    async function callOpenRouter(key, text, imgDataUrl){
+    /* =========================
+       API CALLS
+    ========================= */
+    async function callOpenRouter(key, text, imgDataUrl) {
       const content = [];
-      if(imgDataUrl) content.push({type:"image_url", image_url:{url:imgDataUrl}});
-      if(text) content.push({type:"text", text});
-      const r = await fetch("https://openrouter.ai/api/v1/chat/completions",{
-        method:"POST",
+      if (imgDataUrl) content.push({ type:'image_url', image_url:{ url: imgDataUrl } });
+      if (text) content.push({ type:'text', text });
+
+      const messages = [
+        { role:'system', content:SYSTEM_PROMPT },
+        ...chatHistory.slice(-8).map(m => ({
+          role: m.role === 'user' ? 'user' : 'assistant',
+          content: m.text
+        })),
+        { role:'user', content: imgDataUrl ? content : text }
+      ];
+
+      const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method:'POST',
         headers:{
-          "Content-Type":"application/json",
-          "Authorization":"Bearer " + key,
-          "HTTP-Referer": location.origin || "http://localhost",
-          "X-Title":"Batman AI Ultra Study App"
+          'Content-Type':'application/json',
+          'Authorization':'Bearer ' + key,
+          'HTTP-Referer': location.origin || 'http://localhost',
+          'X-Title':'Batman AI Ultra Final'
         },
-        body:JSON.stringify({
-          model:"meta-llama/llama-3.3-70b-instruct:free",
-          messages:[
-            {role:"system", content:SYSTEM_PROMPT},
-            ...APP.chatHistory.slice(-8).map(m => ({role:m.role === "user" ? "user" : "assistant", content:m.text})),
-            {role:"user", content: imgDataUrl ? content : text}
-          ],
+        body: JSON.stringify({
+          model:'meta-llama/llama-3.3-70b-instruct:free',
+          messages,
           max_tokens:700
         })
       });
+
       const d = await r.json();
-      if(!r.ok || d.error) throw new Error(d?.error?.message || "OpenRouter error");
-      return d?.choices?.[0]?.message?.content || "No response";
+      if (!r.ok || d.error) throw new Error(d?.error?.message || 'OpenRouter request failed');
+      return d?.choices?.[0]?.message?.content || 'No response';
     }
 
-    async function callGemini(key, text, imgDataUrl){
+    async function callGemini(key, text, imgDataUrl) {
       const parts = [];
-      if(imgDataUrl){
+      if (imgDataUrl) {
         parts.push({
-          inlineData:{
-            mimeType: imgDataUrl.split(";")[0].split(":")[1],
-            data: imgDataUrl.split(",")[1]
+          inlineData: {
+            mimeType: imgDataUrl.split(';')[0].split(':')[1],
+            data: imgDataUrl.split(',')[1]
           }
         });
       }
-      if(text) parts.push({text});
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-          contents:[
-            {role:"user",parts:[{text:SYSTEM_PROMPT}]},
-            {role:"model",parts:[{text:"Understood."}]},
-            ...APP.chatHistory.slice(-8).map(m => ({role:m.role === "user" ? "user" : "model", parts:[{text:m.text}]})),
-            {role:"user",parts}
-          ],
-          generationConfig:{temperature:0.8,maxOutputTokens:700}
+      if (text) parts.push({ text });
+
+      const history = [
+        { role:'user', parts:[{ text:SYSTEM_PROMPT }] },
+        { role:'model', parts:[{ text:'Understood.' }] },
+        ...chatHistory.slice(-8).map(m => ({
+          role: m.role === 'user' ? 'user' : 'model',
+          parts: [{ text: m.text }]
+        })),
+        { role:'user', parts }
+      ];
+
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({
+          contents: history,
+          generationConfig: {
+            temperature: 0.8,
+            maxOutputTokens: 700
+          }
         })
       });
+
       const d = await r.json();
-      if(!r.ok || d.error) throw new Error(d?.error?.message || "Gemini error");
-      return d?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+      if (!r.ok || d.error) throw new Error(d?.error?.message || 'Gemini request failed');
+      return d?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response';
     }
 
-    async function callGroq(key, text){
-      const r = await fetch("https://api.groq.com/openai/v1/chat/completions",{
-        method:"POST",
+    async function callGroq(key, text) {
+      const messages = [
+        { role:'system', content:SYSTEM_PROMPT },
+        ...chatHistory.slice(-8).map(m => ({
+          role: m.role === 'user' ? 'user' : 'assistant',
+          content: m.text
+        })),
+        { role:'user', content:text }
+      ];
+
+      const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method:'POST',
         headers:{
-          "Content-Type":"application/json",
-          "Authorization":"Bearer " + key
+          'Content-Type':'application/json',
+          'Authorization':'Bearer ' + key
         },
-        body:JSON.stringify({
-          model:"llama-3.3-70b-versatile",
-          messages:[
-            {role:"system",content:SYSTEM_PROMPT},
-            ...APP.chatHistory.slice(-8).map(m => ({role:m.role === "user" ? "user" : "assistant", content:m.text})),
-            {role:"user",content:text}
-          ],
+        body: JSON.stringify({
+          model:'llama-3.3-70b-versatile',
+          messages,
           max_tokens:700,
           temperature:0.8
         })
       });
+
       const d = await r.json();
-      if(!r.ok || d.error) throw new Error(d?.error?.message || "Groq error");
-      return d?.choices?.[0]?.message?.content || "No response";
+      if (!r.ok || d.error) throw new Error(d?.error?.message || 'Groq request failed');
+      return d?.choices?.[0]?.message?.content || 'No response';
     }
 
-    async function callOpenAI(key, text, imgDataUrl){
+    async function callOpenAI(key, text, imgDataUrl) {
       const content = [];
-      if(imgDataUrl) content.push({type:"image_url", image_url:{url:imgDataUrl}});
-      if(text) content.push({type:"text", text});
-      const r = await fetch("https://api.openai.com/v1/chat/completions",{
-        method:"POST",
+      if (imgDataUrl) content.push({ type:'image_url', image_url:{ url: imgDataUrl } });
+      if (text) content.push({ type:'text', text });
+
+      const messages = [
+        { role:'system', content:SYSTEM_PROMPT },
+        ...chatHistory.slice(-8).map(m => ({
+          role: m.role === 'user' ? 'user' : 'assistant',
+          content: m.text
+        })),
+        { role:'user', content: imgDataUrl ? content : text }
+      ];
+
+      const r = await fetch('https://api.openai.com/v1/chat/completions', {
+        method:'POST',
         headers:{
-          "Content-Type":"application/json",
-          "Authorization":"Bearer " + key
+          'Content-Type':'application/json',
+          'Authorization':'Bearer ' + key
         },
-        body:JSON.stringify({
-          model:"gpt-4o",
-          messages:[
-            {role:"system",content:SYSTEM_PROMPT},
-            ...APP.chatHistory.slice(-8).map(m => ({role:m.role === "user" ? "user" : "assistant", content:m.text})),
-            {role:"user",content:imgDataUrl ? content : text}
-          ],
+        body: JSON.stringify({
+          model:'gpt-4o',
+          messages,
           max_tokens:700
         })
       });
+
       const d = await r.json();
-      if(!r.ok || d.error) throw new Error(d?.error?.message || "OpenAI error");
-      return d?.choices?.[0]?.message?.content || "No response";
+      if (!r.ok || d.error) throw new Error(d?.error?.message || 'OpenAI request failed');
+      return d?.choices?.[0]?.message?.content || 'No response';
     }
 
-    async function callCohere(key, text){
-      const r = await fetch("https://api.cohere.ai/v1/chat",{
-        method:"POST",
+    async function callCohere(key, text) {
+      const chatH = chatHistory.slice(-8).map(m => ({
+        role: m.role === 'user' ? 'USER' : 'CHATBOT',
+        message: m.text
+      }));
+
+      const r = await fetch('https://api.cohere.ai/v1/chat', {
+        method:'POST',
         headers:{
-          "Content-Type":"application/json",
-          "Authorization":"Bearer " + key
+          'Content-Type':'application/json',
+          'Authorization':'Bearer ' + key
         },
-        body:JSON.stringify({
-          model:"command-r-plus",
+        body: JSON.stringify({
+          model:'command-r-plus',
           message:text,
-          chat_history:APP.chatHistory.slice(-8).map(m => ({
-            role:m.role === "user" ? "USER" : "CHATBOT",
-            message:m.text
-          })),
+          chat_history:chatH,
           preamble:SYSTEM_PROMPT,
           max_tokens:700
         })
       });
+
       const d = await r.json();
-      if(!r.ok || d.message) throw new Error(d?.message || "Cohere error");
-      return d?.text || "No response";
-    }
-
-    function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
-
-    /* =========================
-       TRACKER
-    ========================= */
-    function addTask(){
-      const title = document.getElementById("task-title").value.trim();
-      const subject = document.getElementById("task-subject").value;
-      const priority = document.getElementById("task-priority").value;
-      const deadline = document.getElementById("task-deadline").value.trim();
-      if(!title) return alert("Task title daalo");
-      APP.tasks.unshift({
-        id: Date.now(),
-        title, subject, priority, deadline, done:false
-      });
-      document.getElementById("task-title").value = "";
-      document.getElementById("task-deadline").value = "";
-      updateStudyDate();
-      saveState();
-      renderTasks();
-      updateDashboard();
-    }
-
-    function seedTasks(){
-      if(APP.tasks.length) return toast("Tasks already added");
-      APP.tasks = [
-        {id:1,title:"Revise Integration",subject:"Maths",priority:"High",deadline:"Today",done:false},
-        {id:2,title:"Numericals of Current Electricity",subject:"Physics",priority:"High",deadline:"Today",done:false},
-        {id:3,title:"Organic named reactions",subject:"Chemistry",priority:"Medium",deadline:"Tomorrow",done:false},
-        {id:4,title:"English essay practice",subject:"English",priority:"Low",deadline:"This week",done:false}
-      ];
-      updateStudyDate();
-      saveState();
-      renderTasks();
-      updateDashboard();
-    }
-
-    function toggleTask(id){
-      const t = APP.tasks.find(x => x.id === id);
-      if(!t) return;
-      t.done = !t.done;
-      updateStudyDate();
-      saveState();
-      renderTasks();
-      updateDashboard();
-    }
-
-    function deleteTask(id){
-      APP.tasks = APP.tasks.filter(x => x.id !== id);
-      saveState();
-      renderTasks();
-      updateDashboard();
-    }
-
-    function renderTasks(){
-      const box = document.getElementById("task-list");
-      if(!APP.tasks.length){
-        box.innerHTML = `<div class="muted">No tasks yet.</div>`;
-      } else {
-        box.innerHTML = APP.tasks.map(t => `
-          <div class="task-item ${t.done ? "done" : ""}">
-            <input type="checkbox" ${t.done ? "checked" : ""} onchange="toggleTask(${t.id})" />
-            <div>
-              <div style="font-weight:700">${t.title}</div>
-              <div class="muted" style="font-size:13px;margin-top:4px">${t.subject} • ${t.priority} • ${t.deadline || "No deadline"}</div>
-            </div>
-            <div>
-              <span class="pill">${t.done ? "Done" : "Pending"}</span>
-              <div style="margin-top:8px"><button class="tiny-btn red" onclick="deleteTask(${t.id})">Delete</button></div>
-            </div>
-          </div>
-        `).join("");
-      }
-
-      const total = APP.tasks.length;
-      const done = APP.tasks.filter(t => t.done).length;
-      document.getElementById("tracker-total").textContent = total;
-      document.getElementById("tracker-done").textContent = done;
-      document.getElementById("tracker-pending").textContent = total - done;
-    }
-
-    function updateStudyDate(){
-      const today = new Date().toDateString();
-      if(APP.tracker.lastStudyDate !== today){
-        const yesterday = new Date(Date.now() - 86400000).toDateString();
-        APP.tracker.streak = APP.tracker.lastStudyDate === yesterday ? APP.tracker.streak + 1 : 1;
-        APP.tracker.lastStudyDate = today;
-      }
-    }
-
-    /* =========================
-       DASHBOARD
-    ========================= */
-    function updateDashboard(){
-      const total = APP.tasks.length;
-      const done = APP.tasks.filter(t => t.done).length;
-      const percent = total ? Math.round((done / total) * 100) : 0;
-      document.getElementById("stat-tasks").textContent = done;
-      document.getElementById("stat-streak").textContent = APP.tracker.streak;
-      document.getElementById("stat-pomo").textContent = APP.pomodoro.sessions;
-      document.getElementById("main-progress-fill").style.width = percent + "%";
-      document.getElementById("main-progress-text").textContent = percent + "% complete";
-
-      const pending = APP.tasks.filter(t => !t.done).slice(0,3);
-      document.getElementById("dashboard-suggestions").innerHTML =
-        pending.length
-          ? pending.map(t => `• ${t.title} (${t.subject})`).join("<br>")
-          : "All tasks done. Massive W.";
-    }
-
-    /* =========================
-       POMODORO
-    ========================= */
-    let pomoInterval = null;
-
-    function renderPomodoro(){
-      const rem = APP.pomodoro.remaining;
-      const mm = String(Math.floor(rem / 60)).padStart(2,"0");
-      const ss = String(rem % 60).padStart(2,"0");
-      document.getElementById("pomo-time").textContent = `${mm}:${ss}`;
-      document.getElementById("pomo-state-label").textContent = APP.pomodoro.onBreak ? "Break Time" : "Focus Session";
-      document.getElementById("focus-min").value = APP.pomodoro.focusMin;
-      document.getElementById("break-min").value = APP.pomodoro.breakMin;
-      document.getElementById("pomo-count").textContent = APP.pomodoro.sessions;
-    }
-
-    function applyPomodoroSettings(){
-      APP.pomodoro.focusMin = Math.max(1, Number(document.getElementById("focus-min").value || 25));
-      APP.pomodoro.breakMin = Math.max(1, Number(document.getElementById("break-min").value || 5));
-      APP.pomodoro.remaining = APP.pomodoro.focusMin * 60;
-      APP.pomodoro.onBreak = false;
-      APP.pomodoro.running = false;
-      saveState();
-      renderPomodoro();
-    }
-
-    function setPreset(f,b){
-      document.getElementById("focus-min").value = f;
-      document.getElementById("break-min").value = b;
-      applyPomodoroSettings();
-    }
-
-    function startPomodoro(){
-      if(APP.pomodoro.running) return;
-      APP.pomodoro.running = true;
-      saveState();
-      pomoInterval = setInterval(() => {
-        if(APP.pomodoro.remaining > 0){
-          APP.pomodoro.remaining--;
-          renderPomodoro();
-          saveState();
-        } else {
-          if(APP.pomodoro.onBreak){
-            APP.pomodoro.onBreak = false;
-            APP.pomodoro.remaining = APP.pomodoro.focusMin * 60;
-            notify("Break over. Focus time starts now.");
-          } else {
-            APP.pomodoro.onBreak = true;
-            APP.pomodoro.remaining = APP.pomodoro.breakMin * 60;
-            APP.pomodoro.sessions++;
-            saveState();
-            updateDashboard();
-            notify("Focus session completed. Break time.");
-          }
-          renderPomodoro();
-          saveState();
-        }
-      }, 1000);
-      toast("Pomodoro started");
-    }
-
-    function pausePomodoro(){
-      APP.pomodoro.running = false;
-      clearInterval(pomoInterval);
-      saveState();
-      toast("Pomodoro paused");
-    }
-
-    function resetPomodoro(){
-      pausePomodoro();
-      APP.pomodoro.onBreak = false;
-      APP.pomodoro.remaining = APP.pomodoro.focusMin * 60;
-      renderPomodoro();
-      saveState();
-    }
-
-    function skipPomodoro(){
-      APP.pomodoro.remaining = 0;
-      renderPomodoro();
-    }
-
-    /* =========================
-       CBT
-    ========================= */
-    let cbtInterval = null;
-
-    function loadSampleTest(){
-      APP.cbt.questions = [
-        {subject:"Maths", q:"Solve: 2x + 5 = 17", options:["x=5","x=6","x=7","x=8"], answer:1, selected:null, marked:false},
-        {subject:"Physics", q:"SI unit of force is?", options:["Joule","Pascal","Newton","Watt"], answer:2, selected:null, marked:false},
-        {subject:"Chemistry", q:"pH of neutral water is?", options:["0","7","10","14"], answer:1, selected:null, marked:false},
-        {subject:"Maths", q:"Derivative of x² is?", options:["x","2x","x²","2"], answer:1, selected:null, marked:false},
-        {subject:"Physics", q:"Speed of light is approximately?", options:["3×10^8 m/s","3×10^6 m/s","3×10^5 km/s","Both A and C"], answer:3, selected:null, marked:false}
-      ];
-      APP.cbt.current = 0;
-      APP.cbt.submitted = false;
-      APP.cbt.durationMin = Number(document.getElementById("cbt-duration").value || 30);
-      APP.cbt.remaining = APP.cbt.durationMin * 60;
-      APP.cbt.running = false;
-      saveState();
-      renderCBT();
-      toast("Sample test loaded");
-    }
-
-    function renderCBT(){
-      const qs = APP.cbt.questions;
-      const q = qs[APP.cbt.current];
-      document.getElementById("cbt-timer").textContent = formatSec(APP.cbt.remaining);
-      document.getElementById("cbt-attempted").textContent = qs.filter(x => x.selected !== null).length;
-      document.getElementById("cbt-marked").textContent = qs.filter(x => x.marked).length;
-
-      if(!q){
-        document.getElementById("q-index").textContent = "Question 0";
-        document.getElementById("q-text").textContent = "Load a sample test first.";
-        document.getElementById("options-box").innerHTML = "";
-        document.getElementById("palette-box").innerHTML = "";
-        return;
-      }
-
-      document.getElementById("q-index").textContent = `Question ${APP.cbt.current + 1} • ${q.subject}`;
-      document.getElementById("q-text").textContent = q.q;
-
-      document.getElementById("options-box").innerHTML = q.options.map((op, i) => `
-        <div class="option ${q.selected === i ? "selected" : ""}" onclick="selectOption(${i})">${String.fromCharCode(65+i)}. ${op}</div>
-      `).join("");
-
-      document.getElementById("palette-box").innerHTML = qs.map((item, i) => `
-        <button class="pbtn ${item.selected !== null ? "answered" : ""} ${item.marked ? "marked" : ""} ${APP.cbt.current === i ? "current" : ""}" onclick="jumpQ(${i})">${i+1}</button>
-      `).join("");
-    }
-
-    function formatSec(sec){
-      const mm = String(Math.floor(sec/60)).padStart(2,"0");
-      const ss = String(sec%60).padStart(2,"0");
-      return `${mm}:${ss}`;
-    }
-
-    function startTest(){
-      if(!APP.cbt.questions.length) loadSampleTest();
-      if(APP.cbt.running) return;
-      APP.cbt.running = true;
-      cbtInterval = setInterval(() => {
-        if(APP.cbt.remaining > 0){
-          APP.cbt.remaining--;
-          renderCBT();
-          saveState();
-        } else {
-          submitTest();
-        }
-      }, 1000);
-      saveState();
-      toast("Test started");
-    }
-
-    function submitTest(){
-      clearInterval(cbtInterval);
-      APP.cbt.running = false;
-      APP.cbt.submitted = true;
-      let score = 0;
-      APP.cbt.questions.forEach(q => {
-        if(q.selected === q.answer) score += 4;
-        else if(q.selected !== null) score -= 1;
-      });
-      document.getElementById("cbt-result").textContent = score + " marks";
-      saveState();
-      renderCBT();
-      notify("Test submitted. Score: " + score);
-    }
-
-    function resetTest(){
-      clearInterval(cbtInterval);
-      APP.cbt = {
-        durationMin: Number(document.getElementById("cbt-duration").value || 30),
-        remaining: Number(document.getElementById("cbt-duration").value || 30) * 60,
-        running: false,
-        questions: [],
-        current: 0,
-        submitted: false
-      };
-      saveState();
-      renderCBT();
-      document.getElementById("cbt-result").textContent = "Not submitted";
-    }
-
-    function selectOption(i){
-      const q = APP.cbt.questions[APP.cbt.current];
-      if(!q || APP.cbt.submitted) return;
-      q.selected = i;
-      saveState();
-      renderCBT();
-    }
-
-    function prevQ(){ if(APP.cbt.current > 0){ APP.cbt.current--; renderCBT(); saveState(); } }
-    function nextQ(){ if(APP.cbt.current < APP.cbt.questions.length - 1){ APP.cbt.current++; renderCBT(); saveState(); } }
-    function jumpQ(i){ APP.cbt.current = i; renderCBT(); saveState(); }
-    function markReview(){
-      const q = APP.cbt.questions[APP.cbt.current];
-      if(!q) return;
-      q.marked = !q.marked;
-      saveState();
-      renderCBT();
-    }
-    function clearResponse(){
-      const q = APP.cbt.questions[APP.cbt.current];
-      if(!q) return;
-      q.selected = null;
-      saveState();
-      renderCBT();
-    }
-
-    /* =========================
-       FORMULAS
-    ========================= */
-    const FORMULAS = [
-      {title:"Quadratic Formula", body:"x = [-b ± √(b² - 4ac)] / 2a"},
-      {title:"Differentiation", body:"d/dx (xⁿ) = n·xⁿ⁻¹"},
-      {title:"Integration", body:"∫xⁿ dx = xⁿ⁺¹ / (n+1), n ≠ -1"},
-      {title:"Kinematics", body:"v = u + at, s = ut + ½at², v² = u² + 2as"},
-      {title:"Ohm’s Law", body:"V = IR"},
-      {title:"Mole Concept", body:"n = given mass / molar mass"},
-      {title:"Ideal Gas", body:"PV = nRT"}
-    ];
-    function renderFormulas(){
-      document.getElementById("formula-list").innerHTML = FORMULAS.map(f => `
-        <div class="formula-item">
-          <b>${f.title}</b>
-          <div style="margin-top:8px">${f.body}</div>
-          <div style="margin-top:10px"><button class="tiny-btn" onclick="setQuickPrompt('Explain ${escapeQuotes(f.title)} simply'); goPage('chat')">Ask AI</button></div>
-        </div>
-      `).join("");
-    }
-    function escapeQuotes(s){ return String(s).replace(/'/g,"\\'"); }
-
-    /* =========================
-       NOTES
-    ========================= */
-    function saveNote(){
-      const title = document.getElementById("note-title").value.trim();
-      const body = document.getElementById("note-body").value.trim();
-      if(!title || !body) return alert("Title aur note body dono chahiye");
-      APP.notes.unshift({id:Date.now(), title, body, created:new Date().toLocaleString()});
-      saveState();
-      renderNotes();
-      clearNoteInputs();
-      toast("Note saved");
-    }
-
-    function clearNoteInputs(){
-      document.getElementById("note-title").value = "";
-      document.getElementById("note-body").value = "";
-    }
-
-    function renderNotes(){
-      const box = document.getElementById("notes-list");
-      if(!APP.notes.length){
-        box.innerHTML = `<div class="muted">No notes saved.</div>`;
-        return;
-      }
-      box.innerHTML = APP.notes.map((n,i) => `
-        <div class="note-item">
-          <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
-            <div>
-              <div style="font-weight:700">${n.title}</div>
-              <div class="muted" style="font-size:12px;margin-top:4px">${n.created}</div>
-            </div>
-            <div class="small-row">
-              <button class="tiny-btn" onclick="pinNote(${i})">Pin</button>
-              <button class="tiny-btn red" onclick="deleteNote(${i})">Delete</button>
-            </div>
-          </div>
-          <div style="margin-top:10px;line-height:1.6">${fmt(n.body)}</div>
-        </div>
-      `).join("");
-    }
-
-    function pinNote(i){
-      const n = APP.notes[i];
-      if(!n) return;
-      APP.pinned.unshift({text:n.title + " — " + n.body, time:new Date().toLocaleString()});
-      APP.pinned = APP.pinned.slice(0,10);
-      saveState();
-      renderPinned();
-      toast("Note pinned");
-    }
-
-    function deleteNote(i){
-      APP.notes.splice(i,1);
-      saveState();
-      renderNotes();
-    }
-
-    /* =========================
-       BACKUP / RESTORE
-    ========================= */
-    document.getElementById("backup-btn").onclick = () => {
-      const blob = new Blob([JSON.stringify(APP,null,2)], {type:"application/json"});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "batman-ultra-backup.json";
-      a.click();
-      URL.revokeObjectURL(a.href);
-    };
-
-    document.getElementById("restore-btn").onclick = () => document.getElementById("restore-file").click();
-    document.getElementById("restore-file").addEventListener("change", e => {
-      const file = e.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        try{
-          const data = JSON.parse(ev.target.result);
-          Object.assign(APP, data);
-          saveState();
-          initAll();
-          toast("Backup restored");
-        }catch(err){
-          alert("Invalid backup file");
-        }
-      };
-      reader.readAsText(file);
-      e.target.value = "";
-    });
-
-    /* =========================
-       NOTIFICATIONS
-    ========================= */
-    document.getElementById("notify-btn").onclick = async () => {
-      if(!("Notification" in window)) return alert("Notifications supported nahi hain.");
-      const perm = await Notification.requestPermission();
-      toast("Notification: " + perm);
-    };
-
-    function notify(msg){
-      if("Notification" in window && Notification.permission === "granted"){
-        new Notification("Batman AI", {body:msg});
-      }
-    }
-
-    /* =========================
-       OFFLINE / ONLINE STATUS
-    ========================= */
-    function refreshOnlineBadge(){
-      document.getElementById("offline-indicator").textContent = navigator.onLine ? "🟢 Online" : "🟡 Offline";
-    }
-    window.addEventListener("online", refreshOnlineBadge);
-    window.addEventListener("offline", refreshOnlineBadge);
-
-    /* =========================
-       PWA INSTALL PROMPT
-    ========================= */
-    let deferredPrompt = null;
-    window.addEventListener("beforeinstallprompt", e => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById("install-btn").style.display = "inline-flex";
-    });
-
-    document.getElementById("install-btn").onclick = async () => {
-      if(!deferredPrompt) return;
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      document.getElementById("install-btn").style.display = "none";
-    };
-
-    /* =========================
-       SERVICE WORKER REGISTER
-    ========================= */
-    if("serviceWorker" in navigator){
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js").catch(() => {});
-      });
+      if (!r.ok || d.message) throw new Error(d?.message || 'Cohere request failed');
+      return d?.text || 'No response';
     }
 
     /* =========================
        INIT
     ========================= */
-    function initAll(){
-      renderProviderSettings();
-      renderChatHistory();
-      renderPinned();
-      renderTasks();
-      renderPomodoro();
-      renderCBT();
-      renderFormulas();
-      renderNotes();
-      updateDashboard();
-      refreshOnlineBadge();
-      if(!APP.chatHistory.length){
-        addMsg("bot", `Namaste! 👋 Main Batman AI hoon.
-
-Main kya kar sakta hoon:
-• online AI chat
-• offline help replies
-• simple maths solve
-• study tracker
-• pomodoro
-• CBT mock
-• formulas and notes
-
-App open karte hi tum yahin se start kar sakte ho.`);
-      }
-    }
-
-    initAll();
+    renderProvider();
+    checkKeyArea();
+    renderSavedChat();
+    setPos(fabL, fabT, false);
   </script>
 </body>
-</html>
+          </html>
