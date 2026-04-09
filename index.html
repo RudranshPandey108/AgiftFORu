@@ -3,100 +3,135 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Batman AI Ultra</title>
+  <title>Batman AI Ultra Final</title>
+
   <style>
     :root{
       --bg:#07142d;
+      --bg2:#0b1c3d;
       --panel:#020817;
-      --panel-2:#081225;
-      --text:#e5ecff;
-      --muted:#97a4c0;
+      --panel2:#0a1428;
+      --text:#eaf1ff;
+      --muted:#9fb0d1;
+      --gold:#ffd84c;
+      --gold2:#ffeaa0;
+      --blue:#2f67f0;
+      --blue2:#1e4cc0;
       --border:rgba(255,255,255,.12);
-      --border-2:rgba(255,255,255,.08);
-      --gold:#ffd54a;
-      --gold-2:#ffea9a;
-      --accent:#2f67f0;
-      --accent-2:#1c4ec2;
+      --border2:rgba(255,255,255,.07);
       --bot:#1b2940;
       --user:#2f67f0;
       --success:#22c55e;
       --danger:#ef4444;
-      --shadow:0 20px 60px rgba(0,0,0,.45);
-      --radius:20px;
+      --shadow:0 18px 60px rgba(0,0,0,.42);
+      --radius:22px;
     }
 
     *{box-sizing:border-box}
     html,body{
       margin:0;
+      padding:0;
       width:100%;
       height:100%;
-      font-family:Inter, Arial, Helvetica, sans-serif;
+      font-family:Arial, Helvetica, sans-serif;
       background:
-        radial-gradient(circle at top right, rgba(47,103,240,.08), transparent 25%),
-        radial-gradient(circle at bottom left, rgba(255,213,74,.06), transparent 20%),
+        radial-gradient(circle at top right, rgba(47,103,240,.18), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(255,216,76,.08), transparent 22%),
         linear-gradient(180deg, #081633 0%, #07142d 100%);
       color:var(--text);
       overflow-x:hidden;
     }
 
-    .demo-page{
+    body{
       min-height:100vh;
-      padding:28px;
+    }
+
+    .demo-wrap{
+      min-height:100vh;
       display:flex;
       align-items:flex-start;
       justify-content:center;
-      color:#d7def2;
+      padding:24px;
     }
-    .demo-card{
-      width:min(900px, 100%);
+
+    .hero{
+      width:min(980px,100%);
       border:1px solid var(--border);
       background:rgba(255,255,255,.03);
-      border-radius:26px;
-      padding:24px;
+      border-radius:28px;
       box-shadow:var(--shadow);
+      padding:26px;
       backdrop-filter:blur(10px);
     }
-    .demo-card h1{
+
+    .hero h1{
       margin:0 0 10px;
-      font-size:clamp(28px, 4vw, 44px);
+      font-size:clamp(28px,4vw,48px);
+      color:#fff;
     }
-    .demo-card p{
+
+    .hero p{
       margin:0;
       color:var(--muted);
-      line-height:1.7;
+      line-height:1.75;
       font-size:15px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+      gap:14px;
+      margin-top:22px;
+    }
+
+    .hero-card{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+      border-radius:20px;
+      padding:16px;
+    }
+
+    .hero-card h3{
+      margin:0 0 6px;
+      font-size:17px;
+      color:var(--gold2);
+    }
+
+    .hero-card p{
+      margin:0;
+      font-size:14px;
     }
 
     /* FAB */
     #ai-fab-wrap{
       position:fixed;
-      right:18px;
+      right:16px;
       bottom:18px;
       z-index:99998;
       display:flex;
       align-items:center;
       gap:10px;
-      user-select:none;
       touch-action:none;
+      user-select:none;
     }
 
     #ai-fab-label{
-      background:rgba(2,8,23,.82);
+      background:rgba(2,8,23,.86);
+      color:var(--gold2);
       border:1px solid var(--border);
-      color:var(--gold-2);
-      padding:10px 14px;
       border-radius:999px;
+      padding:10px 14px;
       font-size:14px;
       font-weight:700;
       white-space:nowrap;
+      box-shadow:0 10px 25px rgba(0,0,0,.24);
       backdrop-filter:blur(10px);
-      box-shadow:0 10px 25px rgba(0,0,0,.22);
     }
 
     #ai-btn-ring-wrap{
       position:relative;
-      width:72px;
-      height:72px;
+      width:76px;
+      height:76px;
       display:grid;
       place-items:center;
       cursor:grab;
@@ -108,30 +143,33 @@
       position:absolute;
       inset:0;
       border-radius:50%;
-      border:2px solid rgba(255,213,74,.28);
-      animation:pulse 2.6s linear infinite;
+      border:2px solid rgba(255,216,76,.24);
+      animation:pulse 2.8s linear infinite;
     }
-    .pulse-ring2{animation-delay:.65s}
-    .pulse-ring3{animation-delay:1.3s}
+    .pulse-ring2{animation-delay:.7s}
+    .pulse-ring3{animation-delay:1.4s}
 
     @keyframes pulse{
       0%{transform:scale(.78);opacity:0}
-      15%{opacity:.75}
-      100%{transform:scale(1.35);opacity:0}
+      18%{opacity:.8}
+      100%{transform:scale(1.36);opacity:0}
     }
 
     #ai-chat-btn{
       position:relative;
-      width:62px;
-      height:62px;
+      width:64px;
+      height:64px;
       border:none;
       border-radius:50%;
       overflow:hidden;
       padding:0;
-      background:#0b1220;
-      box-shadow:0 0 0 2px rgba(255,213,74,.18), 0 0 22px rgba(255,213,74,.34);
       cursor:pointer;
+      background:#111;
+      box-shadow:
+        0 0 0 2px rgba(255,216,76,.18),
+        0 0 18px rgba(255,216,76,.26);
     }
+
     #ai-chat-btn img{
       width:100%;
       height:100%;
@@ -162,7 +200,7 @@
       z-index:99997;
       display:none;
       background:rgba(2,8,23,.9);
-      color:var(--gold-2);
+      color:var(--gold2);
       border:1px solid var(--border);
       padding:12px 10px;
       border-radius:0 14px 14px 0;
@@ -178,11 +216,11 @@
     /* PANEL */
     #ai-panel{
       position:fixed;
-      right:18px;
-      bottom:102px;
-      width:min(96vw, 520px);
-      height:min(88vh, 820px);
-      background:linear-gradient(180deg, rgba(2,8,23,.98), rgba(3,10,28,.98));
+      right:16px;
+      bottom:104px;
+      width:min(96vw,540px);
+      height:min(88vh,820px);
+      background:linear-gradient(180deg, rgba(2,8,23,.98), rgba(3,11,28,.98));
       border:1px solid var(--border);
       border-radius:24px;
       box-shadow:var(--shadow);
@@ -194,105 +232,118 @@
     }
     #ai-panel.open{display:flex}
     #ai-panel.expanded{
-      width:min(98vw, 740px);
-      height:min(94vh, 940px);
-      right:12px;
-      bottom:12px;
+      width:min(98vw,760px);
+      height:min(94vh,940px);
+      right:10px;
+      bottom:10px;
     }
 
     #ai-header{
-      padding:14px 14px 12px;
-      border-bottom:1px solid var(--border-2);
-      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+      padding:14px;
+      border-bottom:1px solid var(--border2);
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
       flex-shrink:0;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
     }
+
     .ai-head-left{
       display:flex;
       align-items:center;
       gap:10px;
       min-width:0;
     }
+
     .ai-head-left img{
       width:38px;
       height:38px;
       border-radius:50%;
       object-fit:cover;
-      border:1px solid var(--border);
+      border:1.5px solid var(--border);
       flex-shrink:0;
     }
+
     .ai-title{
       font-weight:800;
       font-size:18px;
       color:#fff;
     }
+
     #ai-status-txt{
+      margin-top:2px;
       font-size:12px;
       color:#87f7a7;
-      margin-top:2px;
     }
+
     .head-btns{
       display:flex;
       gap:8px;
       flex-shrink:0;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
+
     .icon-btn{
-      border:1px solid var(--border);
-      background:#0c1527;
-      color:#fff;
       width:38px;
       height:38px;
       border-radius:12px;
+      border:1px solid var(--border);
+      background:#0d1730;
+      color:#fff;
       cursor:pointer;
-      font-size:18px;
+      font-size:17px;
     }
 
     #ai-provider-panel{
       display:none;
-      border-bottom:1px solid var(--border-2);
+      padding:12px 14px;
+      border-bottom:1px solid var(--border2);
       background:rgba(255,255,255,.02);
-      padding:12px;
       flex-shrink:0;
     }
     #ai-provider-panel.show{display:block}
+
     .small-label{
       font-size:11px;
       color:var(--muted);
+      margin-bottom:8px;
       text-transform:uppercase;
       letter-spacing:.12em;
-      margin-bottom:9px;
       font-weight:700;
     }
+
     .providers{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:8px;
     }
+
     .provider-card{
       border:1px solid var(--border);
-      background:#0c1527;
-      padding:11px 12px;
+      background:#0d1730;
       border-radius:14px;
+      padding:11px 12px;
       cursor:pointer;
       transition:.18s ease;
     }
     .provider-card:hover{
       transform:translateY(-1px);
-      border-color:rgba(255,213,74,.35);
+      border-color:rgba(255,216,76,.35);
     }
     .provider-card.active{
-      border-color:rgba(255,213,74,.55);
-      box-shadow:0 0 0 1px rgba(255,213,74,.2) inset;
-      background:#111c33;
+      border-color:rgba(255,216,76,.58);
+      background:#101b34;
+      box-shadow:0 0 0 1px rgba(255,216,76,.18) inset;
     }
+
     .provider-name{
       font-size:14px;
       font-weight:700;
       margin-bottom:6px;
     }
+
     .badge{
       display:inline-flex;
       padding:3px 7px;
@@ -301,21 +352,21 @@
       font-weight:800;
       letter-spacing:.06em;
     }
-    .badge.free{background:rgba(34,197,94,.14); color:#8ff0af}
-    .badge.paid{background:rgba(239,68,68,.14); color:#ff9f9f}
-    .badge.trial{background:rgba(59,130,246,.14); color:#9dc0ff}
+    .badge.free{background:rgba(34,197,94,.15);color:#97ffb5}
+    .badge.paid{background:rgba(239,68,68,.14);color:#ffafaf}
+    .badge.trial{background:rgba(59,130,246,.15);color:#aecaFF}
 
     #ai-body{
       flex:1;
       min-height:0;
-      padding:14px;
       overflow-y:auto;
+      padding:14px;
       display:flex;
       flex-direction:column;
       gap:12px;
       background:
         linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,0)),
-        radial-gradient(circle at top, rgba(47,103,240,.04), transparent 26%);
+        radial-gradient(circle at top, rgba(47,103,240,.05), transparent 28%);
     }
 
     .chips-row{
@@ -323,29 +374,29 @@
       flex-wrap:wrap;
       gap:8px;
     }
+
     .qchip{
       border:1px solid var(--border);
       background:#0d1730;
-      color:#d9e6ff;
+      color:#e2ecff;
       padding:9px 12px;
       border-radius:999px;
       font-size:13px;
       cursor:pointer;
       transition:.18s ease;
     }
-    .qchip:hover{border-color:rgba(255,213,74,.3); color:#fff}
+    .qchip:hover{
+      border-color:rgba(255,216,76,.3);
+      color:#fff;
+    }
 
     .cm{
       display:flex;
       gap:10px;
       align-items:flex-end;
     }
-    .cm.user{
-      justify-content:flex-end;
-    }
-    .cm.bot{
-      justify-content:flex-start;
-    }
+    .cm.user{justify-content:flex-end}
+    .cm.bot{justify-content:flex-start}
 
     .bot-av{
       width:30px;
@@ -372,19 +423,21 @@
     }
 
     .cm-bub{
-      border-radius:18px;
       padding:13px 14px;
+      border-radius:18px;
       font-size:15px;
       line-height:1.55;
       word-wrap:break-word;
-      white-space:pre-wrap;
       border:1px solid rgba(255,255,255,.04);
+      white-space:pre-wrap;
     }
+
     .cm.user .cm-bub{
-      background:linear-gradient(180deg, var(--user), var(--accent-2));
+      background:linear-gradient(180deg, var(--user), var(--blue2));
       color:#fff;
       border-bottom-right-radius:8px;
     }
+
     .cm.bot .cm-bub{
       background:linear-gradient(180deg, #1d2a3f, #182538);
       color:#eef3ff;
@@ -408,7 +461,7 @@
     }
 
     .typing-bub{
-      min-width:72px;
+      min-width:74px;
       display:flex;
       align-items:center;
       gap:6px;
@@ -417,7 +470,7 @@
       width:8px;
       height:8px;
       border-radius:50%;
-      background:#b5c3e2;
+      background:#bcc9e5;
       animation:blink 1.1s infinite ease-in-out;
     }
     .typing-bub span:nth-child(2){animation-delay:.12s}
@@ -429,17 +482,19 @@
 
     #img-preview-wrap{
       display:none;
-      border-top:1px solid var(--border-2);
       padding:10px 14px;
+      border-top:1px solid var(--border2);
       background:rgba(255,255,255,.02);
       flex-shrink:0;
     }
     #img-preview-wrap.show{display:block}
+
     .img-preview-row{
       display:flex;
       align-items:center;
       gap:10px;
     }
+
     #img-preview{
       width:62px;
       height:62px;
@@ -448,10 +503,11 @@
       border:1px solid var(--border);
       background:#0d1730;
     }
+
     .tiny-danger{
       border:none;
       background:#2a0d14;
-      color:#ff9f9f;
+      color:#ffb1b1;
       padding:8px 12px;
       border-radius:12px;
       cursor:pointer;
@@ -459,35 +515,39 @@
     }
 
     #ai-key-area{
-      border-top:1px solid var(--border-2);
       padding:12px 14px;
+      border-top:1px solid var(--border2);
       background:rgba(255,255,255,.02);
       flex-shrink:0;
     }
+
     #key-label-txt{
       font-size:12px;
       font-weight:800;
-      color:var(--gold-2);
+      color:var(--gold2);
       margin-bottom:5px;
-      letter-spacing:.04em;
       text-transform:uppercase;
+      letter-spacing:.04em;
     }
+
     #key-hint-txt{
       font-size:12px;
       color:var(--muted);
       line-height:1.55;
       margin-bottom:10px;
     }
+
     #key-hint-txt a{
       color:#9dc0ff;
       text-decoration:none;
       font-weight:700;
-      cursor:pointer;
     }
+
     .key-row{
       display:flex;
       gap:8px;
     }
+
     .key-row input{
       flex:1;
       min-width:0;
@@ -499,10 +559,11 @@
       outline:none;
       font-size:14px;
     }
+
     .gold-btn{
       border:none;
       background:linear-gradient(180deg, var(--gold), #f5bf20);
-      color:#161616;
+      color:#171717;
       padding:0 16px;
       border-radius:12px;
       font-weight:900;
@@ -511,17 +572,19 @@
     }
 
     #ai-footer{
-      border-top:1px solid var(--border-2);
       padding:12px 14px 14px;
+      border-top:1px solid var(--border2);
       background:linear-gradient(180deg, rgba(255,255,255,.01), rgba(255,255,255,0));
       flex-shrink:0;
     }
+
     .input-row{
       display:flex;
       align-items:flex-end;
       gap:8px;
       margin-bottom:10px;
     }
+
     .round-btn{
       width:42px;
       height:42px;
@@ -533,6 +596,7 @@
       font-size:18px;
       flex-shrink:0;
     }
+
     #chat-input-txt{
       flex:1;
       min-height:46px;
@@ -548,18 +612,20 @@
       line-height:1.45;
       font-family:inherit;
     }
+
     #chat-send-btn{
       width:46px;
       height:46px;
       border-radius:14px;
       border:none;
       background:linear-gradient(180deg, var(--gold), #f5bf20);
-      color:#161616;
+      color:#171717;
       cursor:pointer;
       flex-shrink:0;
       font-size:18px;
       font-weight:900;
     }
+
     .foot-row{
       display:flex;
       align-items:center;
@@ -567,46 +633,63 @@
       gap:10px;
       flex-wrap:wrap;
     }
+
     #provider-badge-btn{
       border:1px solid var(--border);
       background:#111b31;
-      color:var(--gold-2);
+      color:var(--gold2);
       padding:8px 12px;
       border-radius:999px;
       font-size:12px;
       cursor:pointer;
       font-weight:800;
     }
+
     .foot-tools{
       display:flex;
-      align-items:center;
       gap:8px;
+      align-items:center;
       flex-wrap:wrap;
     }
+
     .tiny-btn{
       border:1px solid var(--border);
       background:#0d1730;
-      color:#dce7ff;
+      color:#dbe7ff;
       padding:7px 10px;
       border-radius:999px;
       font-size:12px;
       cursor:pointer;
       font-weight:700;
     }
+
     .foot-hint{
       font-size:11px;
       color:var(--muted);
     }
 
-    .snap-anim{transition:left .38s ease, top .38s ease}
-    .offscreen{visibility:hidden}
+    .snap-anim{
+      transition:left .38s ease, top .38s ease;
+    }
+
+    .offscreen{
+      visibility:hidden;
+    }
 
     @keyframes sparkleFloat{
-      0%{transform:translate(-50%,-50%) scale(.6);opacity:1}
-      100%{transform:translate(calc(-50% + var(--sx)), calc(-50% + var(--sy))) scale(1.4);opacity:0}
+      0%{
+        transform:translate(-50%,-50%) scale(.6);
+        opacity:1;
+      }
+      100%{
+        transform:translate(calc(-50% + var(--sx)), calc(-50% + var(--sy))) scale(1.35);
+        opacity:0;
+      }
     }
 
     @media (max-width: 768px){
+      .demo-wrap{padding:16px}
+      .hero{padding:18px}
       #ai-panel{
         top:10px;
         left:10px;
@@ -631,46 +714,80 @@
       #ai-fab-label{
         display:none;
       }
-      .msg-wrap{max-width:88%}
-      .providers{grid-template-columns:1fr}
-      .foot-row{align-items:flex-start}
+      .msg-wrap{
+        max-width:88%;
+      }
+      .providers{
+        grid-template-columns:1fr;
+      }
+      .head-btns{
+        gap:6px;
+      }
+      .icon-btn{
+        width:36px;
+        height:36px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="demo-page">
-    <div class="demo-card">
-      <h1>Batman AI Ultra</h1>
+  <div class="demo-wrap">
+    <div class="hero">
+      <h1>Batman AI Ultra Final</h1>
       <p>
-        Ye demo page hai. Bottom-right wale floating Batman button ko dabao.
-        Chat window phone pe bhi badi open hogi. Drag karke side pe chhupa bhi sakta hai.
+        Bottom-right wale Batman button ko dabao. Chat kholo. Drag karo. Voice use karo. Image preview use karo.
+        API key ho toh online AI call karega, nahi ho toh offline help replies dega.
       </p>
+
+      <div class="hero-grid">
+        <div class="hero-card">
+          <h3>Offline Ready</h3>
+          <p>Install, bookmark, features, offline mode, API help jaisi cheezein bina key ke reply karega.</p>
+        </div>
+        <div class="hero-card">
+          <h3>Big Mobile UI</h3>
+          <p>Phone pe chhota popup nahi — bada app-jaisa chat panel open hoga.</p>
+        </div>
+        <div class="hero-card">
+          <h3>Multi Provider</h3>
+          <p>Gemini, Groq, OpenRouter, OpenAI, Cohere provider selector diya gaya hai.</p>
+        </div>
+        <div class="hero-card">
+          <h3>Utilities</h3>
+          <p>Voice input, image preview, export chat, clear chat, saved history sab diya gaya hai.</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- AI FAB -->
+  <!-- AI FAB Button -->
   <div id="ai-fab-wrap">
     <div id="ai-fab-label">🦇 Batman AI</div>
     <div id="ai-btn-ring-wrap">
       <div class="pulse-ring"></div>
       <div class="pulse-ring2"></div>
       <div class="pulse-ring3"></div>
+
       <button id="ai-chat-btn" title="Open Batman AI">
         <img
           src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop"
           alt="Batman AI"
+          loading="lazy"
+          decoding="async"
         />
         <div class="notif" id="ai-notif">1</div>
       </button>
     </div>
   </div>
 
-  <!-- Side peek tab -->
+  <!-- Edge peek tab -->
   <div id="ai-show-tab" onclick="aiShowBtn()" title="Show AI">🦇 AI</div>
 
   <!-- AI PANEL -->
   <div id="ai-panel">
+
+    <!-- Header -->
     <div id="ai-header">
       <div class="ai-head-left">
         <img
@@ -682,33 +799,41 @@
           <div id="ai-status-txt">● Online — Ask anything!</div>
         </div>
       </div>
+
       <div class="head-btns">
         <button class="icon-btn" onclick="toggleProviderPanel()" title="Providers">⚙️</button>
         <button class="icon-btn" onclick="aiExpand()" title="Expand">⛶</button>
         <button class="icon-btn" onclick="clearChat()" title="Clear chat">🗑️</button>
+        <button class="icon-btn" onclick="showHelpMessage()" title="Help">?</button>
         <button class="icon-btn" onclick="aiToggle()" title="Close">✕</button>
       </div>
     </div>
 
+    <!-- Provider panel -->
     <div id="ai-provider-panel">
       <div class="small-label">Choose AI Provider</div>
+
       <div class="providers">
         <div class="provider-card" id="pcard-gemini" onclick="selectProvider('gemini')">
           <div class="provider-name">⚡ Gemini Flash</div>
           <span class="badge free">FREE</span>
         </div>
+
         <div class="provider-card" id="pcard-groq" onclick="selectProvider('groq')">
           <div class="provider-name">🚀 Groq</div>
           <span class="badge free">FREE</span>
         </div>
+
         <div class="provider-card" id="pcard-openrouter" onclick="selectProvider('openrouter')">
           <div class="provider-name">🔀 OpenRouter</div>
           <span class="badge free">FREE</span>
         </div>
+
         <div class="provider-card" id="pcard-openai" onclick="selectProvider('openai')">
-          <div class="provider-name">🤖 OpenAI</div>
+          <div class="provider-name">🤖 OpenAI GPT-4o</div>
           <span class="badge paid">PAID</span>
         </div>
+
         <div class="provider-card" id="pcard-cohere" onclick="selectProvider('cohere')">
           <div class="provider-name">🌊 Cohere</div>
           <span class="badge trial">TRIAL</span>
@@ -716,17 +841,21 @@
       </div>
     </div>
 
+    <!-- Chat body -->
     <div id="ai-body">
-      <div id="chat-msgs" style="display:flex; flex-direction:column; gap:12px;"></div>
+      <div id="chat-msgs" style="display:flex;flex-direction:column;gap:12px;"></div>
+
       <div id="chips-row" class="chips-row">
         <span class="qchip" onclick="quickAsk(this)">📚 Study tips</span>
         <span class="qchip" onclick="quickAsk(this)">📱 Install app</span>
         <span class="qchip" onclick="quickAsk(this)">🔑 Get free API key</span>
         <span class="qchip" onclick="quickAsk(this)">🧮 Math help</span>
-        <span class="qchip" onclick="quickAsk(this)">🎤 Use voice input</span>
+        <span class="qchip" onclick="quickAsk(this)">📡 Offline mode</span>
+        <span class="qchip" onclick="quickAsk(this)">🎤 Voice input</span>
       </div>
     </div>
 
+    <!-- Image preview -->
     <div id="img-preview-wrap">
       <div class="img-preview-row">
         <img id="img-preview" src="" alt="preview" />
@@ -734,136 +863,199 @@
       </div>
     </div>
 
+    <!-- API key area -->
     <div id="ai-key-area">
       <div id="key-label-txt"></div>
       <div id="key-hint-txt"></div>
+
       <div class="key-row">
         <input id="ai-api-input" type="password" placeholder="Paste API key here..." />
         <button class="gold-btn" onclick="saveKey()">Save</button>
       </div>
     </div>
 
+    <!-- Footer -->
     <div id="ai-footer">
       <div class="input-row">
         <button class="round-btn" id="img-upload-btn" onclick="document.getElementById('file-input-hidden').click()" title="Upload image">🖼️</button>
         <button class="round-btn" onclick="startVoiceInput()" title="Voice input">🎤</button>
+
         <textarea
           id="chat-input-txt"
           rows="1"
           placeholder="Koi bhi doubt poochho... 🦇"
           oninput="aiResize(this)"
         ></textarea>
+
         <button id="chat-send-btn" onclick="aiSend()" title="Send">➤</button>
       </div>
 
       <div class="foot-row">
         <button id="provider-badge-btn" onclick="toggleProviderPanel()">⚙️ Gemini Flash</button>
+
         <div class="foot-tools">
           <button class="tiny-btn" onclick="exportChat()">Export chat</button>
-          <button class="tiny-btn" onclick="toggleThemeHint()">Help</button>
+          <button class="tiny-btn" onclick="toggleInstallGuide()">Install help</button>
           <span class="foot-hint">Enter = Send • Shift+Enter = New line</span>
         </div>
       </div>
     </div>
   </div>
 
-  <input id="file-input-hidden" type="file" accept="image/*" style="display:none" />
+  <input id="file-input-hidden" type="file" accept="image/*" style="display:none;" />
 
   <script>
     /* =========================
-       OFFLINE INFO / HELP DB
+       OFFLINE KNOWLEDGE BASE
     ========================= */
-    const K4HAV_INFO = {
-      keywords: {
-        'download|homescreen|install|pwa|add to home|phone pe install|mobile install':
-`📲 Phone pe install kaise karein:
+    const OFFLINE_KB = [
+      {
+        patterns: [
+          "install", "install app", "add to home screen", "homescreen",
+          "phone pe install", "mobile install", "pwa", "install help"
+        ],
+        reply: `📲 App install kaise karein:
 
 Android Chrome:
 1. Website kholo
 2. 3-dot menu dabao
 3. "Add to Home screen" ya "Install app" choose karo
-4. Done
+4. Done ✅
 
 iPhone Safari:
 1. Website kholo
 2. Share button dabao
-3. "Add to Home Screen"
+3. "Add to Home Screen" choose karo ✅
 
-Agar address bar me install icon aaye, usko bhi dabaa sakte ho.`,
-
-        'bookmark|save website|laptop bookmark':
-`🔖 Bookmark kaise karein:
+Laptop:
+Browser ke address bar ke paas install icon bhi aa sakta hai.`
+      },
+      {
+        patterns: [
+          "bookmark", "save website", "save", "bookmark kaise", "website save", "star"
+        ],
+        reply: `🔖 Bookmark kaise karein:
 
 Laptop/Desktop:
-• Chrome/Edge/Firefox: Ctrl + D
+• Chrome / Edge / Firefox: Ctrl + D
 • Safari: Cmd + D
 
 Mobile Chrome:
-• 3-dot menu → Star`,
+• 3-dot menu → Star icon`
+      },
+      {
+        patterns: [
+          "offline", "without internet", "bina internet", "net ke bina", "offline mode"
+        ],
+        reply: `📡 Offline mode:
 
-        'offline|without internet|bina internet':
-`📡 Offline use:
-Kuch local features offline chal sakte hain, lekin AI features ke liye internet chahiye.`,
+Ye app offline me basic help replies de sakta hai.
+Online AI replies ke liye internet chahiye.
 
-        'progress|save progress|data save|reset':
-`💾 Progress:
-Progress localStorage me save hoti hai.
+Offline me:
+• app UI chalega
+• saved chat history dikhegi
+• install/help/features wale replies milenge`
+      },
+      {
+        patterns: [
+          "progress", "save progress", "data save", "reset progress", "history"
+        ],
+        reply: `💾 Data save:
 
-Warning:
-Browser cache/data clear karoge toh progress delete ho sakti hai.`,
+Chat history localStorage me save hoti hai.
+Browser data clear karoge toh history delete ho sakti hai.
 
-        'feature|about|help|features|kya kya':
-`🌟 Batman AI Ultra features:
-• Multiple AI providers
-• Image upload preview
+Clear chat button se current chat manually bhi hata sakte ho.`
+      },
+      {
+        patterns: [
+          "features", "feature", "help", "kya kya", "what can you do", "about"
+        ],
+        reply: `🌟 Batman AI Ultra Features:
+
+• Draggable floating AI button
+• Big mobile chat panel
+• Offline replies
+• API based online AI
+• Provider switch
+• Image preview
 • Voice input
 • Export chat
 • Clear chat
-• Offline help replies
-• Big mobile UI
-• Chat history save`,
-
-        'theme|color|change theme':
-`🎨 Theme abhi dark premium style me hai. Baad me multi-theme bhi add kar sakte ho.`,
-
-        'subject|subjects|chapters|syllabus':
-`📖 General support:
-Maths, Physics, Chemistry, Biology, English, Coding aur general doubts me help karega.`,
-
-        'share|friend ko share|link share':
-`🔗 Share:
-Is file ko seedha kisi ko de sakte ho. But agar API key embedded hai toh public share mat karna.`,
-
-        'creator|who made|kisne banaya':
-`👨‍💻 Ye custom AI chat UI tumhare project ke liye banaya gaya hai.`,
-
-        'upi|support|donate|payment|pay':
-`❤️ Donation/support section tum alag se add kar sakte ho landing page me.`,
-
-        'api key|get free api key|free key|api':
-`🔑 Free API key options:
+• Saved chat history`
+      },
+      {
+        patterns: [
+          "api", "api key", "free api key", "key kaha se", "get api key"
+        ],
+        reply: `🔑 Free API key options:
 
 1. OpenRouter
-   https://openrouter.ai/keys
-
 2. Gemini
-   https://aistudio.google.com/apikey
-
 3. Groq
-   https://console.groq.com/keys
 
-Note:
-Browser-side use me key public ho sakti hai. Personal testing ke liye theek hai.`
+Agar sirf offline use karna hai toh API key zaroori nahi hai.`
+      },
+      {
+        patterns: [
+          "hi", "hello", "hey", "namaste", "hii", "yo"
+        ],
+        reply: `Namaste bhai 👋
+Main Batman AI hoon.
+
+Tum mujhse poochh sakte ho:
+• install app
+• bookmark
+• offline mode
+• features
+• api key`
+      },
+      {
+        patterns: [
+          "voice", "voice input", "mic", "speak", "bolke"
+        ],
+        reply: `🎤 Voice input:
+
+Mic button dabao.
+Browser permission maange toh allow karo.
+Jo bologe woh input box me aa jayega.`
       }
-    };
+    ];
+
+    function normalizeText(text) {
+      return text
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s]/g, " ")
+        .replace(/\s+/g, " ");
+    }
 
     function getOfflineReply(text) {
-      const t = text.toLowerCase();
-      for (const [keys, reply] of Object.entries(K4HAV_INFO.keywords)) {
-        const arr = keys.split('|');
-        if (arr.some(k => t.includes(k))) return reply;
+      const t = normalizeText(text);
+
+      for (const item of OFFLINE_KB) {
+        for (const p of item.patterns) {
+          const pattern = normalizeText(p);
+
+          if (
+            t.includes(pattern) ||
+            pattern.includes(t) ||
+            t.split(" ").some(word => pattern.includes(word) || word.includes(pattern))
+          ) {
+            return item.reply;
+          }
+        }
       }
-      return null;
+
+      return `🤖 Offline mode me main basic help de sakta hoon.
+
+Try these:
+• install app
+• bookmark
+• offline mode
+• features
+• api key`;
     }
 
     /* =========================
@@ -886,7 +1078,7 @@ Browser-side use me key public ho sakti hai. Personal testing ke liye theek hai.
       },
       openrouter: {
         name: 'OpenRouter',
-        label: '🔀 Setup OpenRouter (Free models)',
+        label: '🔀 Setup OpenRouter (Free Models)',
         hint: `Go to <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a> → Create key → paste below`,
         storageKey: 'batman_key_openrouter',
         supportsImage: true
@@ -907,13 +1099,11 @@ Browser-side use me key public ho sakti hai. Personal testing ke liye theek hai.
       }
     };
 
-    const SYSTEM_PROMPT = `You are Batman AI, a friendly, smart study assistant.
-Help with student doubts clearly.
+    const SYSTEM_PROMPT = `You are Batman AI, a helpful and friendly study assistant.
+Explain things clearly.
 Use simple Hinglish when natural.
-Keep answers useful, readable, and encouraging.
-If user asks academic questions, answer properly.
-If user asks casual help, respond normally.
-Avoid unnecessary over-explanations.`;
+Keep answers readable and useful.
+Do not overcomplicate.`;
 
     let aiProvider = localStorage.getItem('batman_provider') || 'gemini';
     let chatHistory = JSON.parse(localStorage.getItem('batman_chat_history') || '[]');
@@ -921,6 +1111,9 @@ Avoid unnecessary over-explanations.`;
     let pendingImageB64 = null;
     let pendingImageMime = null;
 
+    /* =========================
+       FAB DRAG
+    ========================= */
     const fabWrap = document.getElementById('ai-fab-wrap');
     const ringWrap = document.getElementById('ai-btn-ring-wrap');
     const showTab = document.getElementById('ai-show-tab');
@@ -931,25 +1124,32 @@ Avoid unnecessary over-explanations.`;
     let pointerDownX, pointerDownY, fabDownL, fabDownT;
     let dragging = false, moved = false;
 
-    function clamp(v, lo, hi){ return Math.max(lo, Math.min(v, hi)); }
+    function clamp(v, lo, hi){
+      return Math.max(lo, Math.min(v, hi));
+    }
 
     function setPos(l, t, animate) {
       const maxL = window.innerWidth - BTN_W + 30;
       const maxT = window.innerHeight - BTN_W - 10;
       fabL = clamp(l, -50, maxL);
       fabT = clamp(t, 10, maxT);
+
       if (animate) fabWrap.classList.add('snap-anim');
       else fabWrap.classList.remove('snap-anim');
+
       fabWrap.style.left = fabL + 'px';
       fabWrap.style.top = fabT + 'px';
       fabWrap.style.right = 'auto';
       fabWrap.style.bottom = 'auto';
     }
 
-    function getPoint(e){ return e.touches ? e.touches[0] : e; }
+    function getPoint(e){
+      return e.touches ? e.touches[0] : e;
+    }
 
     function onFabDown(e) {
       if (e.button && e.button !== 0) return;
+
       const pt = getPoint(e);
       pointerDownX = pt.clientX;
       pointerDownY = pt.clientY;
@@ -964,6 +1164,7 @@ Avoid unnecessary over-explanations.`;
       document.addEventListener('touchmove', onFabMove, { passive:false });
       document.addEventListener('touchend', onFabUp);
       document.addEventListener('touchcancel', onFabUp);
+
       e.preventDefault();
     }
 
@@ -977,8 +1178,10 @@ Avoid unnecessary over-explanations.`;
         moved = true;
         ringWrap.classList.add('dragging');
       }
+
       if (!dragging) return;
       if (e.cancelable) e.preventDefault();
+
       setPos(fabDownL + dx, fabDownT + dy, false);
     }
 
@@ -1009,6 +1212,7 @@ Avoid unnecessary over-explanations.`;
           showTab.style.left = '0';
           showTab.style.right = 'auto';
           showTab.classList.remove('r');
+          showTab.textContent = '🦇 AI';
         }, 380);
       } else if (goRight) {
         setPos(window.innerWidth - 8, fabT, true);
@@ -1019,6 +1223,7 @@ Avoid unnecessary over-explanations.`;
           showTab.style.right = '0';
           showTab.style.left = 'auto';
           showTab.classList.add('r');
+          showTab.textContent = '🦇 AI';
         }, 380);
       } else {
         setPos(fabL, fabT, true);
@@ -1040,16 +1245,19 @@ Avoid unnecessary over-explanations.`;
     });
 
     function spawnSparkles() {
-      const colors = ['#ffd54a','#fff','#8ab4ff','#9a7dff','#67e8f9'];
+      const colors = ['#ffd84c','#fff','#8ab4ff','#9a7dff','#67e8f9'];
       const btn = document.getElementById('ai-chat-btn');
       const r = btn.getBoundingClientRect();
-      const cx = r.left + r.width/2, cy = r.top + r.height/2;
-      for(let i=0;i<12;i++){
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+
+      for (let i = 0; i < 12; i++) {
         const s = document.createElement('div');
-        const ang = (i/12) * Math.PI * 2;
+        const ang = (i / 12) * Math.PI * 2;
         const dist = 30 + Math.random() * 26;
         const sx = Math.cos(ang) * dist;
         const sy = Math.sin(ang) * dist - 10;
+
         s.style.cssText = `
           position:fixed;
           width:${3 + Math.random()*4}px;
@@ -1064,14 +1272,19 @@ Avoid unnecessary over-explanations.`;
           --sy:${sy}px;
           animation:sparkleFloat .8s ease-out ${i*.03}s forwards;
         `;
+
         document.body.appendChild(s);
         setTimeout(() => s.remove(), 1000);
       }
     }
 
+    /* =========================
+       UI ACTIONS
+    ========================= */
     function aiToggle() {
       const p = document.getElementById('ai-panel');
       p.classList.toggle('open');
+
       if (p.classList.contains('open')) {
         spawnSparkles();
         renderProvider();
@@ -1083,20 +1296,20 @@ Avoid unnecessary over-explanations.`;
 
 Main kya kar sakta hoon:
 • padhai me help
-• simple chat
+• normal chat
 • voice input
 • image preview
 • different AI providers
+• offline replies
 
 No API key?
-Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
+Koi baat nahi. Main help-type questions ka offline jawab de dunga.`);
         }
       }
     }
 
     function aiExpand() {
-      const p = document.getElementById('ai-panel');
-      p.classList.toggle('expanded');
+      document.getElementById('ai-panel').classList.toggle('expanded');
     }
 
     function toggleProviderPanel() {
@@ -1116,6 +1329,7 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
       Object.keys(AI_PROVIDERS).forEach(k => {
         document.getElementById('pcard-' + k).classList.remove('active');
       });
+
       document.getElementById('pcard-' + aiProvider).classList.add('active');
 
       const pv = AI_PROVIDERS[aiProvider];
@@ -1139,6 +1353,7 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
         alert('Pehle key daalo.');
         return;
       }
+
       localStorage.setItem(AI_PROVIDERS[aiProvider].storageKey, v);
       document.getElementById('ai-api-input').value = '';
       checkKeyArea();
@@ -1146,13 +1361,16 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
     }
 
     function getTime() {
-      return new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+      return new Date().toLocaleTimeString('en-IN', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
     }
 
     function formatText(text) {
       return text
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
         .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
         .replace(/\n/g, '<br>');
     }
@@ -1161,6 +1379,7 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
       const c = document.getElementById('chat-msgs');
       const d = document.createElement('div');
       d.className = 'cm bot';
+
       d.innerHTML = `
         <div class="bot-av">
           <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop" alt="AI" />
@@ -1170,6 +1389,7 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
           <div class="cm-time">${getTime()}</div>
         </div>
       `;
+
       c.appendChild(d);
       c.scrollTop = c.scrollHeight;
     }
@@ -1178,12 +1398,14 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
       const c = document.getElementById('chat-msgs');
       const d = document.createElement('div');
       d.className = 'cm user';
+
       d.innerHTML = `
         <div class="msg-wrap">
           <div class="cm-bub">${imgSrc ? `<img class="cm-img" src="${imgSrc}" alt="img" />` : ''}${text ? formatText(text) : ''}</div>
           <div class="cm-time">${getTime()}</div>
         </div>
       `;
+
       c.appendChild(d);
       c.scrollTop = c.scrollHeight;
     }
@@ -1193,6 +1415,7 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
       const d = document.createElement('div');
       d.className = 'cm bot';
       d.id = 'ai-typing';
+
       d.innerHTML = `
         <div class="bot-av">
           <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop" alt="AI" />
@@ -1201,6 +1424,7 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
           <div class="cm-bub typing-bub"><span></span><span></span><span></span></div>
         </div>
       `;
+
       c.appendChild(d);
       c.scrollTop = c.scrollHeight;
     }
@@ -1216,6 +1440,7 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
 
     function renderSavedChat() {
       if (!chatHistory.length) return;
+
       for (const item of chatHistory) {
         if (item.role === 'user') userMsg(item.text || '', item.imgSrc || null);
         else botMsg(item.text || '', item.imgSrc || null);
@@ -1235,6 +1460,7 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
         alert('Chat empty hai.');
         return;
       }
+
       const lines = chatHistory.map(m => `[${m.role.toUpperCase()}] ${m.text || '[image]'}`);
       const blob = new Blob([lines.join('\n\n')], { type:'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
@@ -1247,7 +1473,7 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
 
     function quickAsk(el) {
       const inp = document.getElementById('chat-input-txt');
-      inp.value = el.textContent.trim();
+      inp.value = el.textContent.replace(/^[^\w\s]+\s*/,'').trim();
       aiResize(inp);
       aiSend();
     }
@@ -1257,7 +1483,7 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
       el.style.height = Math.min(el.scrollHeight, 130) + 'px';
     }
 
-    function toggleThemeHint() {
+    function showHelpMessage() {
       botMsg(`Quick help:
 
 • Provider choose karne ke liye ⚙️
@@ -1266,21 +1492,39 @@ Koi baat nahi. Website/help type questions ka offline jawab de dunga.`);
 • Export ke liye "Export chat"
 • Clear ke liye 🗑️
 
+Offline mode me:
+install, bookmark, features, api key, offline help ka jawab mil jayega.`);
+    }
+
+    function toggleInstallGuide() {
+      botMsg(`📲 Install guide:
+
+Android Chrome:
+1. Site kholo
+2. 3 dots dabao
+3. "Add to Home screen" ya "Install app"
+
+iPhone Safari:
+1. Share button dabao
+2. "Add to Home Screen"
+
 Note:
-Public website pe direct API key use mat karna. Backend better hota hai.`);
+True PWA install prompt ke liye alag manifest + service worker files chahiye hote hain.
+Ye single HTML version app-jaisa UI deta hai.`);
     }
 
     /* =========================
-       IMAGE
+       IMAGE HANDLING
     ========================= */
     document.getElementById('file-input-hidden').addEventListener('change', handleImageSelect);
 
     function handleImageSelect(e) {
       const file = e.target.files[0];
       if (!file) return;
+
       const pv = AI_PROVIDERS[aiProvider];
       if (!pv.supportsImage) {
-        alert('Current provider image support nahi karta. Gemini/OpenAI/OpenRouter use karo.');
+        alert('Current provider image support nahi karta. Gemini/OpenRouter/OpenAI use karo.');
         return;
       }
 
@@ -1293,6 +1537,7 @@ Public website pe direct API key use mat karna. Backend better hota hai.`);
         document.getElementById('img-preview-wrap').classList.add('show');
       };
       reader.readAsDataURL(file);
+
       e.target.value = '';
     }
 
@@ -1308,10 +1553,12 @@ Public website pe direct API key use mat karna. Backend better hota hai.`);
     ========================= */
     function startVoiceInput() {
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
       if (!SR) {
         alert('Voice input is browser me supported nahi hai.');
         return;
       }
+
       const rec = new SR();
       rec.lang = 'en-IN';
       rec.interimResults = false;
@@ -1320,6 +1567,7 @@ Public website pe direct API key use mat karna. Backend better hota hai.`);
       rec.onstart = () => {
         document.getElementById('ai-status-txt').textContent = '● Listening...';
       };
+
       rec.onresult = (event) => {
         const text = event.results[0][0].transcript;
         const inp = document.getElementById('chat-input-txt');
@@ -1327,19 +1575,22 @@ Public website pe direct API key use mat karna. Backend better hota hai.`);
         aiResize(inp);
         document.getElementById('ai-status-txt').textContent = '● Voice captured';
       };
+
       rec.onerror = () => {
         document.getElementById('ai-status-txt').textContent = '● Voice error';
       };
+
       rec.onend = () => {
         setTimeout(() => {
           document.getElementById('ai-status-txt').textContent = '● Online — Ask anything!';
         }, 1200);
       };
+
       rec.start();
     }
 
     /* =========================
-       SEND
+       INPUT SEND
     ========================= */
     document.getElementById('chat-input-txt').addEventListener('keydown', function(e){
       if (e.key === 'Enter' && !e.shiftKey) {
@@ -1351,50 +1602,71 @@ Public website pe direct API key use mat karna. Backend better hota hai.`);
     async function aiSend() {
       const inp = document.getElementById('chat-input-txt');
       const text = inp.value.trim();
+
       if ((!text && !pendingImageB64) || isBusy) return;
 
       const imgSnapshot = pendingImageB64 ? `data:${pendingImageMime};base64,${pendingImageB64}` : null;
 
       inp.value = '';
       aiResize(inp);
-      userMsg(text, imgSnapshot);
 
-      chatHistory.push({ role:'user', text:text || '[image]', imgSrc: imgSnapshot || null });
+      userMsg(text, imgSnapshot);
+      chatHistory.push({
+        role:'user',
+        text:text || '[image]',
+        imgSrc:imgSnapshot || null
+      });
       persistChat();
 
       document.getElementById('chips-row').style.display = 'none';
 
       if (imgSnapshot) removeImage();
 
-      if (!imgSnapshot) {
+      /* OFFLINE REPLY FIRST */
+      if (!navigator.onLine || !hasProviderKey()) {
+        showTyping();
+        await new Promise(r => setTimeout(r, 450));
+        hideTyping();
+
+        const offlineReply = getOfflineReply(text || 'image');
+        botMsg(offlineReply);
+        chatHistory.push({
+          role:'bot',
+          text:offlineReply,
+          imgSrc:null
+        });
+        persistChat();
+        return;
+      }
+
+      /* SIMPLE HELP WORDS KO OFFLINE SE JAWAB */
+      const lower = (text || '').toLowerCase();
+      const simpleHelp = (
+        lower.includes('install') ||
+        lower.includes('bookmark') ||
+        lower.includes('offline') ||
+        lower.includes('feature') ||
+        lower.includes('api') ||
+        lower.includes('help')
+      );
+
+      if (simpleHelp) {
+        showTyping();
+        await new Promise(r => setTimeout(r, 350));
+        hideTyping();
+
         const offlineReply = getOfflineReply(text);
-        if (offlineReply) {
-          showTyping();
-          await new Promise(r => setTimeout(r, 450));
-          hideTyping();
-          botMsg(offlineReply);
-          chatHistory.push({ role:'bot', text:offlineReply, imgSrc:null });
-          persistChat();
-          return;
-        }
+        botMsg(offlineReply);
+        chatHistory.push({
+          role:'bot',
+          text:offlineReply,
+          imgSrc:null
+        });
+        persistChat();
+        return;
       }
 
       const key = localStorage.getItem(AI_PROVIDERS[aiProvider].storageKey);
-      if (!key) {
-        const msg = `API key nahi mili for ${AI_PROVIDERS[aiProvider].name}.
-
-Free options:
-• OpenRouter
-• Gemini
-• Groq
-
-Key save karo, phir AI reply aayega.`;
-        botMsg(msg);
-        chatHistory.push({ role:'bot', text:msg, imgSrc:null });
-        persistChat();
-        checkKeyArea();
-        return;
-      }
 
       isBusy = true;
       document.getElementById('chat-send-btn').disabled = true;
@@ -1403,6 +1675,7 @@ Key save karo, phir AI reply aayega.`;
 
       try {
         let reply = '';
+
         if (aiProvider === 'gemini') reply = await callGemini(key, text, imgSnapshot);
         else if (aiProvider === 'groq') reply = await callGroq(key, text);
         else if (aiProvider === 'openrouter') reply = await callOpenRouter(key, text, imgSnapshot);
@@ -1410,28 +1683,47 @@ Key save karo, phir AI reply aayega.`;
         else if (aiProvider === 'cohere') reply = await callCohere(key, text);
 
         hideTyping();
-        botMsg(reply || 'Koi response nahi mila.');
-        chatHistory.push({ role:'bot', text:reply || 'Koi response nahi mila.', imgSrc:null });
+
+        const finalReply = reply || 'Koi response nahi mila.';
+        botMsg(finalReply);
+        chatHistory.push({
+          role:'bot',
+          text:finalReply,
+          imgSrc:null
+        });
         persistChat();
       } catch (err) {
         hideTyping();
-        const em = err?.message || 'Unknown error';
 
+        const em = err?.message || 'Unknown error';
         let msg = `Error: ${em}`;
+
         if (/401|403|invalid/i.test(em)) {
           msg = `Invalid API key lag rahi hai for ${AI_PROVIDERS[aiProvider].name}.`;
         } else if (/429|quota|rate/i.test(em)) {
-          msg = `Quota/rate limit hit ho gayi. Dusra provider try karo.`;
+          msg = `Quota ya rate limit hit ho gayi. Dusra provider try karo.`;
+        } else {
+          msg = `Online AI error aaya. Offline mode use kar lo.`;
         }
 
         botMsg(msg);
-        chatHistory.push({ role:'bot', text:msg, imgSrc:null });
+        chatHistory.push({
+          role:'bot',
+          text:msg,
+          imgSrc:null
+        });
         persistChat();
       } finally {
         isBusy = false;
         document.getElementById('chat-send-btn').disabled = false;
         document.getElementById('ai-status-txt').textContent = '● Online — Ask anything!';
       }
+    }
+
+    function hasProviderKey() {
+      const provider = AI_PROVIDERS[aiProvider];
+      if (!provider) return false;
+      return !!localStorage.getItem(provider.storageKey);
     }
 
     /* =========================
@@ -1457,7 +1749,7 @@ Key save karo, phir AI reply aayega.`;
           'Content-Type':'application/json',
           'Authorization':'Bearer ' + key,
           'HTTP-Referer': location.origin || 'http://localhost',
-          'X-Title':'Batman AI Ultra'
+          'X-Title':'Batman AI Ultra Final'
         },
         body: JSON.stringify({
           model:'meta-llama/llama-3.3-70b-instruct:free',
@@ -1603,7 +1895,6 @@ Key save karo, phir AI reply aayega.`;
     renderProvider();
     checkKeyArea();
     renderSavedChat();
-
     setPos(fabL, fabT, false);
   </script>
 </body>
