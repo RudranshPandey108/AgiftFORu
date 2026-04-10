@@ -48,9 +48,7 @@
       overflow-x:hidden;
     }
 
-    body{
-      min-height:100vh;
-    }
+    body{min-height:100vh}
 
     .demo-wrap{
       min-height:100vh;
@@ -108,7 +106,6 @@
       font-size:14px;
     }
 
-    /* FAB */
     #ai-fab-wrap{
       position:fixed;
       right:16px;
@@ -215,11 +212,8 @@
       cursor:pointer;
       backdrop-filter:blur(10px);
     }
-    #ai-show-tab.r{
-      border-radius:14px 0 0 14px;
-    }
+    #ai-show-tab.r{border-radius:14px 0 0 14px}
 
-    /* PANEL */
     #ai-panel{
       position:fixed;
       right:16px;
@@ -302,7 +296,6 @@
       font-size:17px;
     }
 
-    /* Provider quick panel */
     #ai-provider-panel{
       display:none;
       padding:12px 14px;
@@ -575,6 +568,10 @@
       font-size:18px;
       font-weight:900;
     }
+    #chat-send-btn:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+    }
 
     .foot-row{
       display:flex;
@@ -618,13 +615,17 @@
       color:var(--muted);
     }
 
+    #provider-info-line{
+      margin-top:8px;
+      font-size:11px;
+      color:var(--muted);
+    }
+
     .snap-anim{
       transition:left .38s ease, top .38s ease;
     }
 
-    .offscreen{
-      visibility:hidden;
-    }
+    .offscreen{visibility:hidden}
 
     @keyframes sparkleFloat{
       0%{
@@ -637,7 +638,6 @@
       }
     }
 
-    /* SETTINGS MODAL */
     #ai-settings-modal{
       position:fixed;
       inset:0;
@@ -650,9 +650,7 @@
       padding:18px;
     }
 
-    #ai-settings-modal.show{
-      display:flex;
-    }
+    #ai-settings-modal.show{display:flex}
 
     .ai-settings-card{
       width:min(92vw,700px);
@@ -783,6 +781,13 @@
       display:none;
     }
 
+    .test-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
     @media (max-width: 768px){
       .demo-wrap{padding:16px}
       .hero{padding:18px}
@@ -796,6 +801,7 @@
         height:auto;
         border-radius:22px;
       }
+
       #ai-panel.expanded{
         top:6px;
         left:6px;
@@ -804,22 +810,17 @@
         width:auto;
         height:auto;
       }
+
       #ai-fab-wrap{
         right:14px;
         bottom:14px;
       }
-      #ai-fab-label{
-        display:none;
-      }
-      .msg-wrap{
-        max-width:88%;
-      }
-      .providers{
-        grid-template-columns:1fr;
-      }
-      .head-btns{
-        gap:6px;
-      }
+
+      #ai-fab-label{display:none}
+
+      .msg-wrap{max-width:88%}
+      .providers{grid-template-columns:1fr}
+      .head-btns{gap:6px}
       .icon-btn{
         width:36px;
         height:36px;
@@ -831,13 +832,8 @@
         border-radius:22px;
       }
 
-      .ai-settings-title{
-        font-size:20px;
-      }
-
-      .ai-settings-section h3{
-        font-size:18px;
-      }
+      .ai-settings-title{font-size:20px}
+      .ai-settings-section h3{font-size:18px}
 
       .settings-select,
       .settings-input{
@@ -897,7 +893,6 @@
     </div>
   </div>
 
-  <!-- AI FAB Button -->
   <div id="ai-fab-wrap">
     <div id="ai-fab-label">🦇 Batman AI</div>
     <div id="ai-btn-ring-wrap">
@@ -907,7 +902,7 @@
 
       <button id="ai-chat-btn" title="Open Batman AI">
         <img
-          src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop"
+          src="icon-192.png"
           alt="Batman AI"
           loading="lazy"
           decoding="async"
@@ -917,27 +912,21 @@
     </div>
   </div>
 
-  <!-- Edge peek tab -->
   <div id="ai-show-tab" onclick="aiShowBtn()" title="Show AI">🦇 AI</div>
 
-  <!-- AI PANEL -->
   <div id="ai-panel">
-
-    <!-- Header -->
     <div id="ai-header">
       <div class="ai-head-left">
-        <img
-          src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop"
-          alt="AI"
-        />
+        <img src="icon-192.png" alt="AI" />
         <div>
           <div class="ai-title">🦇 Batman AI</div>
-          <div id="ai-status-txt">● Online — Ask anything!</div>
+          <div id="ai-status-txt">● Checking status...</div>
         </div>
       </div>
 
       <div class="head-btns">
-        <button class="icon-btn" onclick="openSettingsModal()" title="Settings">⚙️</button>
+        <button class="icon-btn" onclick="openSettingsModal()" title="Provider & API Key">🔑</button>
+        <button class="icon-btn" onclick="toggleProviderPanel()" title="Providers">⚡</button>
         <button class="icon-btn" onclick="aiExpand()" title="Expand">⛶</button>
         <button class="icon-btn" onclick="clearChat()" title="Clear chat">🗑️</button>
         <button class="icon-btn" onclick="showHelpMessage()" title="Help">?</button>
@@ -945,7 +934,6 @@
       </div>
     </div>
 
-    <!-- Provider quick panel -->
     <div id="ai-provider-panel">
       <div class="small-label">Choose AI Provider</div>
 
@@ -962,11 +950,11 @@
 
         <div class="provider-card" id="pcard-openrouter" onclick="selectProvider('openrouter')">
           <div class="provider-name">🔀 OpenRouter</div>
-          <span class="badge free">FREE</span>
+          <span class="badge free">FREE / MIXED</span>
         </div>
 
         <div class="provider-card" id="pcard-openai" onclick="selectProvider('openai')">
-          <div class="provider-name">🤖 OpenAI GPT-4o</div>
+          <div class="provider-name">🤖 OpenAI GPT-4o mini</div>
           <span class="badge paid">PAID</span>
         </div>
 
@@ -977,7 +965,6 @@
       </div>
     </div>
 
-    <!-- Chat body -->
     <div id="ai-body">
       <div id="chat-msgs" style="display:flex;flex-direction:column;gap:12px;"></div>
 
@@ -991,7 +978,6 @@
       </div>
     </div>
 
-    <!-- Image preview -->
     <div id="img-preview-wrap">
       <div class="img-preview-row">
         <img id="img-preview" src="" alt="preview" />
@@ -999,7 +985,6 @@
       </div>
     </div>
 
-    <!-- Footer -->
     <div id="ai-footer">
       <div class="input-row">
         <button class="round-btn" id="img-upload-btn" onclick="document.getElementById('file-input-hidden').click()" title="Upload image">🖼️</button>
@@ -1016,7 +1001,7 @@
       </div>
 
       <div class="foot-row">
-        <button id="provider-badge-btn" onclick="openSettingsModal()">⚙️ Gemini Flash</button>
+        <button id="provider-badge-btn" onclick="openSettingsModal()">🔑 Provider + API Key</button>
 
         <div class="foot-tools">
           <button class="tiny-btn" onclick="exportChat()">Export chat</button>
@@ -1024,10 +1009,11 @@
           <span class="foot-hint">Enter = Send • Shift+Enter = New line</span>
         </div>
       </div>
+
+      <div id="provider-info-line"></div>
     </div>
   </div>
 
-  <!-- SETTINGS MODAL -->
   <div id="ai-settings-modal">
     <div class="ai-settings-card">
       <div class="ai-settings-top">
@@ -1043,7 +1029,7 @@
           <option value="gemini">Gemini Flash</option>
           <option value="groq">Groq</option>
           <option value="openrouter">OpenRouter</option>
-          <option value="openai">OpenAI GPT-4o</option>
+          <option value="openai">OpenAI GPT-4o mini</option>
           <option value="cohere">Cohere</option>
         </select>
 
@@ -1056,6 +1042,10 @@
           <button class="settings-purple-btn" onclick="toggleSettingsKeyView()">Show / Hide</button>
         </div>
 
+        <div class="test-row">
+          <button class="settings-purple-btn" onclick="testCurrentProvider()">Test Provider</button>
+        </div>
+
         <div class="settings-note" id="settings-provider-desc"></div>
         <div class="settings-mini" id="settings-saved-note"></div>
       </div>
@@ -1065,9 +1055,6 @@
   <input id="file-input-hidden" type="file" accept="image/*" style="display:none;" />
 
   <script>
-    /* =========================
-       OFFLINE KNOWLEDGE BASE
-    ========================= */
     const OFFLINE_KB = [
       {
         patterns: [
@@ -1156,7 +1143,7 @@ Clear chat button se current chat manually bhi hata sakte ho.`
 2. Gemini
 3. Groq
 
-Ab key daalne ke liye settings button ⚙️ use karo.
+Ab key daalne ke liye settings button 🔑 use karo.
 
 Agar sirf offline use karna hai toh API key zaroori nahi hai.`
       },
@@ -1221,9 +1208,6 @@ Try these:
 • api key`;
     }
 
-    /* =========================
-       PROVIDERS
-    ========================= */
     const AI_PROVIDERS = {
       gemini: {
         name: 'Gemini Flash',
@@ -1233,7 +1217,7 @@ Try these:
         supportsImage: true
       },
       groq: {
-        name: 'Groq (Fast & Free)',
+        name: 'Groq',
         label: '🚀 Setup Groq (Free)',
         hint: `Go to <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a> → Create key → paste below`,
         storageKey: 'batman_key_groq',
@@ -1241,13 +1225,13 @@ Try these:
       },
       openrouter: {
         name: 'OpenRouter',
-        label: '🔀 Setup OpenRouter (Free Models)',
+        label: '🔀 Setup OpenRouter',
         hint: `Go to <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a> → Create key → paste below`,
         storageKey: 'batman_key_openrouter',
         supportsImage: true
       },
       openai: {
-        name: 'OpenAI GPT-4o',
+        name: 'OpenAI GPT-4o mini',
         label: '🤖 Setup OpenAI',
         hint: `Go to <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a> → Create key → paste below`,
         storageKey: 'batman_key_openai',
@@ -1263,11 +1247,11 @@ Try these:
     };
 
     const PROVIDER_DESCRIPTIONS = {
-      gemini: 'Good general provider. Image support bhi deta hai.',
-      groq: 'Fast free text chat provider.',
-      openrouter: 'Multiple free/paid models ek jagah se access kar sakte ho.',
-      openai: 'Premium provider. Paid API lagti hai.',
-      cohere: 'Text-focused provider. Simple chat ke liye achha hai.'
+      gemini: 'Best option for text + image. Sabse practical provider isi code me ye hai.',
+      groq: 'Fast free text chat. Image support nahi hai.',
+      openrouter: 'Multiple models. Kuch models free hain, kuch paid.',
+      openai: 'Paid API. Billing required ho sakti hai.',
+      cohere: 'Text-focused provider.'
     };
 
     const SYSTEM_PROMPT = `You are Batman AI, a helpful and friendly study assistant.
@@ -1283,9 +1267,6 @@ Do not overcomplicate.`;
     let pendingImageMime = null;
     let settingsKeyVisible = false;
 
-    /* =========================
-       FAB DRAG
-    ========================= */
     const fabWrap = document.getElementById('ai-fab-wrap');
     const ringWrap = document.getElementById('ai-btn-ring-wrap');
     const showTab = document.getElementById('ai-show-tab');
@@ -1450,9 +1431,26 @@ Do not overcomplicate.`;
       }
     }
 
-    /* =========================
-       UI ACTIONS
-    ========================= */
+    function updateStatus(customText) {
+      const el = document.getElementById('ai-status-txt');
+      if (customText) {
+        el.textContent = customText;
+        return;
+      }
+
+      if (!navigator.onLine) {
+        el.textContent = '● Offline mode';
+        return;
+      }
+
+      if (!hasProviderKey()) {
+        el.textContent = '● No API key — offline replies only';
+        return;
+      }
+
+      el.textContent = '● Online — Ask anything!';
+    }
+
     function aiToggle() {
       const p = document.getElementById('ai-panel');
       p.classList.toggle('open');
@@ -1460,6 +1458,7 @@ Do not overcomplicate.`;
       if (p.classList.contains('open')) {
         spawnSparkles();
         renderProvider();
+        updateStatus();
         document.getElementById('ai-notif').style.display = 'none';
 
         if (!chatHistory.length && !document.getElementById('chat-msgs').children.length) {
@@ -1474,7 +1473,7 @@ Main kya kar sakta hoon:
 • offline replies
 
 No API key?
-Koi baat nahi. Settings ⚙️ me jaake key save kar sakte ho.
+Koi baat nahi. Settings 🔑 me jaake key save kar sakte ho.
 Main help-type questions ka offline jawab bhi de dunga.`);
         }
       }
@@ -1506,11 +1505,19 @@ Main help-type questions ka offline jawab bhi de dunga.`);
       if (current) current.classList.add('active');
 
       const pv = AI_PROVIDERS[aiProvider];
-      document.getElementById('provider-badge-btn').textContent = '⚙️ ' + pv.name;
+      document.getElementById('provider-badge-btn').textContent = '🔑 ' + pv.name;
 
       const imgBtn = document.getElementById('img-upload-btn');
-      imgBtn.style.opacity = pv.supportsImage ? '1' : '.4';
+      imgBtn.style.opacity = pv.supportsImage ? '1' : '.45';
       imgBtn.title = pv.supportsImage ? 'Upload image' : 'Image not supported by this provider';
+
+      const hasKey = !!localStorage.getItem(pv.storageKey);
+      const info = document.getElementById('provider-info-line');
+      if (info) {
+        info.textContent = `${pv.name} • ${hasKey ? 'API key saved' : 'No API key saved'} • ${pv.supportsImage ? 'Image supported' : 'Text only'}`;
+      }
+
+      updateStatus();
     }
 
     function getTime() {
@@ -1535,7 +1542,7 @@ Main help-type questions ka offline jawab bhi de dunga.`);
 
       d.innerHTML = `
         <div class="bot-av">
-          <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop" alt="AI" />
+          <img src="icon-192.png" alt="AI" />
         </div>
         <div class="msg-wrap">
           <div class="cm-bub">${imgSrc ? `<img class="cm-img" src="${imgSrc}" alt="img" />` : ''}${formatText(text)}</div>
@@ -1571,7 +1578,7 @@ Main help-type questions ka offline jawab bhi de dunga.`);
 
       d.innerHTML = `
         <div class="bot-av">
-          <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop" alt="AI" />
+          <img src="icon-192.png" alt="AI" />
         </div>
         <div class="msg-wrap">
           <div class="cm-bub typing-bub"><span></span><span></span><span></span></div>
@@ -1592,6 +1599,8 @@ Main help-type questions ka offline jawab bhi de dunga.`);
     }
 
     function renderSavedChat() {
+      const box = document.getElementById('chat-msgs');
+      box.innerHTML = '';
       if (!chatHistory.length) return;
 
       for (const item of chatHistory) {
@@ -1640,14 +1649,16 @@ Main help-type questions ka offline jawab bhi de dunga.`);
     function showHelpMessage() {
       botMsg(`Quick help:
 
-• Settings ke liye ⚙️
+• Provider/API key ke liye 🔑
+• Fast provider switch ke liye ⚡
 • Voice ke liye 🎤
 • Image preview ke liye 🖼️
 • Export ke liye "Export chat"
 • Clear ke liye 🗑️
 
-API key dalne ke liye:
-⚙️ Settings → provider choose karo → key save karo
+Best setup:
+• Text ke liye: Groq / Gemini
+• Image ke liye: Gemini
 
 Offline mode me:
 install, bookmark, features, api key, offline help ka jawab mil jayega.`);
@@ -1666,13 +1677,10 @@ iPhone Safari:
 2. "Add to Home Screen"
 
 Note:
-True PWA install prompt ke liye alag manifest + service worker files chahiye hote hain.
-Ye single HTML version app-jaisa UI deta hai.`);
+Manifest + service worker added hain.
+Best result ke liye app ko same folder me sab files ke saath host karo.`);
     }
 
-    /* =========================
-       SETTINGS MODAL
-    ========================= */
     function openSettingsModal() {
       document.getElementById('ai-settings-modal').classList.add('show');
       document.getElementById('settings-provider-select').value = aiProvider;
@@ -1699,14 +1707,15 @@ Ye single HTML version app-jaisa UI deta hai.`);
       const input = document.getElementById('settings-api-key');
 
       input.value = key;
-      desc.innerHTML = `${AI_PROVIDERS[p].label}<br>${AI_PROVIDERS[p].hint}<br><br>${PROVIDER_DESCRIPTIONS[p] || ''}`;
+      input.type = settingsKeyVisible ? 'text' : 'password';
 
+      desc.innerHTML = `<b>${AI_PROVIDERS[p].label}</b><br>${AI_PROVIDERS[p].hint}<br><br>${PROVIDER_DESCRIPTIONS[p] || ''}`;
+
+      note.style.display = 'block';
       if (key) {
-        note.style.display = 'block';
         note.textContent = `Saved key found for ${AI_PROVIDERS[p].name}.`;
       } else {
-        note.style.display = 'none';
-        note.textContent = '';
+        note.textContent = `No key saved for ${AI_PROVIDERS[p].name}.`;
       }
     }
 
@@ -1724,6 +1733,7 @@ Ye single HTML version app-jaisa UI deta hai.`);
       localStorage.setItem('batman_provider', p);
       renderProvider();
       refreshSettingsModal();
+      updateStatus();
       botMsg(`Key saved for ${AI_PROVIDERS[p].name}.`);
     }
 
@@ -1733,6 +1743,7 @@ Ye single HTML version app-jaisa UI deta hai.`);
       document.getElementById('settings-api-key').value = '';
       renderProvider();
       refreshSettingsModal();
+      updateStatus();
       botMsg(`Key removed for ${AI_PROVIDERS[p].name}.`);
     }
 
@@ -1742,16 +1753,45 @@ Ye single HTML version app-jaisa UI deta hai.`);
       input.type = settingsKeyVisible ? 'text' : 'password';
     }
 
+    async function testCurrentProvider() {
+      const p = document.getElementById('settings-provider-select').value;
+      const key = document.getElementById('settings-api-key').value.trim() || localStorage.getItem(AI_PROVIDERS[p].storageKey) || '';
+
+      if (!key) {
+        alert('Pehle API key save ya paste karo.');
+        return;
+      }
+
+      const oldProvider = aiProvider;
+      aiProvider = p;
+
+      const note = document.getElementById('settings-saved-note');
+      note.style.display = 'block';
+      note.textContent = `Testing ${AI_PROVIDERS[p].name}...`;
+
+      try {
+        let reply = '';
+        if (p === 'gemini') reply = await callGemini(key, 'Reply only with: Batman AI test success.');
+        else if (p === 'groq') reply = await callGroq(key, 'Reply only with: Batman AI test success.');
+        else if (p === 'openrouter') reply = await callOpenRouter(key, 'Reply only with: Batman AI test success.', null);
+        else if (p === 'openai') reply = await callOpenAI(key, 'Reply only with: Batman AI test success.', null);
+        else if (p === 'cohere') reply = await callCohere(key, 'Reply only with: Batman AI test success.');
+
+        note.textContent = `✅ Provider test successful: ${AI_PROVIDERS[p].name}`;
+      } catch (err) {
+        note.textContent = `❌ Test failed: ${err?.message || 'Unknown error'}`;
+      } finally {
+        aiProvider = p;
+        localStorage.setItem('batman_provider', p);
+        renderProvider();
+      }
+    }
+
     window.addEventListener('click', (e) => {
       const modal = document.getElementById('ai-settings-modal');
-      if (e.target === modal) {
-        closeSettingsModal();
-      }
+      if (e.target === modal) closeSettingsModal();
     });
 
-    /* =========================
-       IMAGE HANDLING
-    ========================= */
     document.getElementById('file-input-hidden').addEventListener('change', handleImageSelect);
 
     function handleImageSelect(e) {
@@ -1760,7 +1800,7 @@ Ye single HTML version app-jaisa UI deta hai.`);
 
       const pv = AI_PROVIDERS[aiProvider];
       if (!pv.supportsImage) {
-        alert('Current provider image support nahi karta. Gemini/OpenRouter/OpenAI use karo.');
+        alert('Current provider image support nahi karta. Gemini sabse best option hai.');
         e.target.value = '';
         return;
       }
@@ -1785,9 +1825,6 @@ Ye single HTML version app-jaisa UI deta hai.`);
       document.getElementById('img-preview').src = '';
     }
 
-    /* =========================
-       VOICE INPUT
-    ========================= */
     function startVoiceInput() {
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -1802,7 +1839,7 @@ Ye single HTML version app-jaisa UI deta hai.`);
       rec.maxAlternatives = 1;
 
       rec.onstart = () => {
-        document.getElementById('ai-status-txt').textContent = '● Listening...';
+        updateStatus('● Listening...');
       };
 
       rec.onresult = (event) => {
@@ -1810,25 +1847,20 @@ Ye single HTML version app-jaisa UI deta hai.`);
         const inp = document.getElementById('chat-input-txt');
         inp.value = text;
         aiResize(inp);
-        document.getElementById('ai-status-txt').textContent = '● Voice captured';
+        updateStatus('● Voice captured');
       };
 
       rec.onerror = () => {
-        document.getElementById('ai-status-txt').textContent = '● Voice error';
+        updateStatus('● Voice error');
       };
 
       rec.onend = () => {
-        setTimeout(() => {
-          document.getElementById('ai-status-txt').textContent = '● Online — Ask anything!';
-        }, 1200);
+        setTimeout(() => updateStatus(), 1200);
       };
 
       rec.start();
     }
 
-    /* =========================
-       INPUT SEND
-    ========================= */
     document.getElementById('chat-input-txt').addEventListener('keydown', function(e){
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -1840,6 +1872,10 @@ Ye single HTML version app-jaisa UI deta hai.`);
       const provider = AI_PROVIDERS[aiProvider];
       if (!provider) return false;
       return !!localStorage.getItem(provider.storageKey);
+    }
+
+    function isSimpleHelpText(text) {
+      return /\binstall\b|\bbookmark\b|\boffline\b|\bfeatures?\b|\bapi\b|\bapi key\b|\bhelp\b/i.test(text || '');
     }
 
     async function aiSend() {
@@ -1854,58 +1890,58 @@ Ye single HTML version app-jaisa UI deta hai.`);
       aiResize(inp);
 
       userMsg(text, imgSnapshot);
-      chatHistory.push({
-        role:'user',
-        text:text || '[image]',
-        imgSrc:imgSnapshot || null
-      });
-      persistChat();
-
       document.getElementById('chips-row').style.display = 'none';
+
+      const userTextForStorage = text || '[image uploaded]';
+      const currentImageForApi = imgSnapshot;
 
       if (imgSnapshot) removeImage();
 
-      /* OFFLINE REPLY FIRST */
       if (!navigator.onLine || !hasProviderKey()) {
-        showTyping();
-        await new Promise(r => setTimeout(r, 450));
-        hideTyping();
-
-        const offlineReply = getOfflineReply(text || 'image');
-        botMsg(offlineReply);
-        chatHistory.push({
-          role:'bot',
-          text:offlineReply,
-          imgSrc:null
-        });
-        persistChat();
-        return;
-      }
-
-      /* SIMPLE HELP WORDS KO OFFLINE SE JAWAB */
-      const lower = (text || '').toLowerCase();
-      const simpleHelp = (
-        lower.includes('install') ||
-        lower.includes('bookmark') ||
-        lower.includes('offline') ||
-        lower.includes('feature') ||
-        lower.includes('api') ||
-        lower.includes('help')
-      );
-
-      if (simpleHelp) {
         showTyping();
         await new Promise(r => setTimeout(r, 350));
         hideTyping();
 
-        const offlineReply = getOfflineReply(text);
-        botMsg(offlineReply);
+        const offlineReply = getOfflineReply(text || 'image');
+
+        chatHistory.push({
+          role:'user',
+          text:userTextForStorage,
+          imgSrc:null
+        });
         chatHistory.push({
           role:'bot',
           text:offlineReply,
           imgSrc:null
         });
         persistChat();
+
+        botMsg(offlineReply);
+        updateStatus();
+        return;
+      }
+
+      if (isSimpleHelpText(text)) {
+        showTyping();
+        await new Promise(r => setTimeout(r, 250));
+        hideTyping();
+
+        const offlineReply = getOfflineReply(text);
+
+        chatHistory.push({
+          role:'user',
+          text:userTextForStorage,
+          imgSrc:null
+        });
+        chatHistory.push({
+          role:'bot',
+          text:offlineReply,
+          imgSrc:null
+        });
+        persistChat();
+
+        botMsg(offlineReply);
+        updateStatus();
         return;
       }
 
@@ -1913,28 +1949,35 @@ Ye single HTML version app-jaisa UI deta hai.`);
 
       isBusy = true;
       document.getElementById('chat-send-btn').disabled = true;
-      document.getElementById('ai-status-txt').textContent = '● Thinking...';
+      updateStatus('● Thinking...');
       showTyping();
 
       try {
         let reply = '';
 
-        if (aiProvider === 'gemini') reply = await callGemini(key, text, imgSnapshot);
+        if (aiProvider === 'gemini') reply = await callGemini(key, text, currentImageForApi);
         else if (aiProvider === 'groq') reply = await callGroq(key, text);
-        else if (aiProvider === 'openrouter') reply = await callOpenRouter(key, text, imgSnapshot);
-        else if (aiProvider === 'openai') reply = await callOpenAI(key, text, imgSnapshot);
+        else if (aiProvider === 'openrouter') reply = await callOpenRouter(key, text, currentImageForApi);
+        else if (aiProvider === 'openai') reply = await callOpenAI(key, text, currentImageForApi);
         else if (aiProvider === 'cohere') reply = await callCohere(key, text);
 
         hideTyping();
 
         const finalReply = reply || 'Koi response nahi mila.';
-        botMsg(finalReply);
+
+        chatHistory.push({
+          role:'user',
+          text:userTextForStorage,
+          imgSrc:null
+        });
         chatHistory.push({
           role:'bot',
           text:finalReply,
           imgSrc:null
         });
         persistChat();
+
+        botMsg(finalReply);
       } catch (err) {
         hideTyping();
 
@@ -1942,30 +1985,37 @@ Ye single HTML version app-jaisa UI deta hai.`);
         let msg = `Error: ${em}`;
 
         if (/401|403|invalid|unauthorized/i.test(em)) {
-          msg = `Invalid API key lag rahi hai for ${AI_PROVIDERS[aiProvider].name}. Settings ⚙️ me jaake sahi key daalo.`;
+          msg = `❌ ${AI_PROVIDERS[aiProvider].name}: API key invalid hai ya access allowed nahi hai.`;
         } else if (/429|quota|rate/i.test(em)) {
-          msg = `Quota ya rate limit hit ho gayi. Dusra provider try karo ya thoda wait karo.`;
+          msg = `⏳ ${AI_PROVIDERS[aiProvider].name}: quota/rate limit hit ho gayi.`;
+        } else if (/billing|payment|credits/i.test(em)) {
+          msg = `💳 ${AI_PROVIDERS[aiProvider].name}: billing/credits required lag rahe hain.`;
+        } else if (/model/i.test(em)) {
+          msg = `⚠️ ${AI_PROVIDERS[aiProvider].name}: selected model available nahi hai ya supported nahi hai.`;
         } else {
-          msg = `Online AI error aaya. Settings me key check karo ya offline mode use kar lo.`;
+          msg = `⚠️ ${AI_PROVIDERS[aiProvider].name} se response nahi aaya. Key, model, ya provider access check karo.`;
         }
 
-        botMsg(msg);
+        chatHistory.push({
+          role:'user',
+          text:userTextForStorage,
+          imgSrc:null
+        });
         chatHistory.push({
           role:'bot',
           text:msg,
           imgSrc:null
         });
         persistChat();
+
+        botMsg(msg);
       } finally {
         isBusy = false;
         document.getElementById('chat-send-btn').disabled = false;
-        document.getElementById('ai-status-txt').textContent = '● Online — Ask anything!';
+        updateStatus();
       }
     }
 
-    /* =========================
-       API CALLS
-    ========================= */
     async function callOpenRouter(key, text, imgDataUrl) {
       const content = [];
       if (imgDataUrl) content.push({ type:'image_url', image_url:{ url: imgDataUrl } });
@@ -1980,6 +2030,10 @@ Ye single HTML version app-jaisa UI deta hai.`);
         { role:'user', content: imgDataUrl ? content : text }
       ];
 
+      const modelToUse = imgDataUrl
+        ? 'openai/gpt-4o-mini'
+        : 'meta-llama/llama-3.3-70b-instruct:free';
+
       const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method:'POST',
         headers:{
@@ -1989,7 +2043,7 @@ Ye single HTML version app-jaisa UI deta hai.`);
           'X-Title':'Batman AI Ultra Final'
         },
         body: JSON.stringify({
-          model:'meta-llama/llama-3.3-70b-instruct:free',
+          model: modelToUse,
           messages,
           max_tokens:700
         })
@@ -2089,7 +2143,7 @@ Ye single HTML version app-jaisa UI deta hai.`);
           'Authorization':'Bearer ' + key
         },
         body: JSON.stringify({
-          model:'gpt-4o',
+          model:'gpt-4o-mini',
           messages,
           max_tokens:700
         })
@@ -2122,16 +2176,17 @@ Ye single HTML version app-jaisa UI deta hai.`);
       });
 
       const d = await r.json();
-      if (!r.ok || d.message) throw new Error(d?.message || 'Cohere request failed');
+      if (!r.ok) throw new Error(d?.message || 'Cohere request failed');
       return d?.text || 'No response';
     }
 
-    /* =========================
-       INIT
-    ========================= */
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
+
     renderProvider();
     renderSavedChat();
     setPos(fabL, fabT, false);
+    updateStatus();
   </script>
 </body>
 </html>
