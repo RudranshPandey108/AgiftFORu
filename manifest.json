@@ -2,24 +2,20 @@
   "name": "Batman AI Ultra Final",
   "short_name": "Batman AI",
   "start_url": "./index.html",
-  "scope": "./",
   "display": "standalone",
   "background_color": "#07142d",
   "theme_color": "#07142d",
-  "orientation": "portrait",
-  "description": "Batman AI Ultra Final - offline replies, big mobile chat UI, voice input, image preview, multi-provider support.",
+  "description": "Batman AI Ultra Final PWA with multi-provider support, offline help, voice input and image preview.",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }
